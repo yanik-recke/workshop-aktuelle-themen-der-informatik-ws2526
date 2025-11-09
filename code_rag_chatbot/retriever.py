@@ -8,7 +8,7 @@ qdrant = QdrantClient(url=QDRANT_URL)
 
 def retrieve_relevant_chunks(
     query,
-    top_k=7,
+    top_k=25,
     degree=None,
     program=None,
     doctype=None,

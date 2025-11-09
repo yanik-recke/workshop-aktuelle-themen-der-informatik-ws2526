@@ -8,9 +8,9 @@ EMB_CACHE_FILE = os.path.join(EMB_DIR, "emb_cache.json")
 
 # === Embedding ===
 EMBED_MODEL = os.getenv("EMBED_MODEL", "text-embedding-qwen3-embedding-0.6b")
-CHUNK_SIZE = 1200
-CHUNK_OVERLAP = 200
-EMB_BATCH = 1000 
+CHUNK_SIZE = 200
+CHUNK_OVERLAP = 30
+EMB_BATCH = 500 
 
 # === Qdrant ===
 QDRANT_URL = "http://localhost:6333"
@@ -26,6 +26,3 @@ CLASSIFY_MODEL = os.getenv("CLASSIFIE_MODEL", "qwen/qwen3-4b-2507")
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "http://localhost:1234/v1")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "not-needed-for-local")
 
-# === Chunking ===
-CHUNK_SIZE = 800
-OVERLAP = 150

@@ -1,13 +1,15 @@
 import json
 import textwrap
+from collections import deque
 from openai import OpenAI
 from retriever import retrieve_relevant_chunks
 from config import *
-from collections import deque
 
+# -----------------------------------------
+# CLIENT SETUP
+# -----------------------------------------
 client = OpenAI(base_url=OPENAI_BASE_URL, api_key=OPENAI_API_KEY)
-MAX_MEMORY_TURNS = 5   
-memory_summary = ""    
+MAX_MEMORY_TURNS = 5
 conversation_buffer = deque(maxlen=MAX_MEMORY_TURNS)
 
 # -----------------------------------------
@@ -27,66 +29,104 @@ STATUSES = ["aktuell", "archiviert"]
 # -----------------------------------------
 # INTENT & CONTEXT DETECTION
 # -----------------------------------------
+def is_broad_query(q: str) -> bool:
+    q = q.lower()
+    return any(
+        kw in q
+        for kw in [
+            "alle studiengänge",
+            "welche studiengänge",
+            "übersicht",
+            "gesamt",
+            "insgesamt",
+            "alle module",
+        ]
+    )
+
+
 def detect_context(query, context):
     """
     Hybrid intent detection using:
-      - LLM classification for FH Wedel study topics
+      - LLM classification for FH Wedel study topics (konservativ!)
       - Fallback keyword rules
-      - Merges multi-value lists safely
+      - Smarte Merge-Strategie:
+          * program/doctype: explizite Angaben überschreiben bisherigen Kontext
+          * degree/status: werden zusammengeführt
     """
     q_low = query.lower()
     new_context = {}
 
-    # --- Step 1️⃣ LLM-based detection ---
+    # -------- 1) LLM-basierte Erkennung (konservativ) --------
     prompt = f"""
-    Du bist ein Klassifizierungsassistent für die Fachhochschule Wedel.
+Du bist ein Klassifizierungsassistent für die Fachhochschule Wedel.
 
-    Analysiere die folgende Anfrage eines Studierenden und gib passende Kategorien zurück.
-    Mehrfachauswahlen sind erlaubt, wenn die Anfrage mehrere Bereiche betrifft
-    (z. B. „alle Master-Studiengänge“ → ["Master"], „BWL und Wirtschaftsinformatik“ → ["Betriebswirtschaftslehre", "Wirtschaftsinformatik"]).
+Analysiere die folgende Anfrage eines Studierenden und weise sie, falls eindeutig passend,
+zu den folgenden Kategorien zu.
 
-    **Mögliche Werte:**
-    - degree: {DEGREES}
-    - program: {PROGRAMS}
-    - doctype: {DOCTYPES}
-    - status: {STATUSES}
+WICHTIG:
+- Sei konservativ.
+- Gib NUR Werte zurück, die explizit genannt oder eindeutig aus dem Inhalt ableitbar sind.
+- Gib KEINE vollständigen Listen aller Studiengänge zurück.
+- Rate NICHT. Wenn du unsicher bist, gib [] zurück.
 
-    **Beispielausgabe (im JSON-Format):**
-    {{
-        "degree": ["Bachelor", "Master"],
-        "program": ["Informatik", "Wirtschaftsinformatik"],
-        "doctype": ["Modulhandbuch"],
-        "status": ["aktuell"]
-    }}
+Mögliche Werte:
+- degree: {DEGREES}
+- program: {PROGRAMS}
+- doctype: {DOCTYPES}
+- status: {STATUSES}
 
-    Wenn keine Zuordnung möglich ist, gib eine leere Liste [] zurück.
+Erwarte Ausgabe AUSSCHLIESSLICH im JSON-Format, z.B.:
+{{
+  "degree": ["Bachelor"],
+  "program": ["Smart Technology"],
+  "doctype": ["Modulhandbuch"],
+  "status": ["aktuell"]
+}}
 
-    Anfrage: "{query}"
-    """
+Wenn keine sinnvolle Zuordnung möglich ist:
+{{
+  "degree": [],
+  "program": [],
+  "doctype": [],
+  "status": []
+}}
+
+Anfrage: "{query}"
+"""
 
     try:
         resp = client.chat.completions.create(
             model=CLASSIFY_MODEL,
             messages=[
-                {"role": "system", "content": "Du bist ein präziser Klassifizierer für Studienanfragen der FH Wedel."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "Du bist ein strenger Klassifizierer. Du gibst nur Werte zurück, die klar im Text liegen. Du spekulierst nicht.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0
+            temperature=0,
         )
-        content = resp.choices[0].message.content.strip()
-        parsed = json.loads(content)
-
+        parsed = json.loads(resp.choices[0].message.content.strip())
         if isinstance(parsed, dict):
             for key in ["degree", "program", "doctype", "status"]:
-                val = parsed.get(key)
+                val = parsed.get(key, [])
+                if isinstance(val, str):
+                    val = [val]
                 if isinstance(val, list):
-                    new_context[key] = val
-                elif val:
-                    new_context[key] = [val]
+                    # nur gültige Werte behalten
+                    allowed_map = {
+                        "degree": DEGREES,
+                        "program": PROGRAMS,
+                        "doctype": DOCTYPES,
+                        "status": STATUSES,
+                    }
+                    allowed = set(allowed_map[key])
+                    cleaned = [v for v in val if v in allowed]
+                    new_context[key] = cleaned
     except Exception as e:
         print(f"⚠️ Intent LLM failed: {e}")
 
-    # --- Step 2️⃣ Heuristic fallback ---
+    # -------- 2) Heuristische Fallbacks --------
     if not new_context.get("degree"):
         if "master" in q_low:
             new_context["degree"] = ["Master"]
@@ -95,8 +135,9 @@ def detect_context(query, context):
 
     if not new_context.get("program"):
         prog_map = {
-            "informatik": "Informatik",
+            "smart technology": "Smart Technology",
             "wirtschaftsinformatik": "Wirtschaftsinformatik",
+            "informatik": "Informatik",
             "wirtschaftsingenieur": "Wirtschaftsingenieurwesen",
             "bwl": "Betriebswirtschaftslehre",
             "data science": "Data Science & Artificial Intelligence",
@@ -104,7 +145,6 @@ def detect_context(query, context):
             "it-sicherheit": "IT-Sicherheit",
             "consulting": "IT-Management, Consulting (und Auditing)",
             "games": "Computer Games Technology",
-            "smart tech": "Smart Technology",
         }
         for key, val in prog_map.items():
             if key in q_low:
@@ -126,60 +166,138 @@ def detect_context(query, context):
                 break
 
     if not new_context.get("status"):
-        if any(word in q_low for word in ["alt", "früher", "veraltet", "vorherige"]):
+        if any(w in q_low for w in ["alt", "früher", "veraltet", "vorherige"]):
             new_context["status"] = ["archiviert"]
         else:
             new_context["status"] = ["aktuell"]
 
-    # --- Step 3️⃣ Merge with persistent context ---
-    for key in ["degree", "program", "doctype", "status"]:
-        if key in new_context:
-            old_vals = context.get(key)
-            if isinstance(old_vals, str):
-                old_vals = [old_vals]
-            elif not isinstance(old_vals, list):
-                old_vals = []
+    # -------- 3) Merge-Logik --------
+    broad = is_broad_query(query)
 
-            new_vals = new_context[key]
-            if isinstance(new_vals, str):
-                new_vals = [new_vals]
-
-            merged = list(sorted(set(old_vals + new_vals)))
+    # degree + status: union (relativ harmlos)
+    for key in ["degree", "status"]:
+        vals = new_context.get(key)
+        if vals:
+            old = context.get(key, [])
+            if isinstance(old, str):
+                old = [old]
+            merged = sorted(set(old + vals))
             context[key] = merged
 
+    # program + doctype:
+    # - bei expliziten Angaben (z.B. "Smart Technology") → überschreiben
+    # - bei breiten Fragen (z.B. "Welche Studiengänge gibt es?") → ersetzen durch new_context
+    # - kein blindes Aufsummieren mehr
+    for key in ["program", "doctype"]:
+        vals = new_context.get(key)
+        if not vals:
+            continue
+
+        if broad:
+            # breite Frage → nutze explizit die erkannten (z.B. mehrere Programme),
+            # aber nicht + alte weiterziehen
+            context[key] = vals
+        else:
+            # eher spezifische Frage → override
+            context[key] = vals
+
     return context
+
+
+# -----------------------------------------
+# QUERY EXPANSION
+# -----------------------------------------
+def expand_query_with_llm(query, memory_summary, conversation_buffer):
+    """
+    Semantische Query-Erweiterung:
+    - Klärt Intention
+    - Keine Kategorien, keine künstlichen Listen
+    - Keine neuen Fakten
+    """
+    recent_history = "\n".join(
+        f"{role}: {msg}" for role, msg in list(conversation_buffer)[-4:]
+    )
+
+    prompt = f"""
+You expand user questions into clearer retrieval queries.
+
+Rules:
+- Do NOT answer the question.
+- Do NOT add degrees, programs, lists, examples or assumptions that were not mentioned.
+- Only clarify what the user is asking for (intent, scope, entities).
+- Keep the same language as the original question.
+- Output must stay short, precise and retrieval-friendly.
+
+Conversation history:
+{recent_history or "None"}
+
+Memory summary:
+{memory_summary or "None"}
+
+Original user question:
+{query}
+
+Return ONLY valid JSON:
+{{
+  "original_query": "<original question>",
+  "expanded_query": "<rewritten query>"
+}}
+"""
+
+    try:
+        resp = client.chat.completions.create(
+            model=CHAT_MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a precise query expansion agent. You never invent new facts or lists.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.2,
+        )
+        data = json.loads(resp.choices[0].message.content.strip())
+        expanded_query = data.get("expanded_query") or query
+        original_query = data.get("original_query") or query
+
+        # kleine Sicherung: kein Roman
+        expanded_query = expanded_query.strip()
+        if len(expanded_query) > 500:
+            expanded_query = query
+
+        print(f"\n🧭 Expanded query for retrieval:\n{expanded_query}\n")
+        return expanded_query, original_query
+    except Exception as e:
+        print(f"⚠️ Query expansion failed: {e}")
+        return query, query
 
 
 # -----------------------------------------
 # UTILITIES
 # -----------------------------------------
 def format_context(context_state):
-    """Format context info for clean display in the chat."""
     parts = []
     for key in ["degree", "program", "doctype", "status"]:
-        val = context_state.get(key)
-        if not val:
+        vals = context_state.get(key)
+        if not vals:
             continue
-        if isinstance(val, list):
-            val_str = ", ".join(val)
-        else:
-            val_str = str(val)
-        parts.append(f"{key}={val_str}")
+        if isinstance(vals, str):
+            vals = [vals]
+        parts.append(f"{key}=" + ", ".join(vals))
     return " | ".join(parts)
 
 
-def build_prompt(query, docs, memory_summary, memory_buffer_text):
+def build_prompt(expanded_query, docs, memory_summary, memory_buffer_text, original_query):
     context_docs = "\n\n---\n\n".join(docs)
-
     return (
         "You are a helpful FH-Wedel assistant.\n"
-        "Answer strictly based on either the RAG context or chat memory.\n"
-        "If unsure, say 'I don't know'.\n\n"
-
-        f"### Conversation Memory (summary)\n{memory_summary or 'None'}\n\n"
+        "Answer strictly based on the provided RAG documents and memory.\n"
+        "If the answer is not clearly contained there, say 'I don't know'.\n\n"
+        f"### Memory Summary\n{memory_summary or 'None'}\n\n"
         f"### Recent Conversation\n{memory_buffer_text or 'None'}\n\n"
         f"### RAG Documents\n{context_docs}\n\n"
-        f"### Question\n{query}\n\n"
+        f"### Original Question\n{original_query}\n\n"
+        f"### Expanded Retrieval Query\n{expanded_query}\n\n"
         "### Answer in the same language as the question"
     )
 
@@ -188,23 +306,21 @@ def update_memory_summary(memory_summary, conversation_buffer):
     if not conversation_buffer:
         return memory_summary
 
-    convo_text = "\n".join(
-        f"{role}: {msg}" for role, msg in conversation_buffer
-    )
+    convo_text = "\n".join(f"{role}: {msg}" for role, msg in conversation_buffer)
 
     prompt = f"""
-    Condense the conversation below into a short memory summary.
-    Preserve important facts, user goals, preferences, and constraints.
-    Exclude small talk, greetings, and irrelevant phrasing.
+Condense the conversation below into a short memory summary.
+Keep only stable facts, preferences, constraints and goals.
+Ignore greetings, filler, and one-off details.
 
-    Existing summary:
-    {memory_summary}
+Existing summary:
+{memory_summary}
 
-    Conversation to add:
-    {convo_text}
+Conversation to add:
+{convo_text}
 
-    Updated memory summary:
-    """
+Updated summary:
+"""
 
     try:
         resp = client.chat.completions.create(
@@ -216,6 +332,7 @@ def update_memory_summary(memory_summary, conversation_buffer):
     except Exception:
         return memory_summary
 
+
 # -----------------------------------------
 # MAIN CHAT LOOP
 # -----------------------------------------
@@ -223,6 +340,7 @@ def chat_loop():
     print("🧠 FH-Wedel Chatbot ready! Type 'exit' to quit.\n")
 
     context_state = {"degree": [], "program": [], "doctype": [], "status": ["aktuell"]}
+    memory_summary = ""
 
     while True:
         query = input("👤 You: ").strip()
@@ -231,56 +349,63 @@ def chat_loop():
         if query.lower() in ["exit", "quit", "q"]:
             break
 
-        # Handle meta-commands
         if query.lower() == "show context":
             print(f"🧩 Active context: {format_context(context_state) or 'none'}\n")
             continue
+
         if query.lower() == "clear context":
             context_state = {"degree": [], "program": [], "doctype": [], "status": ["aktuell"]}
             print("🧹 Context cleared (status=aktuell retained)\n")
             continue
 
-        # --- Detect and update context ---
+        # 1) Kontext erkennen & updaten
         context_state = detect_context(query, context_state)
 
-        # --- Show active filters ---
+        # 2) Query neutral erweitern
+        expanded_query, original_query = expand_query_with_llm(
+            query, memory_summary, conversation_buffer
+        )
+
         print(f"🧩 Active context: {format_context(context_state) or 'none'}")
 
-        # --- Retrieve context-relevant chunks ---
+        # 3) RAG: relevante Chunks holen (auf Basis expanded_query + Filter)
         chunks = retrieve_relevant_chunks(
-            query,
+            expanded_query,
             degree=context_state.get("degree"),
             program=context_state.get("program"),
             doctype=context_state.get("doctype"),
-            status=context_state.get("status")
+            status=context_state.get("status"),
         )
 
         if not chunks:
             print("\n🤖 Assistant:\nI don't know.\n" + "=" * 100 + "\n")
+            # Turn trotzdem in Memory packen
+            conversation_buffer.append(("user", query))
+            if len(conversation_buffer) == MAX_MEMORY_TURNS:
+                memory_summary = update_memory_summary(memory_summary, conversation_buffer)
+                conversation_buffer.clear()
             continue
 
-        # --- Build and send chat completion ---
-        # build previous messages text
+        # 4) Antwort mit RAG + Memory generieren
         memory_buffer_text = "\n".join(f"{role}: {msg}" for role, msg in conversation_buffer)
-
-        prompt = build_prompt(query, chunks, memory_summary, memory_buffer_text)
+        prompt = build_prompt(expanded_query, chunks, memory_summary, memory_buffer_text, original_query)
 
         completion = client.chat.completions.create(
             model=CHAT_MODEL,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7
+            temperature=0.7,
         )
+        answer = completion.choices[0].message.content.strip()
 
-        answer = completion.choices[0].message.content
-        # store chat turn
+        # 5) Verlauf & Memory aktualisieren
         conversation_buffer.append(("user", query))
         conversation_buffer.append(("assistant", answer))
 
-        # summarize if buffer full
         if len(conversation_buffer) == MAX_MEMORY_TURNS:
             memory_summary = update_memory_summary(memory_summary, conversation_buffer)
             conversation_buffer.clear()
 
+        # 6) Ausgabe
         print("\n🤖 Assistant:\n" + textwrap.fill(answer, width=100))
         print("\n" + "=" * 100 + "\n")
 

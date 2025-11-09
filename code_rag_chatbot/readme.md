@@ -23,7 +23,7 @@ python download_pdfs.py
 
 ### 3️ Start Qdrant (vector database)
 ```bash
-docker run -p 6333:6333 -d qdrant/qdrant
+docker run -p 6333:6333 qdrant/qdrant
 ```
 
 Qdrant runs at [http://localhost:6333](http://localhost:6333).

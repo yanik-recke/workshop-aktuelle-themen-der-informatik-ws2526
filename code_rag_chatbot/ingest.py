@@ -10,8 +10,8 @@ from qdrant_client import QdrantClient
 from qdrant_client.http import models as rest
 from config import *
 from utils import sanitize_key
-
-import tiktoken  
+from transformers import AutoTokenizer, AutoModelForCausalLM
+# import tiktoken  
 
 # ---------------------------------------------------------
 # CONFIG
@@ -22,7 +22,7 @@ client = OpenAI(base_url=OPENAI_BASE_URL, api_key=OPENAI_API_KEY)
 qdrant = QdrantClient(url=QDRANT_URL)
 
 # Choose tokenizer encoding for the embedding model
-TOKENIZER = tiktoken.get_encoding("cl100k_base")
+TOKENIZER = AutoTokenizer.from_pretrained("Qwen/Qwen3-Embedding-0.6B")
  # adjust if your model uses different encoding
 
 # ---------------------------------------------------------
@@ -68,40 +68,73 @@ def extract_paragraphs(text: str):
             paragraphs.append((current_heading, para))
     return paragraphs
 
-def chunk_text_by_tokens(text: str, max_tokens: int = CHUNK_SIZE, overlap_tokens: int = CHUNK_OVERLAP):
-    """Chunk text dynamically by tokens, preserving paragraph boundaries and headings."""
+def chunk_text_by_tokens(
+    text: str,
+    max_tokens: int = CHUNK_SIZE,
+    overlap_tokens: int = CHUNK_OVERLAP,
+    add_eos: bool = True
+):
+    """
+    Tokenizes and chunks text using the Hugging Face tokenizer from EMBED_MODEL.
+    Preserves paragraph boundaries when possible, adds EOS tokens at the end of each chunk,
+    and supports token-level overlap for better context continuity.
+    """
+
     paragraphs = extract_paragraphs(text)
     chunks = []
-    current_chunk_parts = []
-    current_chunk_tokens = 0
-    last_para_text = ""
+    current_tokens = []
+    last_tokens = []
 
+    # Detect EOS token dynamically for Qwen / OpenAI-style models
+    eos_token = None
+    eos_token_id = None
+
+    # Qwen3 and similar use <|im_end|> or <eos>
+    if "<|im_end|>" in TOKENIZER.get_vocab():
+        eos_token = "<|im_end|>"
+        eos_token_id = TOKENIZER.convert_tokens_to_ids(eos_token)
+    elif "<eos>" in TOKENIZER.get_vocab():
+        eos_token = "<eos>"
+        eos_token_id = TOKENIZER.convert_tokens_to_ids(eos_token)
+    elif TOKENIZER.eos_token:
+        eos_token = TOKENIZER.eos_token
+        eos_token_id = TOKENIZER.eos_token_id
+
+    # Iterate over paragraphs and group into token-sized chunks
     for heading, para in paragraphs:
-        # Prepend heading if exists
-        if heading:
-            para_text = f"{heading}\n{para}"
-        else:
-            para_text = para
-        para_tokens = count_tokens(para_text)
+        para_text = f"{heading}\n{para}" if heading else para
+        token_ids = TOKENIZER.encode(para_text, add_special_tokens=False)
 
-        # If adding this paragraph would exceed max_tokens, flush current chunk
-        if current_chunk_tokens + para_tokens > max_tokens and current_chunk_parts:
-            chunk = "\n\n".join(current_chunk_parts).strip()
-            chunks.append(chunk)
+        # Falls ein Absatz an sich zu groß ist → splitte innerhalb
+        if len(token_ids) > max_tokens:
+            for i in range(0, len(token_ids), max_tokens - overlap_tokens):
+                sub_ids = token_ids[i:i + max_tokens]
+                sub_text = TOKENIZER.decode(sub_ids, skip_special_tokens=True).strip()
+                if add_eos and eos_token:
+                    sub_text += f" {eos_token}"
+                chunks.append(sub_text)
+            continue
 
-            # For overlap: include last paragraph text as new start
-            # (we could use last_para_text's last overlap_tokens if desired)
-            current_chunk_parts = [last_para_text] if last_para_text else []
-            current_chunk_tokens = count_tokens(last_para_text) if last_para_text else 0
-        # Append paragraph
-        current_chunk_parts.append(para_text)
-        current_chunk_tokens += para_tokens
-        last_para_text = para_text
+        # Standardlogik: packe mehrere Absätze zusammen bis max_tokens erreicht
+        if len(current_tokens) + len(token_ids) > max_tokens and current_tokens:
+            chunk_text = TOKENIZER.decode(current_tokens, skip_special_tokens=True).strip()
+            if add_eos and eos_token:
+                chunk_text += f" {eos_token}"
+            chunks.append(chunk_text)
+            if overlap_tokens > 0:
+                current_tokens = last_tokens[-overlap_tokens:].copy()
+            else:
+                current_tokens = []
 
-    # Add leftover
-    if current_chunk_parts:
-        chunk = "\n\n".join(current_chunk_parts).strip()
-        chunks.append(chunk)
+        current_tokens.extend(token_ids)
+        last_tokens = token_ids
+
+    # Flush final chunk
+    if current_tokens:
+        chunk_text = TOKENIZER.decode(current_tokens, skip_special_tokens=True).strip()
+        if add_eos and eos_token:
+            chunk_text += f" {eos_token}"
+        chunks.append(chunk_text)
 
     return chunks
 
