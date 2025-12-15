@@ -12,11 +12,14 @@ QDRANT_COLLECTION = "fh_wedel_pdfs"
 
 # Achtung: Muss zur Dimension deines Embedding-Modells passen
 # (z.B. 1536 wie bei vielen OpenAI-kompatiblen Embedding-Modellen)
-EMBEDDING_DIM = 1536  # ggf. anpassen
+EMBEDDING_DIM = 1024  # Qwen3-0.6b embedding model produces 1024-dim vectors
 
 # === Modelle (über OpenAI-kompatibles API, z.B. LM Studio) ===
-OPENAI_CHAT_MODEL = "qwen/qwen3-4b-2507"
-OPENAI_EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"
+OPENAI_CHAT_MODEL = "qwen/qwen3-vl-4b"
+OPENAI_EMBED_MODEL = "text-embedding-qwen3-0.6b-text-embedding"
+#OPENAI_CHAT_MODEL = "qwen/qwen3-4b-2507"
+#OPENAI_EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"
+
 OPENAI_CLASSIFIER_MODEL = OPENAI_CHAT_MODEL  # eigenes Modell möglich
 
 # WICHTIG: Setze diese Umgebungsvariablen für LM Studio o.ä.:
@@ -24,7 +27,7 @@ OPENAI_CLASSIFIER_MODEL = OPENAI_CHAT_MODEL  # eigenes Modell möglich
 #   export OPENAI_BASE_URL="http://localhost:1234/v1"
 
 # === RAG / Chat ===
-TOP_K = 20
+TOP_K = 5  # Increase for more diverse results
 MAX_MEMORY_TURNS = 5
 MAX_CONTEXT_TOKENS = 5000
 # === Fachhochschule Wedel Kategorien ===

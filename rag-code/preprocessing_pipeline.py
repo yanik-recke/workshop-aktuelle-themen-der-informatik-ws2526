@@ -162,7 +162,7 @@ def prepare_sources_and_meta() -> Tuple[List[Path], List[dict]]:
     """
     metadb = load_metadata(Path(META_FILE))
     entries = find_pdfs_with_metadata(DATA_DIR, metadb)
-    entries = entries[:10]
+    # entries = entries[:10]  # Removed limit - index all PDFs
     sources = [e["path"] for e in entries]
     metas = [e["meta"] for e in entries]
     return sources, metas

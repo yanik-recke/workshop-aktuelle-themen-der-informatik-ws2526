@@ -1,6 +1,6 @@
-from typing import Optional
+﻿from typing import Optional
 from haystack_integrations.document_stores.qdrant import QdrantDocumentStore
-from config import EMBEDDING_DIM
+from config import EMBEDDING_DIM, QDRANT_COLLECTION
 _document_store: Optional[QdrantDocumentStore] = None
 
 def get_document_store() -> QdrantDocumentStore:
@@ -8,8 +8,8 @@ def get_document_store() -> QdrantDocumentStore:
     if _document_store is None:
         _document_store = QdrantDocumentStore(
             path="qdrant_data",
-            index="documents",
-            embedding_dim=1024,      # oder dein EMBEDDING_DIM
-            recreate_index=False     # nur beim ersten Lauf!
+            index=QDRANT_COLLECTION,
+            embedding_dim=EMBEDDING_DIM,      # oder dein EMBEDDING_DIM
+            recreate_index=False       # Reindexing with all PDFs 
         )
     return _document_store

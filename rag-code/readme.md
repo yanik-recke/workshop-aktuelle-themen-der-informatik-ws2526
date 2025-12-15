@@ -45,6 +45,12 @@ export OPENAI_BASE_URL="http://localhost:1234/v1"
 export OPENAI_API_KEY="not-needed"
 ```
 
+### Windows
+```bash
+set OPENAI_API_KEY=dummy
+set OPENAI_BASE_URL=http://localhost:1234/v1
+```
+
 ---
 
 **Summary:**  

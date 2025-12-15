@@ -94,8 +94,17 @@ class ModulhandbuchParser(BaseParser):
     # ---------------------------------------------------------
     # Chunking
     # ---------------------------------------------------------
-    def _section_to_chunks(self, module_name: str, sections: Dict[str, str]) -> List[Document]:
+    def _section_to_chunks(
+        self, 
+        module_name: str, 
+        sections: Dict[str, str],
+        program: str = "",
+        degree: str = "",
+    ) -> List[Document]:
         chunks: List[Document] = []
+        
+        # Context header to include in each chunk for better retrieval
+        context_header = f"Modul: {module_name}\nStudiengang: {program} ({degree})\n\n"
 
         for subsection, content in sections.items():
             if not content.strip():
@@ -103,31 +112,33 @@ class ModulhandbuchParser(BaseParser):
 
             lines = content.split("\n")
             current = []
-            length = 0
+            length = len(context_header)  # Account for header
 
             for line in lines:
                 if length + len(line) > MAX_CHUNK_SIZE:
+                    chunk_content = context_header + f"Abschnitt: {subsection}\n" + "\n".join(current)
                     chunks.append(
                         Document(
-                            content="\n".join(current),
+                            content=chunk_content,
                             meta={
-                                "module": module_name,
+                                "module_name": module_name,
                                 "section": subsection,
                             }
                         )
                     )
                     current = []
-                    length = 0
+                    length = len(context_header)
 
                 current.append(line)
                 length += len(line)
 
             if current:
+                chunk_content = context_header + f"Abschnitt: {subsection}\n" + "\n".join(current)
                 chunks.append(
                     Document(
-                        content="\n".join(current),
+                        content=chunk_content,
                         meta={
-                            "module": module_name,
+                            "module_name": module_name,
                             "section": subsection,
                         }
                     )
@@ -151,6 +162,13 @@ class ModulhandbuchParser(BaseParser):
 
         documents: List[Document] = []
 
+        base_meta = self._base_meta(meta)
+        program = base_meta.get("program", "Unbekannter Studiengang")
+        degree = base_meta.get("degree", "Unbekannter Abschluss")
+        
+        # Collect all module names for summary
+        all_modules = []
+
         for block in module_blocks:
             sections = self._extract_sections(block)
             module_name = (
@@ -158,14 +176,34 @@ class ModulhandbuchParser(BaseParser):
                 or sections.get("Modultitel")
                 or "Unbekanntes Modul"
             ).strip()
+            
+            all_modules.append(module_name)
 
-            section_docs = self._section_to_chunks(module_name, sections)
+            section_docs = self._section_to_chunks(
+                module_name, 
+                sections,
+                program=program,
+                degree=degree,
+            )
 
             # Metadaten anreichern
-            base_meta = self._base_meta(meta)
             for d in section_docs:
                 d.meta = {**base_meta, **d.meta}
 
             documents.extend(section_docs)
+        
+        # Create a summary document listing all modules in this handbook
+        if all_modules:
+            summary_content = f"""Modulhandbuch für {program} ({degree}) an der FH Wedel
+Studiengang: {program}
+Abschluss: {degree}
+Anzahl Module: {len(all_modules)}
+
+Liste aller Module im Modulhandbuch:
+""" + "\n".join(f"  - {m}" for m in all_modules if m != "Unbekanntes Modul")
+            
+            summary_meta = dict(base_meta)
+            summary_meta["chunk_type"] = "module_overview"
+            documents.insert(0, Document(content=summary_content, meta=summary_meta))
 
         return documents

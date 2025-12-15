@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import List, Dict
 
 from haystack.dataclasses import Document
-from haystack.components.preprocessors import DocumentCleaner
+from haystack.components.preprocessors import DocumentCleaner, DocumentSplitter
 from haystack.components.embedders import OpenAIDocumentEmbedder
 from haystack.components.writers import DocumentWriter
 from haystack.document_stores.types import DuplicatePolicy
@@ -61,6 +61,67 @@ def clean_documents(docs: List[Document]) -> List[Document]:
     return cleaner.run(documents=docs)["documents"]
 
 
+def split_documents(docs: List[Document]) -> List[Document]:
+    """Split by sentence for more coherent chunks, but skip already-structured docs."""
+    # Separate docs that should NOT be split (curriculum, modulhandbuch have structured chunks)
+    skip_split = []
+    to_split = []
+    
+    for doc in docs:
+        doctype = (doc.meta.get("doctype") or "").lower()
+        chunk_type = doc.meta.get("chunk_type", "")
+        # Skip splitting for structured documents
+        if doctype in ["studienverlaufsplan", "modulhandbuch"] or chunk_type in ["module_overview", "module_detail"]:
+            skip_split.append(doc)
+        else:
+            to_split.append(doc)
+    
+    if to_split:
+        splitter = DocumentSplitter(
+            split_by="sentence",
+            split_length=5,        # 5 sentences per chunk
+            split_overlap=1,       # 1 sentence overlap
+        )
+        splitter.warm_up()  # Required for sentence splitting (loads nltk)
+        split_result = splitter.run(documents=to_split)["documents"]
+    else:
+        split_result = []
+    
+    print(f"  Skipped splitting for {len(skip_split)} structured docs")
+    return skip_split + split_result
+
+
+def deduplicate_chunks(docs: List[Document], similarity_threshold: float = 0.95) -> List[Document]:
+    """Remove near-duplicate chunks based on content + metadata (program/degree)."""
+    if not docs:
+        return docs
+    
+    unique_docs = []
+    seen_hashes = set()
+    
+    for doc in docs:
+        meta = doc.meta or {}
+        # Include program and degree in dedup key to avoid removing
+        # same module content from different programs
+        program = meta.get("program", "")
+        degree = meta.get("degree", "")
+        
+        # Simple hash-based dedup on normalized content + metadata
+        content_normalized = " ".join(doc.content.lower().split())
+        # Use first 500 chars + program/degree for comparison
+        content_key = f"{program}|{degree}|{content_normalized[:500]}"
+        
+        if content_key not in seen_hashes:
+            seen_hashes.add(content_key)
+            unique_docs.append(doc)
+    
+    removed = len(docs) - len(unique_docs)
+    if removed > 0:
+        print(f"Deduplizierung: {removed} Duplikate entfernt")
+    
+    return unique_docs
+
+
 def embed_documents(docs: List[Document]) -> List[Document]:
     embedder = OpenAIDocumentEmbedder(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
@@ -82,28 +143,39 @@ collector = MetadataCollector()
 def build_embed_text(doc: Document) -> str:
     """
     Baut den finalen Text für Embeddings:
-    - Injektion relevanter Metadaten als Präfix
-    - bessere semantische Suche (Semester, Modul-ID, Degree, Program, etc.)
+    - Injektion relevanter Metadaten als semantischer Kontext
+    - bessere semantische Suche durch natürlichsprachige Beschreibung
     """
     meta = doc.meta or {}
 
-    relevant_keys = [
-        "degree", "program", "doctype", "module_id", "module_name",
-        "ects", "semester", "track", "status", "version"
-    ]
-
-    meta_text_parts = []
-    for k in relevant_keys:
-        v = meta.get(k)
-        if isinstance(v, (str, int, float)) and str(v).strip():
-            meta_text_parts.append(f"{k.capitalize()}: {v}")
-
-    meta_prefix = " | ".join(meta_text_parts)
-
-    if not meta_prefix:
+    # Build natural language context for better embedding
+    context_parts = []
+    
+    if meta.get("degree"):
+        context_parts.append(f"Studienabschluss: {meta['degree']}")
+    if meta.get("program"):
+        context_parts.append(f"Studiengang: {meta['program']}")
+    if meta.get("doctype"):
+        context_parts.append(f"Dokumenttyp: {meta['doctype']}")
+    if meta.get("module_name"):
+        context_parts.append(f"Modul: {meta['module_name']}")
+    if meta.get("module_id"):
+        context_parts.append(f"Modul-ID: {meta['module_id']}")
+    if meta.get("semester"):
+        context_parts.append(f"Semester: {meta['semester']}")
+    if meta.get("section"):
+        context_parts.append(f"Abschnitt: {meta['section']}")
+    if meta.get("paragraph"):
+        context_parts.append(f"Paragraph: {meta['paragraph']}")
+    if meta.get("ects"):
+        context_parts.append(f"ECTS: {meta['ects']}")
+    
+    if not context_parts:
         return doc.content
 
-    return f"{meta_prefix}\n\n{doc.content}"
+    # Natural language header for better semantic matching
+    context_header = "Kontext: " + ", ".join(context_parts) + "."
+    return f"{context_header}\n\n{doc.content}"
 
 
 def parse_pdf_with_correct_parser(path: Path, meta: Dict) -> List[Document]:
@@ -154,7 +226,15 @@ def index_pdfs_with_metadata():
 
     cleaned = clean_documents(all_docs)
 
-    embedded = embed_documents(cleaned)
+    # Split into sentence-based chunks for coherent retrieval
+    splitted = split_documents(cleaned)
+    print(f"📄 Nach Splitting: {len(splitted)} Chunks")
+
+    # Remove near-duplicate chunks (e.g., similar PVO versions)
+    deduped = deduplicate_chunks(splitted)
+    print(f"📄 Nach Deduplizierung: {len(deduped)} Chunks")
+
+    embedded = embed_documents(deduped)
 
     write_documents(embedded)
 
