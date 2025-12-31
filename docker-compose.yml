@@ -12,8 +12,7 @@ services:
       - QDRANT__SERVICE__GRPC_PORT=6334
     restart: unless-stopped
 
-  # Ollama - Local LLM Service (DISABLED - using host machine Ollama instead)
-  # Uncomment this service if you want to run Ollama in Docker
+  # Ollama - Local LLM Service
   # ollama:
   #   image: ollama/ollama:latest
   #   container_name: fh-wedel-ollama
@@ -45,7 +44,7 @@ services:
       - ./rag-code:/app/rag-code
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
-      # Use host.docker.internal to access Ollama running on host machine
+      # docker.internal weil ich Ollama lokal laufe, wegen GPU Acceleration
       - OPENAI_BASE_URL=${OPENAI_BASE_URL:-http://host.docker.internal:11434/v1}
       - QDRANT_URL=http://qdrant:6333
     command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
@@ -66,7 +65,6 @@ services:
     depends_on:
       - qdrant
     volumes:
-      # Mount data directories for persistence
       - ./rag-code/data_fh_wedel:/app/rag-code/data_fh_wedel
       - ./rag-code/fhwedel_docs.json:/app/rag-code/fhwedel_docs.json
       - ./rag-code/fhwedel_docs.csv:/app/rag-code/fhwedel_docs.csv
@@ -84,6 +82,7 @@ services:
     profiles:
       - cli
 
+  # Optional, für Download der Dokumente
   # download-docs:
   #   build:
   #     context: .

@@ -1,7 +1,5 @@
 # FH Wedel RAG Chatbot - REST API Documentation
 
-The REST API provides HTTP endpoints for querying the FH Wedel RAG system without needing an interactive CLI.
-
 ## Quick Start
 
 ### Start the API Server
@@ -498,46 +496,10 @@ docker-compose logs -f rag-api
 
 ---
 
-## Troubleshooting
-
-### API Returns 503 (Service Unavailable)
-
-- The RAG pipeline failed to initialize
-- Check logs: `docker-compose logs rag-api`
-- Ensure Qdrant is running: `curl http://localhost:6333/healthz`
-
-### Session Not Found (404)
-
-- Session expired (> 1 hour of inactivity)
-- Session was manually deleted
-- Solution: Start a new conversation without `session_id`
-
-### Slow Response Times
-
-- First query initializes the pipeline (can take 10-30s)
-- Subsequent queries are faster (~1-5s depending on model)
-- Consider increasing `TOP_K` in `config.py` for better quality but slower responses
-
-### Debug Mode Shows No Documents
-
-- Qdrant collection is empty (run indexing)
-- Filters are too restrictive
-- Try without context override
-
----
 
 ## Example Web Interface
 
-See `client.html` for a simple web interface to interact with the API.
-
----
-
-## API Limits
-
-- **Session timeout**: 1 hour
-- **Max memory turns**: 5 (configurable in `config.py`)
-- **Max context tokens**: 5000 (configurable in `config.py`)
-- **Top-K documents**: 5 (configurable in `config.py`)
+See `client.html` for a simple web interface to interact with the API. For Test until we have a real frontend.
 
 ---
 
@@ -553,15 +515,4 @@ export OPENAI_BASE_URL=http://localhost:1234/v1
 export QDRANT_URL=http://localhost:6333
 uvicorn api:app --reload
 ```
-
-### Hot Reload in Docker
-
-The docker-compose configuration includes `--reload` flag, so code changes are automatically reloaded.
-
 ---
-
-## Further Reading
-
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [Haystack Documentation](https://docs.haystack.deepset.ai/)
-- [Qdrant API Reference](https://qdrant.tech/documentation/quick-start/)

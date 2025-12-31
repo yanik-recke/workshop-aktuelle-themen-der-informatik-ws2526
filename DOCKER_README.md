@@ -1,14 +1,5 @@
 # Docker Setup for FH Wedel RAG Chatbot
 
-This guide explains how to run the FH Wedel RAG Chatbot using Docker and Docker Compose.
-
-## Prerequisites
-
-- Docker Engine 20.10+
-- Docker Compose 2.0+
-- At least 8GB of free RAM
-- (Optional) NVIDIA GPU with Docker GPU support for faster inference
-
 ## Quick Start
 
 ### 1. Clone and Navigate
@@ -154,31 +145,6 @@ If you prefer LM Studio running on your host machine:
    EMBEDDING_DIM = 1536  # Change to match OpenAI embedding dimension
    ```
 
-## Common Operations
-
-### View Logs
-```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f rag-app
-docker-compose logs -f qdrant
-docker-compose logs -f ollama
-```
-
-### Rebuild Application
-After code changes:
-```bash
-docker-compose build rag-app
-docker-compose up -d rag-app
-```
-
-### Re-index Documents
-After adding new PDFs:
-```bash
-docker-compose --profile setup run --rm indexing
-```
 
 ### Access Qdrant Dashboard
 Open http://localhost:6333/dashboard in your browser.
@@ -257,33 +223,6 @@ docker-compose down --rmi all
 
 Currently, PyTorch GPU support in Docker is limited on macOS. Consider running natively or using CPU inference.
 
-## Troubleshooting
-
-### Qdrant Connection Refused
-- Wait 30-60 seconds after starting for Qdrant to initialize
-- Check health: `curl http://localhost:6333/`
-- View logs: `docker-compose logs qdrant`
-
-### Ollama Model Not Found
-- Ensure models are downloaded: `docker exec -it fh-wedel-ollama ollama list`
-- Model names in `config.py` must match Ollama's naming convention
-
-### Out of Memory
-- Reduce `TOP_K` in `config.py` (default: 5)
-- Use smaller models (e.g., `qwen2.5:3b` instead of `7b`)
-- Allocate more memory to Docker (Docker Desktop settings)
-
-### Slow Indexing
-- GPU acceleration helps significantly
-- Reduce batch size in `indexing_pipeline.py`
-- Process fewer documents initially for testing
-
-### Permission Errors
-On Linux, fix ownership:
-```bash
-sudo chown -R $USER:$USER rag-code/data_fh_wedel rag-code/qdrant_data
-```
-
 ## Development Workflow
 
 For active development:
@@ -306,13 +245,6 @@ For active development:
    docker-compose run --rm rag-app pytest
    ```
 
-## Performance Optimization
-
-- **Embeddings**: Cache embeddings to avoid recomputation
-- **Qdrant**: Use `prefer_grpc=True` in client for faster retrieval
-- **Ollama**: Increase `OLLAMA_NUM_PARALLEL` for concurrent requests
-- **Memory**: Monitor with `docker stats`
-
 ## Alternative: Docker Without Compose
 
 Build and run manually:
@@ -334,24 +266,3 @@ docker run -it --rm \
   fh-wedel-rag
 ```
 
-## Next Steps
-
-1. Review `rag-code/config.py` for customization
-2. Explore different models and parameters
-3. Implement web UI or REST API wrapper
-4. Add monitoring and logging
-5. Deploy to production (Kubernetes, cloud providers)
-
-## Resources
-
-- [Haystack Documentation](https://docs.haystack.deepset.ai/)
-- [Qdrant Documentation](https://qdrant.tech/documentation/)
-- [Ollama Documentation](https://github.com/ollama/ollama/blob/main/docs/api.md)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
-
-## Support
-
-For issues specific to:
-- **RAG implementation**: Check `rag-code/readme.md`
-- **Docker setup**: Review logs with `docker-compose logs`
-- **FH Wedel data**: Verify PDFs in `data_fh_wedel/` directory
