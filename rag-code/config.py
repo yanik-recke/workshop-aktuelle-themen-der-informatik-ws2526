@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # === Pfade ===
@@ -7,7 +8,8 @@ DATA_DIR = PROJECT_ROOT # / "data_fh_wedel_pdfs"
 META_FILE = PROJECT_ROOT / "fhwedel_docs.json"
 
 # === Qdrant ===
-QDRANT_URL = "http://localhost:6333"
+# Use env, fallback to localhost as default value
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 QDRANT_COLLECTION = "fh_wedel_pdfs"
 
 # Achtung: Muss zur Dimension deines Embedding-Modells passen
@@ -15,8 +17,8 @@ QDRANT_COLLECTION = "fh_wedel_pdfs"
 EMBEDDING_DIM = 1024  # Qwen3-0.6b embedding model produces 1024-dim vectors
 
 # === Modelle (über OpenAI-kompatibles API, z.B. LM Studio) ===
-OPENAI_CHAT_MODEL = "qwen/qwen3-vl-4b"
-OPENAI_EMBED_MODEL = "text-embedding-qwen3-0.6b-text-embedding"
+OPENAI_CHAT_MODEL = "deepseek-r1:1.5b"
+OPENAI_EMBED_MODEL = "qwen3-embedding:0.6b"
 #OPENAI_CHAT_MODEL = "qwen/qwen3-4b-2507"
 #OPENAI_EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"
 

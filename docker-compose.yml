@@ -1,0 +1,120 @@
+services:
+  # Qdrant Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: fh-wedel-qdrant
+    ports:
+      - "6333:6333"  # HTTP API
+      - "6334:6334"  # gRPC API
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    restart: unless-stopped
+
+  # Ollama - Local LLM Service (DISABLED - using host machine Ollama instead)
+  # Uncomment this service if you want to run Ollama in Docker
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: fh-wedel-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - /Volumes/ext-ssd1/ollama-models:/root/.ollama
+  #   environment:
+  #     - OLLAMA_HOST=0.0.0.0
+  #   restart: unless-stopped
+
+  # RAG API Service
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fh-wedel-rag-api
+    depends_on:
+      - qdrant
+    ports:
+      - "8000:8000"  # API endpoint
+    volumes:
+      # Mount data directories for persistence
+      - ./rag-code/data_fh_wedel:/app/rag-code/data_fh_wedel
+      - ./rag-code/fhwedel_docs.json:/app/rag-code/fhwedel_docs.json
+      - ./rag-code/fhwedel_docs.csv:/app/rag-code/fhwedel_docs.csv
+      - ./rag-code/metadata_cache.json:/app/rag-code/metadata_cache.json
+      # For development: mount source code for hot reload
+      - ./rag-code:/app/rag-code
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
+      # Use host.docker.internal to access Ollama running on host machine
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-http://host.docker.internal:11434/v1}
+      - QDRANT_URL=http://qdrant:6333
+    command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # RAG CLI (for interactive use)
+  rag-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fh-wedel-rag-cli
+    depends_on:
+      - qdrant
+    volumes:
+      # Mount data directories for persistence
+      - ./rag-code/data_fh_wedel:/app/rag-code/data_fh_wedel
+      - ./rag-code/fhwedel_docs.json:/app/rag-code/fhwedel_docs.json
+      - ./rag-code/fhwedel_docs.csv:/app/rag-code/fhwedel_docs.csv
+      - ./rag-code/metadata_cache.json:/app/rag-code/metadata_cache.json
+      # For development: mount source code
+      - ./rag-code:/app/rag-code
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
+      # Use host.docker.internal to access Ollama running on host machine
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-http://host.docker.internal:11434/v1}
+      - QDRANT_URL=http://qdrant:6333
+    command: python chat_cli.py
+    stdin_open: true
+    tty: true
+    profiles:
+      - cli
+
+  # download-docs:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: fh-wedel-download
+  #   volumes:
+  #     - ./rag-code/data_fh_wedel:/app/rag-code/data_fh_wedel
+  #     - ./rag-code:/app/rag-code
+  #   command: python download_pdfs.py
+  #   profiles:
+  #     - setup
+
+  # indexing:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: fh-wedel-indexing
+  #   depends_on:
+  #     qdrant:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./rag-code/data_fh_wedel:/app/rag-code/data_fh_wedel
+  #     - ./rag-code:/app/rag-code
+  #   environment:
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
+  #     - OPENAI_BASE_URL=${OPENAI_BASE_URL:-http://ollama:11434/v1}
+  #     - QDRANT_URL=http://qdrant:6333
+  #   command: python indexing_pipeline.py
+  #   profiles:
+  #     - setup
+
+volumes:
+  qdrant_data:
+    driver: local
