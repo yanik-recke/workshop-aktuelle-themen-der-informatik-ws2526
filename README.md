@@ -1,5 +1,31 @@
 # Workshop: Aktuelle Themen der Informatik - WS25/26
 
+## Quick Start with Docker
+
+The entire application stack can be run with Docker Compose:
+
+```bash
+# Start all services (Frontend, RAG API, MongoDB, Qdrant)
+docker compose up frontend -d
+
+# View logs
+docker compose logs -f frontend
+
+# Stop all services
+docker compose down
+```
+
+**Services:**
+- Frontend (Next.js): http://localhost:3000
+- RAG API (FastAPI): http://localhost:8000
+- MongoDB: localhost:27017
+- Qdrant: http://localhost:6333
+
+**Features:**
+- Hot reload enabled for both frontend and backend
+- Persistent data storage with Docker volumes
+- Automatic service dependencies and health checks
+
 ## Architecture Overview
 
 This project implements a RAG (Retrieval-Augmented Generation) chatbot for FH Wedel using Haystack, OpenAI embeddings, and Qdrant vector database.

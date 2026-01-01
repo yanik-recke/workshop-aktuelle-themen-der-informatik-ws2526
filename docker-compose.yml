@@ -75,6 +75,29 @@ services:
       retries: 3
       start_period: 60s
 
+  # Frontend (Next.js Application)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fh-wedel-frontend
+    depends_on:
+      - rag-api
+      - mongodb
+    ports:
+      - "3000:3000"  # Frontend application
+    volumes:
+      # Mount source code for hot reload
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017
+      - NEXT_PUBLIC_RAG_API_URL=http://localhost:8000
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
   # RAG CLI (for interactive use)
   rag-cli:
     build:
