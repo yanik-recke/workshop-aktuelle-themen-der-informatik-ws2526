@@ -203,15 +203,16 @@ export function ChatTab() {
     }
 
     try {
-      // Call the search API
-      const response = await fetch(`/api/v1/search`, {
+      // Call the RAG API
+      const ragApiUrl = process.env.NEXT_PUBLIC_RAG_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${ragApiUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: message.text,
-          module: model,
+          query: message.text,
+          session_id: chatId,
         }),
       });
 
@@ -219,7 +220,8 @@ export function ChatTab() {
         throw new Error(`API request failed with status ${response.status}`);
       }
 
-      const responseText = await response.text();
+      const responseData = await response.json();
+      const responseText = responseData.answer;
 
       // Update the assistant message with the actual response
       let finalChat: Chat | null = null;

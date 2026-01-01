@@ -12,16 +12,25 @@
    npm install
    ```
 
-2. Configure MongoDB:
+2. Configure environment variables:
    - Copy `.env.local.example` to `.env.local`
-   - Update `MONGODB_URI` with your MongoDB connection string
+   - Update the following variables:
+     - `MONGODB_URI`: MongoDB connection string
+     - `NEXT_PUBLIC_RAG_API_URL`: RAG API endpoint URL
 
    For Docker (using the docker-compose.yml in the root):
-   ```
+   ```env
    MONGODB_URI=mongodb://admin:password@localhost:27017
+   NEXT_PUBLIC_RAG_API_URL=http://localhost:8000
    ```
 
 ## Running the Application
+
+**Prerequisites:** Make sure the RAG API and MongoDB services are running:
+```bash
+# From the project root directory
+docker compose up rag-api mongodb -d
+```
 
 Development mode:
 ```bash
@@ -34,6 +43,8 @@ npm run build
 npm start
 ```
 
+The application will be available at `http://localhost:3000`
+
 ## MongoDB Collections
 
 The application uses the following MongoDB collections in the `chatbot` database:
@@ -43,6 +54,8 @@ The application uses the following MongoDB collections in the `chatbot` database
 ## Features
 
 - Chat history persistence in MongoDB
+- Integration with RAG API backend (rag-code/api.py)
+- Session-based conversation continuity with RAG API
 - Real-time chat updates
 - Chat deletion with MongoDB sync
-- Hardcoded AI model selection (Gemini, ChatGPT, Llama)
+- Model selection interface (Gemini, ChatGPT, Llama)
