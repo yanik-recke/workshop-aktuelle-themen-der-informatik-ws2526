@@ -12,6 +12,25 @@ services:
       - QDRANT__SERVICE__GRPC_PORT=6334
     restart: unless-stopped
 
+  # MongoDB Database
+  mongodb:
+    image: mongo:latest
+    container_name: fh-wedel-mongodb
+    ports:
+      - "27017:27017"  # MongoDB port
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # Ollama - Local LLM Service
   # ollama:
   #   image: ollama/ollama:latest
@@ -116,4 +135,6 @@ services:
 
 volumes:
   qdrant_data:
+    driver: local
+  mongodb_data:
     driver: local
