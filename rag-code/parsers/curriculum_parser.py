@@ -5,7 +5,6 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
-import pdfplumber
 from haystack.dataclasses import Document
 
 from .base_parser import BaseParser
@@ -48,87 +47,86 @@ class CurriculumParser(BaseParser):
         current_semester: Optional[int] = None
         current_module: Optional[Dict] = None
 
-        with pdfplumber.open(str(path)) as pdf:
-            for page in pdf.pages:
-                text = page.extract_text() or ""
-                lines = text.splitlines()
+        # Read markdown file instead of PDF
+        text = self._read_markdown(path)
+        lines = text.splitlines()
 
-                for raw_line in lines:
-                    line = raw_line.strip()
-                    if not line:
-                        continue
+        for raw_line in lines:
+            line = raw_line.strip()
+            if not line:
+                continue
 
-                    # -------------------------------
-                    # 1) Bachelor-style "1. Semester"
-                    # -------------------------------
-                    m_sem_header = SEMESTER_HEADER_RX.match(line)
-                    if m_sem_header:
-                        current_semester = int(m_sem_header.group(1))
-                        continue
+            # -------------------------------
+            # 1) Bachelor-style "1. Semester"
+            # -------------------------------
+            m_sem_header = SEMESTER_HEADER_RX.match(line)
+            if m_sem_header:
+                current_semester = int(m_sem_header.group(1))
+                continue
 
-                    # -------------------------------
-                    # 2) Bachelor-style MB-Module
-                    # -------------------------------
-                    m_mb = MB_RX.match(line)
-                    if m_mb:
-                        if current_module:
-                            modules.append(current_module)
+            # -------------------------------
+            # 2) Bachelor-style MB-Module
+            # -------------------------------
+            m_mb = MB_RX.match(line)
+            if m_mb:
+                if current_module:
+                    modules.append(current_module)
 
-                        current_module = {
-                            "code": m_mb.group(1),
-                            "title": m_mb.group(2),
-                            "semester": current_semester,
-                            "lines": [],
-                        }
-                        continue
+                current_module = {
+                    "code": m_mb.group(1),
+                    "title": m_mb.group(2),
+                    "semester": current_semester,
+                    "lines": [],
+                }
+                continue
 
-                    # bachelor TB rows
-                    m_tb = TB_RX.match(line)
-                    if m_tb and current_module:
-                        current_module["lines"].append(line)
-                        continue
+            # bachelor TB rows
+            m_tb = TB_RX.match(line)
+            if m_tb and current_module:
+                current_module["lines"].append(line)
+                continue
 
-                    # -------------------------------
-                    # 3) Master-style MM module block
-                    # -------------------------------
-                    m_mm = MM_RX.match(line)
-                    if m_mm:
-                        if current_module:
-                            modules.append(current_module)
+            # -------------------------------
+            # 3) Master-style MM module block
+            # -------------------------------
+            m_mm = MM_RX.match(line)
+            if m_mm:
+                if current_module:
+                    modules.append(current_module)
 
-                        current_module = {
-                            "code": m_mm.group(1),
-                            "title": m_mm.group(2),
-                            "semester": None,
-                            "lines": [],
-                        }
-                        continue
+                current_module = {
+                    "code": m_mm.group(1),
+                    "title": m_mm.group(2),
+                    "semester": None,
+                    "lines": [],
+                }
+                continue
 
-                    # -------------------------------
-                    # 4) Master-style TM (Teilmodule)
-                    # -------------------------------
-                    m_tm = TM_RX.match(line)
-                    if m_tm and current_module:
-                        # Try to extract semester from table columns
-                        m_semcol = SEMESTER_COL_RX.search(line)
-                        semester = int(m_semcol.group(1)) if m_semcol else None
+            # -------------------------------
+            # 4) Master-style TM (Teilmodule)
+            # -------------------------------
+            m_tm = TM_RX.match(line)
+            if m_tm and current_module:
+                # Try to extract semester from table columns
+                m_semcol = SEMESTER_COL_RX.search(line)
+                semester = int(m_semcol.group(1)) if m_semcol else None
 
-                        current_module["lines"].append(line)
+                current_module["lines"].append(line)
 
-                        if semester and not current_module.get("semester"):
-                            current_module["semester"] = semester
+                if semester and not current_module.get("semester"):
+                    current_module["semester"] = semester
 
-                        continue
+                continue
 
-                    # -------------------------------
-                    # 5) Other lines inside module
-                    # -------------------------------
-                    if current_module:
-                        current_module["lines"].append(line)
-
-            # final block
+            # -------------------------------
+            # 5) Other lines inside module
+            # -------------------------------
             if current_module:
-                modules.append(current_module)
+                current_module["lines"].append(line)
+
+        # final block
+        if current_module:
+            modules.append(current_module)
 
         # --------------------------
         # Build Haystack documents

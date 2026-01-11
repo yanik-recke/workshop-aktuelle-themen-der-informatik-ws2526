@@ -44,15 +44,17 @@ def select_parser(filename: str):
         return PARSERS[2]
     return None
 
-from haystack.components.converters.pypdf import PyPDFToDocument
-pypdf_converter = PyPDFToDocument()
-
-
 def fallback_extract(path: Path, meta: Dict) -> List[Document]:
-    result = pypdf_converter.run(sources=[path], meta=[meta])
-    docs = result["documents"]
-    print(f"⚠️ Fallback-Parser benutzt für {path.name} ({len(docs)} Seiten)")
-    return docs
+    """
+    Fallback extractor for markdown files that don't have a specific parser.
+    Simply reads the markdown file and creates a single document.
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+    
+    doc = Document(content=content, meta=meta)
+    print(f"[WARN] Fallback-Parser benutzt fuer {path.name}")
+    return [doc]
 
 
 
@@ -135,7 +137,7 @@ def write_documents(docs: List[Document]):
     store = get_document_store()
     writer = DocumentWriter(store, policy=DuplicatePolicy.OVERWRITE)
     writer.run(documents=docs)
-    print(f"💾 Qdrant: {store.count_documents()} gespeicherte Chunks")
+    print(f"[INFO] Qdrant: {store.count_documents()} gespeicherte Chunks")
 
 
 
@@ -189,7 +191,7 @@ def parse_pdf_with_correct_parser(path: Path, meta: Dict) -> List[Document]:
     if parser is None:
         docs = fallback_extract(path, meta)
     else:
-        print(f"🧩 Parser gewählt: {parser.__class__.__name__} für {path.name}")
+        print(f"[INFO] Parser gewaehlt: {parser.__class__.__name__} fuer {path.name}")
         docs = parser.parse(path, meta)
 
     for d in docs:
@@ -211,10 +213,10 @@ def index_pdfs_with_metadata():
     sources, metas = prepare_sources_and_meta()
 
     if not sources:
-        print("⚠️ Keine PDFs gefunden.")
+        print("[WARN] Keine Markdown-Dateien gefunden.")
         return
 
-    print(f"🚀 Starte parser-basierte Indexierung von {len(sources)} PDFs...")
+    print(f"[INFO] Starte parser-basierte Indexierung von {len(sources)} Markdown-Dateien...")
 
     all_docs: List[Document] = []
 
@@ -222,17 +224,17 @@ def index_pdfs_with_metadata():
         docs = parse_pdf_with_correct_parser(path, meta)
         all_docs.extend(docs)
 
-    print(f"📄 Gesamte extrahierte Dokumente: {len(all_docs)}")
+    print(f"[INFO] Gesamte extrahierte Dokumente: {len(all_docs)}")
 
     cleaned = clean_documents(all_docs)
 
     # Split into sentence-based chunks for coherent retrieval
     splitted = split_documents(cleaned)
-    print(f"📄 Nach Splitting: {len(splitted)} Chunks")
+    print(f"[INFO] Nach Splitting: {len(splitted)} Chunks")
 
     # Remove near-duplicate chunks (e.g., similar PVO versions)
     deduped = deduplicate_chunks(splitted)
-    print(f"📄 Nach Deduplizierung: {len(deduped)} Chunks")
+    print(f"[INFO] Nach Deduplizierung: {len(deduped)} Chunks")
 
     embedded = embed_documents(deduped)
 
@@ -242,8 +244,8 @@ def index_pdfs_with_metadata():
     with open("metadata_cache.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
 
-    print("📦 Metadata Cache gespeichert → metadata_cache.json")
-    print("🎉 Indexierung abgeschlossen!")
+    print("[INFO] Metadata Cache gespeichert -> metadata_cache.json")
+    print("[INFO] Indexierung abgeschlossen!")
 
 
 if __name__ == "__main__":

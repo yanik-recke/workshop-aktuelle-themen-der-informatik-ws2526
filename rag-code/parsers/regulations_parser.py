@@ -5,7 +5,6 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
-import pdfplumber
 from haystack.dataclasses import Document
 
 from .base_parser import BaseParser
@@ -87,16 +86,10 @@ class RegulationsParser(BaseParser):
         return docs
 
     def _extract_text(self, path: Path) -> str:
-        """Extract text from PDF using pdfplumber with cleanup."""
-        all_text = []
-        with pdfplumber.open(path) as pdf:
-            for page in pdf.pages:
-                txt = page.extract_text() or ""
-                all_text.append(txt)
+        """Read markdown file with cleanup."""
+        text = self._read_markdown(path)
 
-        text = "\n".join(all_text)
-
-        # Clean up repeated page headers/footers
+        # Clean up repeated page headers/footers (may still exist in converted markdown)
         text = re.sub(r"Seite \d+ von \d+", "", text)
         text = re.sub(r"Fachhochschule Wedel.*", "", text)
         text = re.sub(r"\n{3,}", "\n\n", text)
