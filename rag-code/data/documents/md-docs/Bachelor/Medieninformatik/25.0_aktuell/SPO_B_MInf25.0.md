@@ -1,0 +1,466 @@
+# Staatlich anerkannte Fachhochschule PTL Wedel, Prof. Dr. D. Harms, Prof. Dr. H. Harms Gemeinnützige Schulgesellschaft mbH STUDIEN- UND PRÜFUNGSORDNUNG Bachelor-Studiengang Medieninformatik
+
+### Studienformen: Vollzeit, Teilzeit, Dual
+
+Vom 6. November 2024
+
+
+Studien- und Prüfungsordnung (Satzung) für den Bachelor-Studiengang _Medieninformatik_ an
+der Fachhochschule Wedel
+
+
+Zuständiges Ministerium, Nummer, Jahr und Seite der Veröffentlichung im Nachrichtenblatt
+Hochschule: NBl. HS. MBWK Schl.-H. 6/2016, S. 105
+
+
+Aufgrund des § 52 Absatz 1 Satz 2 des Hochschulgesetzes (HSG) in der Fassung der Bekanntmachung vom 5. Februar 2016 (GVOBl. Schl.-H., S. 39), zuletzt geändert durch Art. 1 des
+Gesetzes vom 3. Februar 2022 (GVOBl. Schl.-H., S. 102), wird nach Beschlussfassung durch
+den Senat vom 6. November 2024 und nach Genehmigung durch das Präsidium am selben
+Datum die folgende Satzung erlassen:
+
+
+2
+
+
+## **§ 1 Allgemeine Studienhinweise**
+
+Diese Studiengangs- und Prüfungsordnungordnung des Bachelor-Studiengangs _Medieninfor-_
+_matik_ enthält Hinweise allgemeiner Art. Es wird den Studentinnen und Studenten empfohlen,
+sich auch mit der Prüfungsverfahrensordnung für Bachelor- und Masterstudiengänge an der
+Fachhochschule Wedel vertraut zu machen und möglichst frühzeitig Kontakt mit Professorinnen und Professoren und wissenschaftlichen Mitarbeiterinnen und Mitarbeitern mit dem Ziel
+der Studienfachberatung aufzunehmen. Außerdem wird auf die Aushänge des Prüfungssekretariates verwiesen.
+
+## **§ 2 Geltungsbereich**
+
+
+Diese Studiengangs- und Prüfungsordnungordnung regelt auf der Grundlage der gültigen Prüfungsverfahrensordnung für Bachelor- und Masterstudiengänge an der Fachhochschule Wedel
+Ziel, Inhalt und Aufbau des Studiums für den Bachelor-Studiengang _Medieninformatik_ an der
+Fachhochschule Wedel.
+
+## **§ 3 Studienbeginn**
+
+
+Das Lehrangebot ist auf einen Beginn zum Sommer- und Wintersemester ausgelegt.
+
+## **§ 4 Regelstudienzeit**
+
+
+Das Lehrangebot erstreckt sich über sieben Semester (Regelstudienzeit). Der zeitliche Gesamtumfang der für den erfolgreichen Abschluss des Studiums erforderlichen Arbeitslast beträgt 6300 Stunden (= 210 ECTS-Punkte). Für den Erwerb eines ECTS-Punktes wird ein
+Arbeitsaufwand von 30 Stunden zugrunde gelegt.
+
+## **§ 5 Abschluss**
+
+
+Den Absolventinnen und Absolventen des Bachelor-Studiums wird der akademische Grad eines
+„Bachelor of Science“ (abgekürzt: B.Sc.) verliehen.
+
+## **§ 6 Studienberatung**
+
+
+Zu den Modulen beraten die Modulverantwortlichen.
+
+
+Die übergreifende Studienfachberatung zur individuellen Studienplanung erfolgt durch vom
+Prüfungsausschuss bestimmte Studienfachberaterinnen und Studienfachberater. In der Regel
+sind dies die Studiengangsleiterinnen und Studiengangsleiter.
+
+
+Für nicht fachspezifische Studienprobleme steht die Allgemeine Studienberatung der FH Wedel
+zur Verfügung.
+
+
+3
+
+
+## **§ 7 Studienformen**
+
+Das Studium kann in folgenden Formen absolviert werden: Vollzeit, Teilzeit, Dual.
+
+
+Details regelt die Prüfungsverfahrensordnung.
+
+## **§ 8 Qualifikationsziele**
+
+### (1) Allgemeine Qualifikationsziele
+
+
+Die grundlegende Ausrichtung des Studienganges zielt auf eine vollwertige Informatikausbildung aus Sicht interaktiver Medien ab und unterscheidet sich wesentlich von einem reinen
+Informatikstudiengang mit lediglich einer Spezialisierung auf den Bereich der Medien. So lassen sich die Inhalte des Studiengangs in die übergeordneten Felder
+
+
+a: Mathematik (Analysis, Lineare Algebra, Numerik, etc.),
+
+
+b: Informatik (Theorie, Algorithmen, Programmiersprachen, Entwicklungswerkzeuge, Anwendungen, etc.),
+
+
+c: Meidientechnologien und -anwendung (Video, Audio, Computergrafik, Virtuelle Realität,
+Grafikprogrammierung, Internet und Browser, Mensch-/Maschinekommunikation, UserInterfaces, Echtzeitgrafik, interaktive Modellierung, etc.),
+
+
+d: rechtliche und ethische Aspekte und einen
+
+
+e: Wahlblock
+
+
+aufgliedern. Hierbei decken die ersten drei Felder insgesamt etwa 80% des gesamten Curriculums ab und gut die Hälfte davon ist dem Bereich interaktiver Medien gewidmet.
+
+
+Im Verlauf des Studium sollen Studentinnen und Studenten folgende Befähigungen erlangen,
+nämlich
+
+
+a: tiefgehende Programmierkenntnisse in relevanten Programmiersprachen und grundlegendes Verständnis komplexer Algorithmen,
+
+
+b: eine große Anzahl derzeit aktueller Entwicklungsumgebungen für Internetanwendungen,
+interaktive Modellierung und Audio-/Videodesign einzusetzen,
+
+
+c: eigene Algorithmen zu entwickeln und Komplexitätsabschätzungen vorzunehmen,
+
+
+d: die umfassende Kenntnis klassischer Arbeiten im Bereich der Programmierung und speziell der Browser-basierten Entwicklung, um eigene Projekte effizienter zu gestalten,
+
+
+e: unter Nutzung mathematischer Methoden eigene Anwendungen effizienter zu gestalten
+und zu analysieren,
+
+
+f: einschlägige, wissenschaftliche Methoden und neue Ergebnisse der Informatikforschung
+auf Aufgabenstellungen in der Praxis unter Berücksichtigung wirtschaftlicher, ökologischer, technischer und gesellschaftlicher Erfordernisse anzuwenden,
+
+
+g: aktuelle Methoden der Künstlichen Intelligenz zu kennen und die Fähigkeit eine objektiven Bewertung über deren Nutzen und Zuverlässigkeit vorzunehmen,
+
+
+4
+
+
+h: Schnittstellen zum Anwender zu entwickeln und deren Effizienz zu beurteilen,
+
+
+i: technische Grundlagen, insbesondere für die Interface-Entwicklung, zu besitzen und ergonomische Grundsätze damit zu verknüpfen,
+
+
+j: den gesamten Softwareentwicklungsprozess zu kennen, um größere Projekte planen und
+evaluieren zu können,
+
+
+k: komplexe Aufgabenstellungen erkennen und fachübergreifend, ganzheitlich und methodisch zu lösen,
+
+
+l: effektiv mit anderen Menschen in unterschiedlichen Situationen und internationalem
+Umfeld fachübergreifend, konstruktiv zusammenzuarbeiten,
+
+
+m: Projekte zu planen, Aufgaben effizient zu delegieren, zielgerichtet zu kommunizieren,
+
+
+n: in großen Programmierprojekten auf allen Ebenen mitzuarbeiten — auf der Implementationsebene genauso wie in leitenden Funktionen,
+
+
+o: durch einen ausreichenden Praxisbezug des Studiums sich unmittelbar in das berufliche
+Umfeld zu integrieren und mit Partnern auf unterschiedlichen Ebenen zusammenzuarbeiten,
+
+
+p: die Fähigkeit, Inhalte von Anwendungen und Spielen zu klassifizieren, deren gesellschaftliche Bedeutung zu erkennen und aufgrund Letzterem Entscheidungen für den Entwicklungsprozess zu treffen.
+
+### (2) Besondere Qualifikationsziele des Vollzeitstudiums
+
+
+Die Qualifikationsziele des Vollzeitstudiums sind durch die allgemeinen Ziele umfassend beschrieben.
+
+### (3) Besondere Qualifikationsziele des dualen Studiums
+
+
+Das Duale Studium richtet sich an Studentinnen und Studenten, die grundlegende Kompetenzen für Berufsbilder in der Softwareentwickung für die Mensch-/Maschinekommunikation und
+zu einem späteren Zeitpunkt in der Leitung kleinerer Projektgruppen erwerben und diese von
+Beginn an in Unternehmen über die regelmäßigen Praxisphasen des Studiums erproben und
+vertiefen möchten.
+
+
+Hierbei wird auf eine starke fachliche Verzahnung der in der Hochschule vermittelten Kompetenzen und der im Unternehmen geforderten Fähigkeiten geachtet, die sich auch im zeitlichen
+Ablauf des Curriculum abzeichnen. Fokus an der Hochschule sind hierbei die wissenschaftlichen Aspekte der vermittelten Methoden und deren Einordnung in das gesamte Spektrum der
+Ausbildung, im Unternehmen findet parallel die Erprobung der Kompetenzen in einem realen,
+berufsorientierten Umfeld statt. Dieser frühzeitige Abgleich zwischen Theorie und Praxis ist
+gerade in der Mitarbeit in größeren Projekten essentiell, da hier die Vorstellungen unter den
+Projektteilnehmern oft differieren. Das Duale Studium nivelliert die betreffenden Erwartungen
+schon früh und erhöht so sowohl die Effizienz im Studium als auch die beim späteren Einstieg
+in ein Unternehmen maßgeblich.
+
+
+5
+
+
+## **§ 9 Studienverlaufs- und Prüfungsplan**
+
+Die Module, die dazugehörigen Lehrveranstaltungen und deren Semesterzuordnung werden im
+Studienverlaufs- und Prüfungsplan (siehe Anlage) ersichtlich.
+
+
+Die Vertiefungsrichtungen und Wahlblöcke sind im Modulhandbuch beschrieben.
+
+## **§ 10 Inkrafttreten**
+
+
+Diese Satzung tritt mit der Wirkung vom 1. April 2025 in Kraft.
+
+
+Wedel, den 6. November 2024
+
+
+Prof. Dr. Eike Harms
+Präsident der Fachhochschule Wedel
+
+
+6
+
+
+## **Anhang: Studienverlaufs- und Prüfungsplan**
+
+
+|Legende|Beschreibung|
+|---|---|
+|Modul-Nr.|Modulnummer|
+|Modul|Bezeichnung des Moduls|
+|Prfg.-Nr.|Prüfungsfachnummer|
+|Veranstaltung|Bezeichnung der Lehrveranstaltung|
+|ECTS pro Semester|Angabe, in welchem Semester in einer Fachrichtung das Modul<br>mit wie vielen ECTS liegt|
+|Fq.|Frequenz<br>W = Wintersemester<br>S = Sommersemester<br>E = jedes Semester|
+|SWS|Semesterwochenstunden (2 SWS = 75 Min./Woche)|
+|Hfgk.|Anzahl Wochen|
+|ws|Durchschnittliche wöchentliche Anwesenheit in der Vorlesungs-<br>zeit|
+|KoZ|Kontaktzeit|
+|EiZ|Selbststudium|
+|AA|Arbeitsaufwand|
+|Anw.|Anwesenheit|
+|Vorl.|erforderliche Vorleistungen|
+|Art|Prüfungsform (s.u.** Anmerkung** und Tabelle)|
+|Ben.|Benotung<br>J = Ja<br>N = nein|
+|Vers.|Anzahl der Versuche (* 4. Versuch = mündliche Nachprüfung)|
+|Dauer|Dauer der Prüfung|
+|OA.|Online-Anmeldung|
+|Gew.|Prozentualer Anteil an der Abschlussnote|
+|Vert.|Vertiefungsrichtung (s.u.** Anmerkung**)|
+|WB|Wahlblockzuordnung|
+|LF.|Veranstaltungsform (s.u. Tabelle)|
+|Mit.|Mitarbeiterkürzel|
+|Sprache V.|Vorlesungssprache<br>DE = deutsch<br>EN = Englisch|
+|Sprache M.|Sprache der Unterrichtsmaterialien<br>DE = deutsch<br>EN = Englisch|
+|Fachgebiet|Informatik<br>Integrationsfach<br>Mathematik<br>Technik<br>Wirtschaft<br>Medien & Kommunikation<br>Fremdsprachen & Recht|
+|Curricularer Bezug|Grundlagen<br>Kernfach<br>Spezialisierung<br>Soft Skills<br>7|
+
+
+**Kürzel** **Prüfungsform** **admissible assessment types**
+AB Abnahme acceptance test
+AS Assessment assessment
+AU Ausland study abroad
+FP Teilnahme participation
+K1 Klausur + ggf. Bonus written examination (+ bonus points)
+K2 Klausur / Mündliche Prüfung + ggf. written or oral examination (+ bonus
+Bonus points)
+
+
+f
+
+
+
+K2 Klausur / Mündliche Prüfung + ggf. written or oral examination (+ bonus
+Bonus points)
+
+KL Klausur written examination
+KM Klausur / Mündliche Prüfung written or oral examination
+KO Kolloquium colloquium
+MP Mündliche Prüfung oral examination
+PB Praktikumsbericht / Protokoll practical course report
+PF Portfolio-Prüfung different types of examinations
+PR Präsentation / Referat presentation
+SA Schriftl. Ausarbeitung (ggf. mit Prä- written documentation (if necessary
+sentation) presentation)
+
+
+
+f
+
+
+written documentation (if necessary
+presentation)
+
+
+
+f
+
+|Kürzel|Veranstaltungsform|teaching methods|
+|---|---|---|
+|A|Assistenz|assistance|
+|BR|Betriebliches Praktikum|internship|
+|di|Mehrere Veranstaltungsarten|diferent types of lectures|
+|F|Fallstudie|case study|
+|K|Kolloquium|colloquium|
+|P|Praktikum|lab|
+|PR|Projekt|project|
+|S|Seminar|seminar|
+|TS|Thesis|thesis|
+|U|Übung/Praktikum/Planspiel|tutorial/lab/business game|
+|Y|Veranstaltungen<br>an<br>ausländischer<br>Hochschule|study abroad|
+|V|Vorlesung|lecture|
+|VU|Vorlesung<br>mit<br>integrierter<br>Übung/<br>Workshop/Assigm.|lecture with tutorial, workshop, assign-<br>ment|
+|W|Workshop|workshop|
+
+
+
+**Anmerkung für Bachelor-Studiengänge: Prüfungsform mit** **[U]** :
+Zur Sicherstellung eines angemessenen Studienablaufes müssen gekennzeichneten Module bis
+zum Ende des 5. Studiensemesters erfolgreich absolviert werden.
+
+
+**Anmerkung für Vertiefungsrichtung** :
+Ein Modul, welches laut Studienverlaufsplan in allen Vertiefungsrichtungen vorkommt, ist ein
+nicht abwählbares Pflichtfach, welches im Mobilitätsfenster liegt. Das International Office und
+die Fachbereichsleitung stellt beim formulieren des Learning Agreements in Abstimmung mit
+dem Studierenden und der kooperierenden Institution sicher, dass im Auslandssemester eine
+äquivalente Leistung erbracht wird.
+
+
+Die Spaltenanzeige variiert nach Darstellungsform.
+
+
+8
+
+
+|B_MInf25.0 Studienverlaufs- und Prüfungsplan Medieninformatik (B.Sc.)|Col2|Col3|Col4|Col5|Col6|Col7|Col8|Col9|Col10|Col11|Col12|Col13|Col14|Col15|Col16|Col17|Col18|Col19|Col20|Col21|Col22|Col23|Col24|Col25|Col26|Col27|Col28|Col29|Col30|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+||||**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Aufwand pro Semester**|**Prüfung**|**Prüfung**|**Prüfung**|**Prüfung**|**Prüfung**|**Prüfung**|**Einordnung**|**Einordnung**|**Einordnung**|**Einordnung**|**Einordnung**|**Einordnung**|**Einordnung**|
+|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|Fq.|SWS|Hfgk.|KoZ|EiZ|AA|Anw.|Vorl.|Art.|Ben.|Vers.|Dauer|OA.|Vert.|WB.|LF.|Mit.|Sprache|Sprache|Fachgebiet|
+|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|Prfg.-Nr.|Veranstaltung|1|2|3|4|5|6|7||||[h]|[h]|[h]||||||[min]||||||V.|M.||
+|MB001 Analysis<br>TB001<br>Analysis<br>TB002<br>Übg. Analysis|MB001 Analysis<br>TB001<br>Analysis<br>TB002<br>Übg. Analysis|MB001 Analysis<br>TB001<br>Analysis<br>TB002<br>Übg. Analysis||||||||||||||||||||||||fko|||Mathematik|
+|MB001 Analysis<br>TB001<br>Analysis<br>TB002<br>Übg. Analysis|TB001|Analysis|3,0|||||||W+S|4|12|30,0|60,0|90,0|N||K1U|J|3*|120|J|||V|fko|DE|DE||
+|MB001 Analysis<br>TB001<br>Analysis<br>TB002<br>Übg. Analysis|TB002|Übg. Analysis|2,0|||||||W+S|2|12|15,0|45,0|60,0|N||FPU|N|o.B.||N|||U|fko|DE|DE||
+|MB002 Mathematische Konzepte und Diskrete Mathematik<br>TB003<br>Diskrete Mathematik|MB002 Mathematische Konzepte und Diskrete Mathematik<br>TB003<br>Diskrete Mathematik|MB002 Mathematische Konzepte und Diskrete Mathematik<br>TB003<br>Diskrete Mathematik||||||||||||||||||||||||iw|||Mathematik|
+|MB002 Mathematische Konzepte und Diskrete Mathematik<br>TB003<br>Diskrete Mathematik|TB003|Diskrete Mathematik|5,0|||||||W+S|4|12|30,0|120,0|150,0|N||K1U|J|3*|120|J|||V|iw|DE|DE||
+|MB003 Programmstrukturen 1<br>TB004<br>Programmstrukturen 1<br>TB005<br>Übg. Programmstrukturen 1|MB003 Programmstrukturen 1<br>TB004<br>Programmstrukturen 1<br>TB005<br>Übg. Programmstrukturen 1|MB003 Programmstrukturen 1<br>TB004<br>Programmstrukturen 1<br>TB005<br>Übg. Programmstrukturen 1||||||||||||||||||||||||dpr|||Informatik|
+|MB003 Programmstrukturen 1<br>TB004<br>Programmstrukturen 1<br>TB005<br>Übg. Programmstrukturen 1|TB004|Programmstrukturen 1|3,0|||||||W+S|4|12|30,0|60,0|90,0|N||K1U|J|3*|120|J|||V|dpr|DE|DE||
+|MB003 Programmstrukturen 1<br>TB004<br>Programmstrukturen 1<br>TB005<br>Übg. Programmstrukturen 1|TB005|Übg. Programmstrukturen 1|2,0|||||||W+S|6|12|45,0|15,0|60,0|J||ABU|N|o.B.||N|||U|ne|DE|DE||
+|MB004 Informationstechnik<br>TB006<br>Informationstechnik|MB004 Informationstechnik<br>TB006<br>Informationstechnik|MB004 Informationstechnik<br>TB006<br>Informationstechnik||||||||||||||||||||||||dsg|||Informatik|
+|MB004 Informationstechnik<br>TB006<br>Informationstechnik|TB006|Informationstechnik|5,0|||||||W|4|12|30,0|120,0|150,0|N||K1U|J|3*|60|J|||V|dsg|DE|DE||
+|MB014 Audio und Grundlagen der AV-Bearbeitung<br>TB093<br>Workshop Audio-Bearbeitung<br>TB082<br>Grundlagen der AV-Bearbeitung|MB014 Audio und Grundlagen der AV-Bearbeitung<br>TB093<br>Workshop Audio-Bearbeitung<br>TB082<br>Grundlagen der AV-Bearbeitung|MB014 Audio und Grundlagen der AV-Bearbeitung<br>TB093<br>Workshop Audio-Bearbeitung<br>TB082<br>Grundlagen der AV-Bearbeitung||||||||||||||||||||||||dsg|||Integrationsfach|
+|MB014 Audio und Grundlagen der AV-Bearbeitung<br>TB093<br>Workshop Audio-Bearbeitung<br>TB082<br>Grundlagen der AV-Bearbeitung|TB093|Workshop Audio-Bearbeitung|2,5|||||||W|5|12|37,5|37,5|75,0|J||PF|J|3||N|||di|hi|DE|DE||
+|MB014 Audio und Grundlagen der AV-Bearbeitung<br>TB093<br>Workshop Audio-Bearbeitung<br>TB082<br>Grundlagen der AV-Bearbeitung|TB082|Grundlagen der AV-Bearbeitung||2,5||||||S|2|12|15,0|60,0|75,0|N||K1|J|3*|60|J|||V|dsg|DE|DE||
+|MB015 Mediengestaltung<br>Anwendung Mediengestaltung<br>Grundlagen der Mediengestaltung<br>TB075|MB015 Mediengestaltung<br>Anwendung Mediengestaltung<br>Grundlagen der Mediengestaltung<br>TB075|MB015 Mediengestaltung<br>Anwendung Mediengestaltung<br>Grundlagen der Mediengestaltung<br>TB075||||||||||||||||||||||||hi|||Integrationsfach|
+|MB015 Mediengestaltung<br>Anwendung Mediengestaltung<br>Grundlagen der Mediengestaltung<br>TB075|TB075|Anwendung Mediengestaltung||2,5||||||S|3|12|22,5|52,5|75,0|N||K1|J|3*|90|J|||VU|mlo|DE|DE||
+|MB015 Mediengestaltung<br>Anwendung Mediengestaltung<br>Grundlagen der Mediengestaltung<br>TB075|TB075|Grundlagen der Mediengestaltung|2,5|||||||W|4|12|30,0|45,0|75,0|N|||||||||VU|mlo|DE|DE||
+|MB052 Einführung in Datenbanken<br>TB020<br>Einführung in Datenbanken<br>TB021<br>Übg. Einführung in Datenbanken|MB052 Einführung in Datenbanken<br>TB020<br>Einführung in Datenbanken<br>TB021<br>Übg. Einführung in Datenbanken|MB052 Einführung in Datenbanken<br>TB020<br>Einführung in Datenbanken<br>TB021<br>Übg. Einführung in Datenbanken||||||||||||||||||||||||mpa|||Informatik|
+|MB052 Einführung in Datenbanken<br>TB020<br>Einführung in Datenbanken<br>TB021<br>Übg. Einführung in Datenbanken|TB020|Einführung in Datenbanken|3,0|||||||W|2|12|15,0|75,0|90,0|N||K1|J|3*|60|J|||V|mpa|DE|DE||
+|MB052 Einführung in Datenbanken<br>TB020<br>Einführung in Datenbanken<br>TB021<br>Übg. Einführung in Datenbanken|TB021|Übg. Einführung in Datenbanken|2,0|||||||W|1|12|7,5|52,5|60,0|J||AB|N|o.B.||N|||U|mzo|DE|DE||
+|MB018 Workshop Audio- / Video-Bearbeitung<br>TB092<br>Workshop Audio-/Video-Bearbeitung|MB018 Workshop Audio- / Video-Bearbeitung<br>TB092<br>Workshop Audio-/Video-Bearbeitung|MB018 Workshop Audio- / Video-Bearbeitung<br>TB092<br>Workshop Audio-/Video-Bearbeitung||||||||||||||||||||||||ann|||Integrationsfach|
+|MB018 Workshop Audio- / Video-Bearbeitung<br>TB092<br>Workshop Audio-/Video-Bearbeitung|TB092|Workshop Audio-/Video-Bearbeitung||5,0||||||S|3|12|22,5|127,5|150,0|J||AB|J|3||N|||W|ann|DE|DE||
+|MB019 Deskriptive Statistik und Grundlagen der Linearen Algebra<br>Deskriptive Statistik<br>Grundlagen der Linearen Algebra<br>TB009|MB019 Deskriptive Statistik und Grundlagen der Linearen Algebra<br>Deskriptive Statistik<br>Grundlagen der Linearen Algebra<br>TB009|MB019 Deskriptive Statistik und Grundlagen der Linearen Algebra<br>Deskriptive Statistik<br>Grundlagen der Linearen Algebra<br>TB009||||||||||||||||||||||||fbo|||Mathematik|
+|MB019 Deskriptive Statistik und Grundlagen der Linearen Algebra<br>Deskriptive Statistik<br>Grundlagen der Linearen Algebra<br>TB009|TB009|Deskriptive Statistik||2,5||||||S|2|12|15,0|60,0|75,0|N||K1|J|3*|120|J|||V|fbo|DE|DE||
+|MB019 Deskriptive Statistik und Grundlagen der Linearen Algebra<br>Deskriptive Statistik<br>Grundlagen der Linearen Algebra<br>TB009|TB009|Grundlagen der Linearen Algebra||2,5||||||S|2|12|15,0|60,0|75,0|N|N|N|N|N|N|N|||V|aha|DE|DE||
+|MB020 Programmstrukturen 2<br>TB010<br>Programmstrukturen 2<br>TB011<br>Übg. Programmstrukturen 2|MB020 Programmstrukturen 2<br>TB010<br>Programmstrukturen 2<br>TB011<br>Übg. Programmstrukturen 2|MB020 Programmstrukturen 2<br>TB010<br>Programmstrukturen 2<br>TB011<br>Übg. Programmstrukturen 2||||||||||||||||||||||||dpr|||Informatik|
+|MB020 Programmstrukturen 2<br>TB010<br>Programmstrukturen 2<br>TB011<br>Übg. Programmstrukturen 2|TB010|Programmstrukturen 2||3,0||||||W+S|4|12|30,0|60,0|90,0|N||K1|J|3*|150|J|||V|dpr|DE|DE||
+|MB020 Programmstrukturen 2<br>TB010<br>Programmstrukturen 2<br>TB011<br>Übg. Programmstrukturen 2|TB011|Übg. Programmstrukturen 2||2,0||||||W+S|2|12|15,0|45,0|60,0|J|TB005|AB|N|o.B.||N|||U|klk|DE|DE||
+|MB044 UNIX und Shell-Programmierung<br>UNIX und Shell-Programmierung<br>Übg. UNIX und Shell-Programmierung<br>TB019|MB044 UNIX und Shell-Programmierung<br>UNIX und Shell-Programmierung<br>Übg. UNIX und Shell-Programmierung<br>TB019|MB044 UNIX und Shell-Programmierung<br>UNIX und Shell-Programmierung<br>Übg. UNIX und Shell-Programmierung<br>TB019||||||||||||||||||||||||mhe|||Informatik|
+|MB044 UNIX und Shell-Programmierung<br>UNIX und Shell-Programmierung<br>Übg. UNIX und Shell-Programmierung<br>TB019|TB019|UNIX und Shell-Programmierung||2,0||||||S|2|12|15,0|45,0|60,0|N||AB|N|o.B.||N|||V|di|DE|DE||
+|MB044 UNIX und Shell-Programmierung<br>UNIX und Shell-Programmierung<br>Übg. UNIX und Shell-Programmierung<br>TB019|TB019|Übg. UNIX und Shell-Programmierung||3,0||||||S|2|12|15,0|75,0|90,0|J|J|J|J|J|J|J|||U|mhe|DE|DE||
+|MB238 Digital Content Creation<br>TB085<br>Prakt. Interaktive Geometrische Modellierung<br>TB100<br>Prakt. Fortgeschrittene Interaktive Modellierung|MB238 Digital Content Creation<br>TB085<br>Prakt. Interaktive Geometrische Modellierung<br>TB100<br>Prakt. Fortgeschrittene Interaktive Modellierung|MB238 Digital Content Creation<br>TB085<br>Prakt. Interaktive Geometrische Modellierung<br>TB100<br>Prakt. Fortgeschrittene Interaktive Modellierung||||||||||||||||||||||||bo|||Informatik|
+|MB238 Digital Content Creation<br>TB085<br>Prakt. Interaktive Geometrische Modellierung<br>TB100<br>Prakt. Fortgeschrittene Interaktive Modellierung|TB085|Prakt. Interaktive Geometrische Modellierung||3,0||||||W+S|8|4|22,5|67,5|90,0|J||AB|J|3||N|||U|swa|DE|DE||
+|MB238 Digital Content Creation<br>TB085<br>Prakt. Interaktive Geometrische Modellierung<br>TB100<br>Prakt. Fortgeschrittene Interaktive Modellierung|TB100|Prakt. Fortgeschrittene Interaktive Modellierung||2,0||||||W+S|8|3|15,0|45,0|60,0|J||AB|J|3||N|||U|swa|DE|DE||
+|MB038 Compositing-Projekt<br>TB077<br>Compositing-Projekt|MB038 Compositing-Projekt<br>TB077<br>Compositing-Projekt|MB038 Compositing-Projekt<br>TB077<br>Compositing-Projekt||||||||||||||||||||||||ann|||Integrationsfach|
+|MB038 Compositing-Projekt<br>TB077<br>Compositing-Projekt|TB077|Compositing-Projekt|||5,0|||||W|2|12|15,0|135,0|150,0|J|TB092|AB|J|3||N|||PR|ann|DE|DE||
+|MB043 Systemnahe Programmierung<br>TB072<br>Systemnahe Programmierung<br>TB074<br>Übg. Systemnahe Programmierung|MB043 Systemnahe Programmierung<br>TB072<br>Systemnahe Programmierung<br>TB074<br>Übg. Systemnahe Programmierung|MB043 Systemnahe Programmierung<br>TB072<br>Systemnahe Programmierung<br>TB074<br>Übg. Systemnahe Programmierung||||||||||||||||||||||||uhl|||Informatik|
+|MB043 Systemnahe Programmierung<br>TB072<br>Systemnahe Programmierung<br>TB074<br>Übg. Systemnahe Programmierung|TB072|Systemnahe Programmierung|||2,0|||||W|2|12|15,0|45,0|60,0|N||K1|J|3*|120|J|||V|uhl|DE|DE||
+|MB043 Systemnahe Programmierung<br>TB072<br>Systemnahe Programmierung<br>TB074<br>Übg. Systemnahe Programmierung|TB074|Übg. Systemnahe Programmierung|||3,0|||||W|2|12|15,0|75,0|90,0|J||AB|N|o.B.||N|||U|mhe|DE|DE||
+|MB045 Lineare Algebra<br>TB068<br>Lineare Algebra|MB045 Lineare Algebra<br>TB068<br>Lineare Algebra|MB045 Lineare Algebra<br>TB068<br>Lineare Algebra||||||||||||||||||||||||aha|||Mathematik|
+|MB045 Lineare Algebra<br>TB068<br>Lineare Algebra|TB068|Lineare Algebra|||5,0|||||W|4|12|30,0|120,0|150,0|N|TB009|K1|J|3*|120|J|||V|aha|DE|DE||
+|MB292 Usability and Mobile<br>Mobile Commerce and App Economy<br>User Experience<br>TB283|MB292 Usability and Mobile<br>Mobile Commerce and App Economy<br>User Experience<br>TB283|MB292 Usability and Mobile<br>Mobile Commerce and App Economy<br>User Experience<br>TB283||||||||||||||||||||||||awo|||Integrationsfach|
+|MB292 Usability and Mobile<br>Mobile Commerce and App Economy<br>User Experience<br>TB283|TB283|Mobile Commerce and App Economy|||3,0|||||W|3|12|22,5|67,5|90,0|N||PF|J|3|60|J|||VU|fhe|DE|DE||
+|MB292 Usability and Mobile<br>Mobile Commerce and App Economy<br>User Experience<br>TB283|TB283|User Experience|||2,0|||||W|2|12|15,0|45,0|60,0|J|J|J|J|J|J|J|||VU|wa|DE|DE||
+|MB293 Digital Product Management<br>TB284<br>Digital Product Management|MB293 Digital Product Management<br>TB284<br>Digital Product Management|MB293 Digital Product Management<br>TB284<br>Digital Product Management||||||||||||||||||||||||awo|||Integrationsfach|
+|MB293 Digital Product Management<br>TB284<br>Digital Product Management|TB284|Digital Product Management|||5,0|||||W|4|12|30,0|60,0|90,0|J||K1|J|3*||J|||VU|gru|DE|DE||
+|MB201 Digital Marketing<br>TB094<br>Digital Marketing<br>TB095<br>Digital Marketing Projekt|MB201 Digital Marketing<br>TB094<br>Digital Marketing<br>TB095<br>Digital Marketing Projekt|MB201 Digital Marketing<br>TB094<br>Digital Marketing<br>TB095<br>Digital Marketing Projekt||||||||||||||||||||||||jpl|||Wirtschaft|
+|MB201 Digital Marketing<br>TB094<br>Digital Marketing<br>TB095<br>Digital Marketing Projekt|TB094|Digital Marketing|||2,0|||||W|2|12|15,0|45,0|60,0|N||K1|J|3*|60|J|||V|jpl|DE|DE||
+|MB201 Digital Marketing<br>TB094<br>Digital Marketing<br>TB095<br>Digital Marketing Projekt|TB095|Digital Marketing Projekt|||3,0|||||W|2|12|15,0|75,0|90,0|N||SA|J|3||N|||PR|jpl|DE|DE||
+|MB221 Grundlagen Data Science<br>TB104<br>Data Literacy<br>TB121<br>Übg. Data Science|MB221 Grundlagen Data Science<br>TB104<br>Data Literacy<br>TB121<br>Übg. Data Science|MB221 Grundlagen Data Science<br>TB104<br>Data Literacy<br>TB121<br>Übg. Data Science|||||||||||||||||||||Informatik und Data Analytics|||ann|||Integrationsfach|
+|MB221 Grundlagen Data Science<br>TB104<br>Data Literacy<br>TB121<br>Übg. Data Science|TB104|Data Literacy|||3,0|||||W|2|12|15,0|75,0|90,0|N||K1|J|3*|60|J|||V|ann|DE|DE||
+|MB221 Grundlagen Data Science<br>TB104<br>Data Literacy<br>TB121<br>Übg. Data Science|TB121|Übg. Data Science|||2,0|||||W|2|12|15,0|45,0|60,0|N||AB|N|o.B.||N|||U|kil|DE|DE||
+|MB252 Mechanik und Elektrotechnik<br>Grundlagen der Elektrotechnik<br>Grundlagen der Mechanik<br>TB108|MB252 Mechanik und Elektrotechnik<br>Grundlagen der Elektrotechnik<br>Grundlagen der Mechanik<br>TB108|MB252 Mechanik und Elektrotechnik<br>Grundlagen der Elektrotechnik<br>Grundlagen der Mechanik<br>TB108|||||||||||||||||||||Human Computer Interface|||cbu|||Technik|
+|MB252 Mechanik und Elektrotechnik<br>Grundlagen der Elektrotechnik<br>Grundlagen der Mechanik<br>TB108|TB108|Grundlagen der Elektrotechnik|||3,0|||||W|4|12|30,0|60,0|90,0|N||K1|J|3*|150|J|||VU|cbu|DE (EN)|DE/EN||
+|MB252 Mechanik und Elektrotechnik<br>Grundlagen der Elektrotechnik<br>Grundlagen der Mechanik<br>TB108|TB108|Grundlagen der Mechanik|||2,0|||||W|2|12|15,0|45,0|60,0|N|N|N|N|N|N|N|||V|aha|DE|DE||
+|MB053 Datenschutz und Medienrecht<br>Datenschutz<br>Medienrecht<br>TB078|MB053 Datenschutz und Medienrecht<br>Datenschutz<br>Medienrecht<br>TB078|MB053 Datenschutz und Medienrecht<br>Datenschutz<br>Medienrecht<br>TB078||||||||||||||||||||||||gb|||Fremdsprachen & Recht|
+|MB053 Datenschutz und Medienrecht<br>Datenschutz<br>Medienrecht<br>TB078|TB078|Datenschutz||||2,0||||S|2|12|15,0|45,0|60,0|N||K1|J|3*|180|J|||V|bra|DE|DE||
+|MB053 Datenschutz und Medienrecht<br>Datenschutz<br>Medienrecht<br>TB078|TB078|Medienrecht||||3,0||||S|2|12|15,0|75,0|90,0|N|N|N|N|N|N|N|||V|job|DE|DE||
+|MB059 Web-Anwendungen<br>TB027<br>Web-Anwendungen<br>TB028<br>Übg. Web-Anwendungen|MB059 Web-Anwendungen<br>TB027<br>Web-Anwendungen<br>TB028<br>Übg. Web-Anwendungen|MB059 Web-Anwendungen<br>TB027<br>Web-Anwendungen<br>TB028<br>Übg. Web-Anwendungen||||||||||||||||||||||||mpg|||Informatik|
+|MB059 Web-Anwendungen<br>TB027<br>Web-Anwendungen<br>TB028<br>Übg. Web-Anwendungen|TB027|Web-Anwendungen||||3,0||||S|3|12|22,5|67,5|90,0|N||K1|J|3*|60|J|||V|mpg|DE|DE||
+|MB059 Web-Anwendungen<br>TB027<br>Web-Anwendungen<br>TB028<br>Übg. Web-Anwendungen|TB028|Übg. Web-Anwendungen||||2,0||||S|2|12|15,0|45,0|60,0|J|TB005|AB|N|o.B.||N|||U|mpg|DE|DE||
+|MB085 Grundlagen der Computergrafik<br>TB066<br>Grundlagen der Computergrafik<br>TB071<br>Prakt. Grundlagen der Computergrafik|MB085 Grundlagen der Computergrafik<br>TB066<br>Grundlagen der Computergrafik<br>TB071<br>Prakt. Grundlagen der Computergrafik|MB085 Grundlagen der Computergrafik<br>TB066<br>Grundlagen der Computergrafik<br>TB071<br>Prakt. Grundlagen der Computergrafik||||||||||||||||||||||||bo|||Integrationsfach|
+|MB085 Grundlagen der Computergrafik<br>TB066<br>Grundlagen der Computergrafik<br>TB071<br>Prakt. Grundlagen der Computergrafik|TB066|Grundlagen der Computergrafik||||2,0||||S|2|12|15,0|45,0|60,0|N||K1|J|3*|90|J|||V|bo|DE|DE||
+|MB085 Grundlagen der Computergrafik<br>TB066<br>Grundlagen der Computergrafik<br>TB071<br>Prakt. Grundlagen der Computergrafik|TB071|Prakt. Grundlagen der Computergrafik||||3,0||||S|4|12|30,0|60,0|90,0|J|TB074|AB|J|3||N|||U|pmu|DE|DE||
+
+
+|Col1|Col2|Col3|Aufwand pro Semester|Col5|Col6|Col7|Col8|Col9|Col10|Col11|Col12|Col13|Col14|Col15|Col16|Col17|Prüfung|Col19|Col20|Col21|Col22|Col23|Einordnung|Col25|Col26|Col27|Col28|Col29|Col30|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|**ECTS pro Semester**|Fq.|SWS|Hfgk.|KoZ|EiZ|AA|Anw.|Vorl.|Art.|Ben.|Vers.|Dauer|OA.|Vert.|WB.|LF.|Mit.|Sprache|Sprache|Fachgebiet|
+|Prfg.-Nr.<br>Veranstaltung<br>Modul-Nr. Modul|Prfg.-Nr.|Veranstaltung|1|2|3|4|5|6|7||||[h]|[h]|[h]||||||[min]||||||V.|M.||
+|MB097 Bildbearbeitung und -analyse<br>TB076<br>Bildbearbeitung und -analyse<br>TB083<br>Prakt. Bildbearbeitung und -analyse|MB097 Bildbearbeitung und -analyse<br>TB076<br>Bildbearbeitung und -analyse<br>TB083<br>Prakt. Bildbearbeitung und -analyse|MB097 Bildbearbeitung und -analyse<br>TB076<br>Bildbearbeitung und -analyse<br>TB083<br>Prakt. Bildbearbeitung und -analyse||||||||||||||||||||||||dsg|||Integrationsfach|
+|MB097 Bildbearbeitung und -analyse<br>TB076<br>Bildbearbeitung und -analyse<br>TB083<br>Prakt. Bildbearbeitung und -analyse|TB076|Bildbearbeitung und -analyse||||2,0||||S|2|12|15,0|45,0|60,0|N||K1|J|3*|60|J|||V|dsg|DE|DE||
+|MB097 Bildbearbeitung und -analyse<br>TB076<br>Bildbearbeitung und -analyse<br>TB083<br>Prakt. Bildbearbeitung und -analyse|TB083|Prakt. Bildbearbeitung und -analyse||||3,0||||S|2|12|15,0|75,0|90,0|J|TB074|AB|J|3||N|||U|hoe|DE|DE||
+|MB209 Applied Data Science and Machine Learning<br>TB061<br>Applied Data Science and Machine Learning|MB209 Applied Data Science and Machine Learning<br>TB061<br>Applied Data Science and Machine Learning|MB209 Applied Data Science and Machine Learning<br>TB061<br>Applied Data Science and Machine Learning||||||||||||||||||||||||uh|||Informatik|
+|MB209 Applied Data Science and Machine Learning<br>TB061<br>Applied Data Science and Machine Learning|TB061|Applied Data Science and Machine Learning||||5,0||||S|4|12|30,0|120,0|150,0|J||SA|N|o.B.||N|||VU|czo|DE (EN)|DE/EN||
+|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|||||||||||||||||||||Human Computer Interface|||bo|||Technik|
+|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|TB267|Echtzeitsysteme||||1,5||||S|2|12|15,0|30,0|45,0|N|TB006|K1|J|3*|150|J|||V|saw|DE|DE||
+|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|TB267|Interface-Technologie||||1,5||||S|2|12|15,0|30,0|45,0|N|N|N|N|N|N|N|||V|dsg|DE|DE||
+|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|TB267|Optik||||1,5||||S|2|12|15,0|30,0|45,0|N|N|N|N|N|N|N|||V|aha|DE|DE||
+|MB270 Optik und Interface-Technologie<br>Echtzeitsysteme<br>Interface-Technologie<br>Optik<br>TB172<br>Prakt. Optik<br>TB267|TB172|Prakt. Optik||||0,5||||S|1|12|7,5|7,5|15,0|J||PB|J|3||N|||U|jg|DE|DE||
+|MB291 Web- and App-Analytics<br>TB282<br>Web- and App-Analytics<br>TB126<br>Web-Analytics Projekt|MB291 Web- and App-Analytics<br>TB282<br>Web- and App-Analytics<br>TB126<br>Web-Analytics Projekt|MB291 Web- and App-Analytics<br>TB282<br>Web- and App-Analytics<br>TB126<br>Web-Analytics Projekt|||||||||||||||||||||Informatik und Data Analytics|||awo|||Wirtschaft|
+|MB291 Web- and App-Analytics<br>TB282<br>Web- and App-Analytics<br>TB126<br>Web-Analytics Projekt|TB282|Web- and App-Analytics||||2,0||||S|2|12|15,0|45,0|60,0|N||K1|J|3*|60|J|||VU|awo|DE|DE||
+|MB291 Web- and App-Analytics<br>TB282<br>Web- and App-Analytics<br>TB126<br>Web-Analytics Projekt|TB126|Web-Analytics Projekt||||3,0||||S|3|12|22,5|67,5|90,0|J||SA|J|3||N|||PR|awo|DE|DE||
+|MB040 Algorithmen und Datenstrukturen<br>TB015<br>Algorithmen und Datenstrukturen<br>TB016<br>Übg. Algorithmen und Datenstrukturen|MB040 Algorithmen und Datenstrukturen<br>TB015<br>Algorithmen und Datenstrukturen<br>TB016<br>Übg. Algorithmen und Datenstrukturen|MB040 Algorithmen und Datenstrukturen<br>TB015<br>Algorithmen und Datenstrukturen<br>TB016<br>Übg. Algorithmen und Datenstrukturen||||||||||||||||||||||||uhl|||Informatik|
+|MB040 Algorithmen und Datenstrukturen<br>TB015<br>Algorithmen und Datenstrukturen<br>TB016<br>Übg. Algorithmen und Datenstrukturen|TB015|Algorithmen und Datenstrukturen|||||3,0|||W|4|12|30,0|60,0|90,0|N|TB011|K1|J|3*|90|J|||V|uhl|DE|DE||
+|MB040 Algorithmen und Datenstrukturen<br>TB015<br>Algorithmen und Datenstrukturen<br>TB016<br>Übg. Algorithmen und Datenstrukturen|TB016|Übg. Algorithmen und Datenstrukturen|||||2,0|||W|2|12|15,0|45,0|60,0|J||AB|N|o.B.||N|||U|mhe|DE|DE||
+|MB102 Geometrische Modellierung und Computeranimation<br>TB081<br>Geometrische Modellierung und Computeranimation<br>TB084<br>Prakt. Geometrische Modellierung und Computeranimation|MB102 Geometrische Modellierung und Computeranimation<br>TB081<br>Geometrische Modellierung und Computeranimation<br>TB084<br>Prakt. Geometrische Modellierung und Computeranimation|MB102 Geometrische Modellierung und Computeranimation<br>TB081<br>Geometrische Modellierung und Computeranimation<br>TB084<br>Prakt. Geometrische Modellierung und Computeranimation||||||||||||||||||||||||bo|||Integrationsfach|
+|MB102 Geometrische Modellierung und Computeranimation<br>TB081<br>Geometrische Modellierung und Computeranimation<br>TB084<br>Prakt. Geometrische Modellierung und Computeranimation|TB081|Geometrische Modellierung und Computeranimation|||||2,0|||W|2|12|15,0|45,0|60,0|N||K1|J|3*|90|J|||V|bo|DE|DE||
+|MB102 Geometrische Modellierung und Computeranimation<br>TB081<br>Geometrische Modellierung und Computeranimation<br>TB084<br>Prakt. Geometrische Modellierung und Computeranimation|TB084|Prakt. Geometrische Modellierung und Computeranimation|||||3,0|||W|4|12|30,0|60,0|90,0|J|TB071|AB|J|3||N|||U|pmu|DE|DE||
+|MB116 Technologie der Mediengestaltung und GUI-Programmierung<br>TB089<br>Technologie der Mediengestaltung und GUI-Programmierung|MB116 Technologie der Mediengestaltung und GUI-Programmierung<br>TB089<br>Technologie der Mediengestaltung und GUI-Programmierung|MB116 Technologie der Mediengestaltung und GUI-Programmierung<br>TB089<br>Technologie der Mediengestaltung und GUI-Programmierung||||||||||||||||||||||||uh|||Medien & Kommunikation|
+|MB116 Technologie der Mediengestaltung und GUI-Programmierung<br>TB089<br>Technologie der Mediengestaltung und GUI-Programmierung|TB089|Technologie der Mediengestaltung und GUI-Programmierung|||||5,0|||W|4|12|30,0|120,0|150,0|N||K1|J|3*|60|J|||V|ona|DE|DE||
+|MB266<br>TB091<br>Virtual und Augmented Reality<br>TB257<br>Prakt. Virtual Reality<br>Virtual and Augmented Reality|MB266<br>TB091<br>Virtual und Augmented Reality<br>TB257<br>Prakt. Virtual Reality<br>Virtual and Augmented Reality|MB266<br>TB091<br>Virtual und Augmented Reality<br>TB257<br>Prakt. Virtual Reality<br>Virtual and Augmented Reality||||||||||||||||||||||||bo|||Integrationsfach|
+|MB266<br>TB091<br>Virtual und Augmented Reality<br>TB257<br>Prakt. Virtual Reality<br>Virtual and Augmented Reality|TB091|Virtual und Augmented Reality|||||2,0|||W|2|12|15,0|45,0|60,0|N||K1|J|3*|90|J|||V|bo|DE|DE||
+|MB266<br>TB091<br>Virtual und Augmented Reality<br>TB257<br>Prakt. Virtual Reality<br>Virtual and Augmented Reality|TB257|Prakt. Virtual Reality|||||3,0|5,0||W+S|3|12|22,5|217,5|240,0|J||AB|J|3||N|||U|mpg|DE|DE||
+|MB107 Einführung in die Robotik<br>TB080<br>Einführung in die Robotik<br>TB086<br>Prakt. Robotik|MB107 Einführung in die Robotik<br>TB080<br>Einführung in die Robotik<br>TB086<br>Prakt. Robotik|MB107 Einführung in die Robotik<br>TB080<br>Einführung in die Robotik<br>TB086<br>Prakt. Robotik|||||||||||||||||||||Human Computer Interface|||uh|||Informatik|
+|MB107 Einführung in die Robotik<br>TB080<br>Einführung in die Robotik<br>TB086<br>Prakt. Robotik|TB080|Einführung in die Robotik|||||2,0|||W|2|12|15,0|45,0|60,0|N||K1|J|3*|120|J|||V|uh|DE|DE||
+|MB107 Einführung in die Robotik<br>TB080<br>Einführung in die Robotik<br>TB086<br>Prakt. Robotik|TB086|Prakt. Robotik|||||3,0|||W|2|12|15,0|75,0|90,0|J|TB011|PB|J|3||N|||U|hoe|DE|DE||
+|MB244 Exploratory Data Analysis<br>Data Visualization<br>Feature Engineering<br>TB090<br>Übg. Exploratory Data Analysis<br>TB079|MB244 Exploratory Data Analysis<br>Data Visualization<br>Feature Engineering<br>TB090<br>Übg. Exploratory Data Analysis<br>TB079|MB244 Exploratory Data Analysis<br>Data Visualization<br>Feature Engineering<br>TB090<br>Übg. Exploratory Data Analysis<br>TB079|||||||||||||||||||||Informatik und Data Analytics|||ann|||Integrationsfach|
+|MB244 Exploratory Data Analysis<br>Data Visualization<br>Feature Engineering<br>TB090<br>Übg. Exploratory Data Analysis<br>TB079|TB079|Data Visualization|||||2,0|||W|2|12|15,0|45,0|60,0|N||K1|J|3*|90|J|||VU|ann|DE|DE||
+|MB244 Exploratory Data Analysis<br>Data Visualization<br>Feature Engineering<br>TB090<br>Übg. Exploratory Data Analysis<br>TB079|TB079|Feature Engineering|||||1,0|||W|2|12|15,0|15,0|30,0|N|N|N|N|N|N|N|||VU|ann|DE|DE||
+|MB244 Exploratory Data Analysis<br>Data Visualization<br>Feature Engineering<br>TB090<br>Übg. Exploratory Data Analysis<br>TB079|TB090|Übg. Exploratory Data Analysis|||||2,0|||W|2|12|15,0|45,0|60,0|N||AB|N|o.B.||N|||U|mpa|DE|DE||
+|MB268<br>TB259<br>Projekt App- und Web-Development<br>Projekt App- und Web-Development|MB268<br>TB259<br>Projekt App- und Web-Development<br>Projekt App- und Web-Development|MB268<br>TB259<br>Projekt App- und Web-Development<br>Projekt App- und Web-Development||||||||||||||||||||||A1||Doz|||Integrationsfach|
+|MB268<br>TB259<br>Projekt App- und Web-Development<br>Projekt App- und Web-Development|TB259|Projekt App- und Web-Development|||||5,0|||W+S|2|12|15,0|135,0|150,0|J||SA|J|3||N|||PR|Doz|DE|DE||
+|MB318 Projekt Video-Marketing<br>TB311<br>Projekt Video-Marketing|MB318 Projekt Video-Marketing<br>TB311<br>Projekt Video-Marketing|MB318 Projekt Video-Marketing<br>TB311<br>Projekt Video-Marketing||||||||||||||||||||||||ann|||Integrationsfach|
+|MB318 Projekt Video-Marketing<br>TB311<br>Projekt Video-Marketing|TB311|Projekt Video-Marketing|||||10,0|||W+S|4|24|120,0|180,0|300,0|J||SA|J|3||N|||PR|ann|DE|DE||
+|MB319 Projekt Video-Marketing<br>TB310<br>Projekt Video-Marketing|MB319 Projekt Video-Marketing<br>TB310<br>Projekt Video-Marketing|MB319 Projekt Video-Marketing<br>TB310<br>Projekt Video-Marketing||||||||||||||||||||||||ann|||Integrationsfach|
+|MB319 Projekt Video-Marketing<br>TB310<br>Projekt Video-Marketing|TB310|Projekt Video-Marketing|||||5,0|||W+S|4|12|120,0|180,0|300,0|J||SA|J|3||N|||PR|ann|DE|DE||
+|MB057 Fortgeschrittene Objektorientierte Programmierung<br>TB024<br>Fortgeschrittene Objektorientierte Programmierung<br>TB025<br>Übg. Fortgeschrittene Objektorientierte Programmierung|MB057 Fortgeschrittene Objektorientierte Programmierung<br>TB024<br>Fortgeschrittene Objektorientierte Programmierung<br>TB025<br>Übg. Fortgeschrittene Objektorientierte Programmierung|MB057 Fortgeschrittene Objektorientierte Programmierung<br>TB024<br>Fortgeschrittene Objektorientierte Programmierung<br>TB025<br>Übg. Fortgeschrittene Objektorientierte Programmierung|||||||||||||||||||||Informatik und Data Analytics|A1*||uhl|||Informatik|
+|MB057 Fortgeschrittene Objektorientierte Programmierung<br>TB024<br>Fortgeschrittene Objektorientierte Programmierung<br>TB025<br>Übg. Fortgeschrittene Objektorientierte Programmierung|TB024|Fortgeschrittene Objektorientierte Programmierung||||||2,0||S|2|12|15,0|45,0|60,0|N|TB011|K1|J|3*|120|J|||V|uhl|DE|DE||
+|MB057 Fortgeschrittene Objektorientierte Programmierung<br>TB024<br>Fortgeschrittene Objektorientierte Programmierung<br>TB025<br>Übg. Fortgeschrittene Objektorientierte Programmierung|TB025|Übg. Fortgeschrittene Objektorientierte Programmierung||||||3,0||S|2|12|15,0|75,0|90,0|J||AB|N|o.B.||N|||U|mhe|DE|DE||
+|MB118 Soft Skills<br>TB042<br>Assistenz<br>TB043<br>Communication Skills|MB118 Soft Skills<br>TB042<br>Assistenz<br>TB043<br>Communication Skills|MB118 Soft Skills<br>TB042<br>Assistenz<br>TB043<br>Communication Skills||||||||||||||||||||||A1||Doz|||Medien & Kommunikation|
+|MB118 Soft Skills<br>TB042<br>Assistenz<br>TB043<br>Communication Skills|TB042|Assistenz||||||3,0||W+S|3|12|22,5|67,5|90,0|N||SA|N|o.B.||N|||A|Doz|DE|DE||
+|MB118 Soft Skills<br>TB042<br>Assistenz<br>TB043<br>Communication Skills|TB043|Communication Skills||||||2,0||W+S|2|12|15,0|45,0|60,0|J||SA|N|o.B.||N|||W|amk|DE|DE||
+|MB121 Software-Projekt<br>TB046<br>Projektmanagement<br>TB047<br>Softwareprojekt|MB121 Software-Projekt<br>TB046<br>Projektmanagement<br>TB047<br>Softwareprojekt|MB121 Software-Projekt<br>TB046<br>Projektmanagement<br>TB047<br>Softwareprojekt||||||||||||||||||||||A1||Doz|||Integrationsfach|
+|MB121 Software-Projekt<br>TB046<br>Projektmanagement<br>TB047<br>Softwareprojekt|TB046|Projektmanagement||||||2,0||S|2|12|15,0|45,0|60,0|N||K1|J|3*|60|J|||V|gre|DE (EN)|DE/EN||
+|MB121 Software-Projekt<br>TB046<br>Projektmanagement<br>TB047<br>Softwareprojekt|TB047|Softwareprojekt||||||8,0||W+S|4|12|30,0|210,0|240,0|J||PB|J|3||N|||PR|bo|DE|DE||
+|MB147 Seminar Medieninformatik<br>TB040<br>Seminar|MB147 Seminar Medieninformatik<br>TB040<br>Seminar|MB147 Seminar Medieninformatik<br>TB040<br>Seminar||||||||||||||||||||||A1||Doz|||Integrationsfach|
+|MB147 Seminar Medieninformatik<br>TB040<br>Seminar|TB040|Seminar||||||5,0||W+S|2|12|15,0|135,0|150,0|J||SA|J|3||N|||S|Doz|DE (EN)|DE||
+|MB257 Auslandssemester<br>TB039<br>Auslandssemester|MB257 Auslandssemester<br>TB039<br>Auslandssemester|MB257 Auslandssemester<br>TB039<br>Auslandssemester||||||||||||||||||||||A2||sal|||Integrationsfach|
+|MB257 Auslandssemester<br>TB039<br>Auslandssemester|TB039|Auslandssemester||||||30,0||W+S|25|12|187,5|712,5|900,0|N||AU|J|3||N|||Y|sal|DE|DE||
+|MB273 Projekt Interfaces<br>TB264<br>Projekt Interfaces|MB273 Projekt Interfaces<br>TB264<br>Projekt Interfaces|MB273 Projekt Interfaces<br>TB264<br>Projekt Interfaces|||||||||||||||||||||Human Computer Interface|A1*||bo|||Technik|
+|MB273 Projekt Interfaces<br>TB264<br>Projekt Interfaces|TB264|Projekt Interfaces||||||5,0||S|2|12|15,0|135,0|150,0|J||AB|J|3||N|||PR|bo|DE|DE||
+|MB150 Bachelor-Thesis<br>TB050<br>Bachelor-Thesis|MB150 Bachelor-Thesis<br>TB050<br>Bachelor-Thesis|MB150 Bachelor-Thesis<br>TB050<br>Bachelor-Thesis||||||||||||||||||||||||Doz|||Integrationsfach|
+|MB150 Bachelor-Thesis<br>TB050<br>Bachelor-Thesis|TB050|Bachelor-Thesis|||||||12,0|W+S|0|12|0,0|360,0|360,0|N||SA|J|2||N|||TS|Doz|DE|DE||
+|MB159 Praktikum<br>TB051<br>Praktikum|MB159 Praktikum<br>TB051<br>Praktikum|MB159 Praktikum<br>TB051<br>Praktikum||||||||||||||||||||||||Doz|||Integrationsfach|
+|MB159 Praktikum<br>TB051<br>Praktikum|TB051|Praktikum|||||||17,0|W+S|0|12|0,0|510,0|510,0|N||PB|N|o.B.||N|||BR|Doz|DE|DE||
+|MB160 Bachelor-Kolloquium<br>TB052<br>Bachelor-Kolloquium|MB160 Bachelor-Kolloquium<br>TB052<br>Bachelor-Kolloquium|MB160 Bachelor-Kolloquium<br>TB052<br>Bachelor-Kolloquium||||||||||||||||||||||||Doz|||Integrationsfach|
+|MB160 Bachelor-Kolloquium<br>TB052<br>Bachelor-Kolloquium|TB052|Bachelor-Kolloquium|||||||1,0|W+S|1|12|7,5|22,5|30,0|N|TB050|KO|J|2|15|N|||K|Doz|DE|DE||
+
+

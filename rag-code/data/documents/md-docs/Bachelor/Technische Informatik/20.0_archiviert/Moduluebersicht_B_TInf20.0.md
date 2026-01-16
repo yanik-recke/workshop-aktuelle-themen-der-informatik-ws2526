@@ -1,0 +1,51 @@
+## **Bachelor Technische Informatik**
+
+![](_page_0_Picture_1.jpeg)
+
+![](_page_0_Picture_2.jpeg)
+
+| Semester 1                    | Semester 2                                                                  | Semester 3                          | Semester 4                                                                 | Semester 5                                                                                                                    | Semester 6  Mobilitätsfenster         | Semester 7          |
+|-------------------------------|-----------------------------------------------------------------------------|-------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|---------------------|
+| Informationstechnik  I 5 ECTS | Programmstrukturen 2                                                        | Algorithmen & Datenstrukturen       | Bildbearbeitung & -analyse                                                 | Großintegrierte Systeme  I 5 ECTS                                                                                             | Laborprojekt                          |                     |
+| Programmstrukturen 1          | UNIX- & Shell-<br>Programmierung                                            | Systemnahe Programmierung  I 5 ECTS | Fortgeschrittene<br>Objektorientierte<br>Programmierung                    | Rechnernetze  I 5 ECTS                                                                                                        | X 10 ECTS                             | Betriebspraktikum   |
+| Digitaltechnik T 5 ECTS       | Halbleiterphysik & Optik                                                    | Programmier-<br>praktikum           | Echtzeitsysteme T 5 ECTS                                                   | Regelungstechnik T 5 ECTS                                                                                                     | Diskrete Systeme                      | X 17 ECTS           |
+| Mechanik & Elektrotechnik     | Rechnerstrukturen & Digitaltechnik                                          | Elektronik<br>T 5 ECTS              | Halbleiterschaltungs-<br>technik                                           | Seminar Technische Informatik T 5 ECTS                                                                                        | Projekt Eingebettete Systeme T 5 ECTS |                     |
+| Diskrete Mathematik           | Übertragungstechnik                                                         | Ingenieur-<br>mathematik            | Systemtheorie T 5 ECTS                                                     | Einführung in die<br>Betriebswirtschaft<br>w 5 ects                                                                           | Systementwurf<br>mit VHDL             | Thesis & Kolloquium |
+| Analysis M 5 ECTS             | Deskriptive Statistik<br>und Grundlagen der<br>Linearen Algebra<br>M 5 ECTS | Lineare Algebra  M 5 ECTS           | Wahlblock (1 aus 2) Grundlagen der Computergrafik Software-Design V 5 ECTS | Wahlblock (1 aus 4) Einführung in Datenbanken Einführung in die Robotik Anwendungen der KI Netzwerk- und Messtechnik V 5 ECTS | Soft Skills<br>s 5 ects               | X 13 ECTS           |
+| I INFORMATIK                  | T TECHNIK                                                                   | W WIRTSCHAFT                        | M MATHEMATIK                                                               | X INTEGRATIONSFACH                                                                                                            | V VERTIEFUNG/WAHL                     | S SOFT SKILLS       |
+
+## **Bachelor Technische Informatik**
+
+![](_page_1_Picture_1.jpeg)
+
+![](_page_1_Picture_2.jpeg)
+
+| Semester 1                                                                     | Semester 2                                             | Semester 3                                           | Semester 4                                      | Semester 5                                                             | Semester 6                                                                                                                                      | Semester 7                      |
+|--------------------------------------------------------------------------------|--------------------------------------------------------|------------------------------------------------------|-------------------------------------------------|------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| Programmstrukturen 1<br>I<br>5 ECTS                                            | Informationstechnik<br>I<br>5 ECTS                     | UNIX- & Shell<br>Programmierung<br>I<br>5 ECTS       | Algorithmen &<br>Datenstrukturen<br>I<br>5 ECTS | Bildbearbeitung &<br>-analyse<br>X<br>5 ECTS                           | Laborprojekt2)<br>X<br>10 ECTS                                                                                                                  | Betriebspraktikum               |
+| Digitaltechnik<br>T<br>5 ECTS                                                  | Programmstrukturen 2<br>I<br>5 ECTS                    | Echtzeitsysteme<br>T<br>5 ECTS                       | Systemnahe<br>Programmierung<br>I<br>5 ECTS     | Fortgeschrittene<br>Objektorientierte<br>Programmierung<br>I<br>5 ECTS |                                                                                                                                                 |                                 |
+| Diskrete Mathematik<br>M<br>5 ECTS                                             | Rechnernetze<br>I<br>5 ECTS                            | Halbleiterphysik &<br>Optik<br>T<br>5 ECTS           | Großintegrierte<br>Systeme<br>I<br>5 ECTS       | Systementwurf<br>mit VHDL<br>T<br>5 ECTS                               | Regelungstechnik<br>T<br>5 ECTS                                                                                                                 | X<br>17 ECTS                    |
+| Analysis<br>M<br>5 ECTS                                                        | Mechanik &<br>Elektrotechnik<br>T<br>5 ECTS            | Rechnerstrukturen &<br>Digitaltechnik<br>T<br>5 ECTS | Programmier<br>praktikum<br>I<br>5 ECTS         | Halbleiterschaltungs<br>technik<br>T<br>5 ECTS                         | Seminar<br>Technische Informatik<br>T<br>5 ECTS                                                                                                 |                                 |
+| Deskriptive Statistik<br>und Grundlagen der<br>Linearen Algebra<br>M<br>5 ECTS | Lineare Algebra<br>M<br>5 ECTS                         | Übertragungstechnik<br>T<br>5 ECTS                   | Elektronik<br>T<br>5 ECTS                       | Projekt<br>Eingebettete Systeme<br>T<br>5 ECTS                         | Soft Skills<br>S<br>5 ECTS                                                                                                                      | Thesis & Kolloquium             |
+|                                                                                | Einführung in die<br>Betriebswirtschaft<br>W<br>5 ECTS |                                                      | Ingenieur<br>mathematik<br>M<br>5 ECTS          | Systemtheorie<br>T<br>5 ECTS                                           | Wahlblock (1 aus 4)<br>Einführung in Datenbanken<br>Einführung in die Robotik<br>Anwendungen der KI<br>Netzwerk- und Messtechnik<br>V<br>5 ECTS | X<br>13 ECTS                    |
+|                                                                                |                                                        |                                                      |                                                 | Wahlblock (1 aus 2)<br>Grundlagen der Computergrafik                   |                                                                                                                                                 | Diskrete Systeme                |
+| I<br>INFORMATIK                                                                | T<br>TECHNIK                                           | W<br>WIRTSCHAFT                                      | M<br>MATHEMATIK                                 | Software-Design<br>V<br>5 ECTS<br>X<br>INTEGRATIONSFACH                | V<br>VERTIEFUNG/WAHL                                                                                                                            | T<br>5 ECTS<br>S<br>SOFT SKILLS |
+
+## **Bachelor Technische Informatik**
+
+## Anmerkungen
+
+![](_page_2_Picture_2.jpeg)
+
+- 1) Mobilitätsfenster:
+- Dual Studierende verbringen dieses Semester als Praxissemester in ihrem Betrieb
+- Für Vollzeitstudierende ist in diesem Semester ein Auslandssemester möglich.
+
+Bei Studierenden mit Studienstart zum Sommersemester ist zur Wahrnehmung eines Mobilitätsfensters eine Beratung erforderlich.
+
+- 2) Die Veranstaltung Projektmanagement des Moduls Laborprojekt findet bei Studienstart zum Sommersemester nicht im 6. sondern im 5. Semester statt.
+- 3) Die folgenden Leistungen müssen bis zum Ende des 5. Studiensemesters erbracht werden und sind ebenfalls Voraussetzung für die Zulassung zum Auslandssemester. Ohne erfolgreiche Übergangsprüfung erfolgt die Exmatrikulation.
+
+Analysis Übung Analysis Diskrete Mathematik Programmstrukturen 1 Übung Programmstrukturen 1 Informationstechnik
+
+4) Weitere Informationen zu Prüfungstypen und Vorbedingungen zu Prüfungen finden sich im Studienverlaufsplan. Die Inhalte der einzelnen Lehrveranstaltungen sind im Modulhandbuch beschrieben.

@@ -22,37 +22,40 @@ def load_metadata(meta_file: Path) -> Dict[str, dict]:
 
     lookup: Dict[str, dict] = {}
     for entry in raw:
-        filename = Path(entry["local_path"]).name
-        lookup[filename] = entry
+        # Use local_md_path for the lookup key (just the filename)
+        md_path = entry.get("local_md_path", "")
+        if md_path:
+            filename = Path(md_path).name
+            lookup[filename] = entry
 
-    print(f"🔎 Metadaten geladen: {len(lookup)} Einträge")
+    print(f"[INFO] Metadaten geladen: {len(lookup)} Eintraege")
     return lookup
 
 
 
-def find_pdfs_with_metadata(base_dir: Path, metadb: Dict[str, dict]) -> List[Dict]:
+def find_docs_with_metadata(base_dir: Path, metadb: Dict[str, dict]) -> List[Dict]:
     """
-    Sucht alle PDFs im DATA_DIR und ordnet ihnen die Metadaten aus fhwedel_docs.json zu.
+    Sucht alle Markdown-Dateien im DATA_DIR und ordnet ihnen die Metadaten aus fhwedel_docs.json zu.
     Liefert Liste:
       [{"path": Path, "meta": {...}}, ...]
     """
-    pdfs = list(base_dir.rglob("*.pdf"))
+    md_files = list(base_dir.rglob("*.md"))
     results: List[Dict] = []
 
-    for path in pdfs:
+    for path in md_files:
         filename = path.name
         meta = metadb.get(filename)
         if not meta:
-            print(f"⚠️ Warnung: Keine Metadaten zu {filename} gefunden")
+            print(f"[WARN] Keine Metadaten zu {filename} gefunden")
             continue
 
-        if meta.get("status") and meta["status"] != "aktuell" or "Moduluebersicht".upper() in meta.get("filename").upper():
+        if meta.get("status") and meta["status"] != "aktuell" or "Moduluebersicht".upper() in meta.get("filename", "").upper():
             continue
 
         results.append({
             "path": path,
             "meta": {
-                "filename": meta.get("filename"),
+                "filename": filename,
                 "degree": meta.get("degree"),
                 "program": meta.get("program"),
                 "doctype": meta.get("doctype"),
@@ -62,8 +65,14 @@ def find_pdfs_with_metadata(base_dir: Path, metadb: Dict[str, dict]) -> List[Dic
             }
         })
 
-    print(f"📚 PDFs mit Metadaten: {len(results)}")
+    print(f"[INFO] Markdown-Dateien mit Metadaten: {len(results)}")
     return results
+
+
+# Backward compatibility alias
+def find_pdfs_with_metadata(base_dir: Path, metadb: Dict[str, dict]) -> List[Dict]:
+    """Deprecated: Use find_docs_with_metadata instead."""
+    return find_docs_with_metadata(base_dir, metadb)
 
 
 
@@ -155,14 +164,13 @@ def prepare_sources_and_meta() -> Tuple[List[Path], List[dict]]:
     """
     Wird von der Indexing-Pipeline verwendet:
     - lädt Metadaten
-    - findet passende PDFs
+    - findet passende Markdown-Dateien
     - gibt zwei parallele Listen zurück:
         sources: List[Path]
         metas:   List[dict]
     """
     metadb = load_metadata(Path(META_FILE))
-    entries = find_pdfs_with_metadata(DATA_DIR, metadb)
-    # entries = entries[:10]  # Removed limit - index all PDFs
+    entries = find_docs_with_metadata(DATA_DIR, metadb)
     sources = [e["path"] for e in entries]
     metas = [e["meta"] for e in entries]
     return sources, metas

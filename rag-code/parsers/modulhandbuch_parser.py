@@ -5,7 +5,6 @@ import re
 from pathlib import Path
 from typing import List, Dict
 
-import fitz  # PyMuPDF
 from haystack.dataclasses import Document
 
 from .base_parser import BaseParser
@@ -31,13 +30,11 @@ class ModulhandbuchParser(BaseParser):
     MODULE_START = re.compile(r"(Modulname|Modultitel)\s*[:\-]?", re.IGNORECASE)
 
     # ---------------------------------------------------------
-    # PDF Extraction
+    # Markdown Extraction
     # ---------------------------------------------------------
-    def _load_pdf_text(self, path: Path) -> str:
-        """Extract raw PDF text."""
-        doc = fitz.open(str(path))
-        pages = [page.get_text("text") for page in doc]
-        return "\n".join(pages)
+    def _load_text(self, path: Path) -> str:
+        """Read markdown file text."""
+        return self._read_markdown(path)
 
     # ---------------------------------------------------------
     # Module Split
@@ -157,7 +154,7 @@ class ModulhandbuchParser(BaseParser):
         - erzeugt strukturierte Chunks
         - setzt Metadaten
         """
-        text = self._load_pdf_text(path)
+        text = self._load_text(path)
         module_blocks = self._split_into_modules(text)
 
         documents: List[Document] = []

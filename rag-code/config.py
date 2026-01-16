@@ -1,11 +1,15 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
 
 # === Pfade ===
 PROJECT_ROOT = Path(__file__).parent
-# Ordner mit deinen PDF-Dateien
-DATA_DIR = PROJECT_ROOT # / "data_fh_wedel_pdfs"
-META_FILE = PROJECT_ROOT / "fhwedel_docs.json"
+# Ordner mit Markdown-Dateien
+DATA_DIR = PROJECT_ROOT / "data" / "documents" / "md-docs"
+META_FILE = PROJECT_ROOT / "data" / "documents" / "meta.json"
 
 # === Qdrant ===
 # Use env, fallback to localhost as default value

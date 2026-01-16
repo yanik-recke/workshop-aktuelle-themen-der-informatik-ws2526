@@ -10,13 +10,15 @@ from haystack.dataclasses import Document
 
 class BaseParser(ABC):
     """
-    Abstrakte Basis-Klasse für alle FH-Wedel-spezifischen PDF-Parser.
+    Abstrakte Basis-Klasse für alle FH-Wedel-spezifischen Markdown-Parser.
 
     Idee:
     - can_handle(meta): entscheidet, ob dieser Parser für das Dokument zuständig ist
       (z.B. anhand von meta["doctype"])
     - parse(path, meta): erzeugt eine Liste von Haystack-Documents mit sinnvollem,
       für RAG geeigneten Text.
+    
+    Die Eingabedateien sind Markdown-Dateien (.md), die aus PDFs konvertiert wurden.
     """
 
     # Liste der unterstützten Doctypes (z.B. ["Studienverlaufsplan"])
@@ -32,9 +34,16 @@ class BaseParser(ABC):
     @abstractmethod
     def parse(self, path: Path, meta: Dict) -> List[Document]:
         """
-        Liest die PDF-Datei und gibt eine Liste von Haystack-Documents zurück.
+        Liest die Markdown-Datei und gibt eine Liste von Haystack-Documents zurück.
         """
         raise NotImplementedError("Subclasses must implement parse()")
+    
+    def _read_markdown(self, path: Path) -> str:
+        """
+        Liest eine Markdown-Datei und gibt den Text zurück.
+        """
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
 
     # Kleine Hilfsfunktion für ein konsistentes Meta-Mapping
     def _base_meta(self, meta: Dict) -> Dict:
