@@ -1,0 +1,95 @@
+**M_WIng16.0** **Studienverlaufs- und Prüfungsplan Wirtschaftsingenieurwesen (M.Sc.)**
+
+|Col1|Col2|Col3|Aufwand pro Semester|Col5|Col6|Col7|Col8|Col9|Col10|Col11|Col12|Col13|Prüfung|Col15|Col16|Col17|Col18|Col19|Einordnung|Col21|Col22|Col23|Col24|Col25|Col26|Col27|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**ECTS pro**<br>**Sem.**|**ECTS pro**<br>**Sem.**|**ECTS pro**<br>**Sem.**|**Fq.**|**SWS**|** Hfgk.**|**WS**|**KoZ**|**EiZ**|**Anw.**|**Vorl.**|**Art**|** Ben.**|** Vers.**|**  Dauer**|**  OA.**|**Vert.**|**WB.**|**LF.**|**Mit.**|**Sprache**|**Sprache**|**Fachgebiet**|**Curricularer**<br>**Bezug**|
+|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Prfg.-Nr.**|**Veranstaltung**|**1.**|**2.**|**3.**||||**[min]**|**[h]**|**[h]**||||||**[min]**||||||**V.**|**M.**|||
+|M101<br>Business Intelligence und Data Science<br>M101a<br>Business Intelligence und Data Science|M101<br>Business Intelligence und Data Science<br>M101a<br>Business Intelligence und Data Science|M101<br>Business Intelligence und Data Science<br>M101a<br>Business Intelligence und Data Science||||||||||||||||||||msz|||Informatik||
+|M101<br>Business Intelligence und Data Science<br>M101a<br>Business Intelligence und Data Science|M101a|Business Intelligence und Data Science|5.0|||S|6|12|225.0|45.0|105.0|N||K2|J|3|90|J|||VU|msz|DE/EN|DE/EN|||
+|M004<br>Angewandte Mikroökonomik<br>M004a<br>Entscheidungstheorie<br>Industrieökonomik|M004<br>Angewandte Mikroökonomik<br>M004a<br>Entscheidungstheorie<br>Industrieökonomik|M004<br>Angewandte Mikroökonomik<br>M004a<br>Entscheidungstheorie<br>Industrieökonomik||||||||||||||||||||gi|||Wirtschaft||
+|M004<br>Angewandte Mikroökonomik<br>M004a<br>Entscheidungstheorie<br>Industrieökonomik|M004a|Entscheidungstheorie|2.5|||S|2|12|75.0|15.0|60.0|N||K2|J|3|120|J|||VU|gi|DE|DE|||
+|M004<br>Angewandte Mikroökonomik<br>M004a<br>Entscheidungstheorie<br>Industrieökonomik|M004a|Industrieökonomik|2.5|||S|2|12|75.0|15.0|60.0|N|N|N|N|N|N|N|||VU|gi|DE(EN)|EN|||
+|M014<br>Modern Production Methods<br>M014a<br>Fiber reinforced plastics and hybrids<br>(FRP)<br>M014b<br>Laser Engineering|M014<br>Modern Production Methods<br>M014a<br>Fiber reinforced plastics and hybrids<br>(FRP)<br>M014b<br>Laser Engineering|M014<br>Modern Production Methods<br>M014a<br>Fiber reinforced plastics and hybrids<br>(FRP)<br>M014b<br>Laser Engineering||||||||||||||||||||aha|||Technik||
+|M014<br>Modern Production Methods<br>M014a<br>Fiber reinforced plastics and hybrids<br>(FRP)<br>M014b<br>Laser Engineering|M014a|Fiber reinforced plastics and hybrids<br>(FRP)|2.5|||S|2|12|75.0|15.0|60.0|N||KM|J|3|120|J|||V|hle|EN|EN|||
+|M014<br>Modern Production Methods<br>M014a<br>Fiber reinforced plastics and hybrids<br>(FRP)<br>M014b<br>Laser Engineering|M014b|Laser Engineering|2.5|||S|2|12|75.0|15.0|60.0|N||KM|J|3|60|J|||V|dmi|EN|EN|||
+|M020<br>Social Skills<br>M020a<br>Verhandlungsführung<br>M020b<br>Assistenz|M020<br>Social Skills<br>M020a<br>Verhandlungsführung<br>M020b<br>Assistenz|M020<br>Social Skills<br>M020a<br>Verhandlungsführung<br>M020b<br>Assistenz||||||||||||||||||||ba|||Medien &<br>Kommunikation||
+|M020<br>Social Skills<br>M020a<br>Verhandlungsführung<br>M020b<br>Assistenz|M020a|Verhandlungsführung|3.0|||S|2|12|75.0|15.0|75.0|J||AB|N|o. B.||N|||W|mt|DE|DE|||
+|M020<br>Social Skills<br>M020a<br>Verhandlungsführung<br>M020b<br>Assistenz|M020b|Assistenz|2.0|||S|2|12|75.0|15.0|45.0|J||SA|N|o. B.||N|||A|div|DE|DE|||
+|M011<br>Entscheidungsunterstützung<br>M011a<br>Modellierung und Simulation<br>M011b<br>Smart Data|M011<br>Entscheidungsunterstützung<br>M011a<br>Modellierung und Simulation<br>M011b<br>Smart Data|M011<br>Entscheidungsunterstützung<br>M011a<br>Modellierung und Simulation<br>M011b<br>Smart Data|||||||||||||||||IT-Management|B3||hs|||Integrationsfach||
+|M011<br>Entscheidungsunterstützung<br>M011a<br>Modellierung und Simulation<br>M011b<br>Smart Data|M011a|Modellierung und Simulation|3.0|||S|3|12|112.5|22.5|67.5|N||KM|J|3|120|J|||VU|hs|DE|DE|||
+|M011<br>Entscheidungsunterstützung<br>M011a<br>Modellierung und Simulation<br>M011b<br>Smart Data|M011b|Smart Data|2.0|||S|2|12|75.0|15.0|45.0|J||SA|J|3||N|||W|dpr|DE|DE|||
+|M116<br>Seminar Informatik<br>M116a<br>Seminar Informatik|M116<br>Seminar Informatik<br>M116a<br>Seminar Informatik|M116<br>Seminar Informatik<br>M116a<br>Seminar Informatik|||||||||||||||||IT-Management|B3||Doz|||Informatik||
+|M116<br>Seminar Informatik<br>M116a<br>Seminar Informatik|M116a|Seminar Informatik|5.0|||E|2|12|75.0|15.0|135.0|J||SA|J|3||N|||S|Doz|DE|DE|||
+|M142<br>Umwelttechnik<br>M142a<br>Umwelttechnik|M142<br>Umwelttechnik<br>M142a<br>Umwelttechnik|M142<br>Umwelttechnik<br>M142a<br>Umwelttechnik|||||||||||||||||Energie- und<br>Umwelttechnik|B5||smt|||Technik||
+|M142<br>Umwelttechnik<br>M142a<br>Umwelttechnik|M142a|Umwelttechnik|5.0|||S|4|12|150.0|30.0|120.0|N||MP|J|3|20|J|||V|smt|||||
+|M144<br>Projektstudie Technik<br>M144a<br>Projektstudie Technik|M144<br>Projektstudie Technik<br>M144a<br>Projektstudie Technik|M144<br>Projektstudie Technik<br>M144a<br>Projektstudie Technik|||||||||||||||||Energie- und<br>Umwelttechnik|B5||ba|||Technik||
+|M144<br>Projektstudie Technik<br>M144a<br>Projektstudie Technik|M144a|Projektstudie Technik|5.0|||S|4|12|150.0|30.0|120.0|N||SA|J|3||N|||PR|Doz|DE|DE|||
+|M115<br>Technical Optics<br>M115a<br>Technical Optics|M115<br>Technical Optics<br>M115a<br>Technical Optics|M115<br>Technical Optics<br>M115a<br>Technical Optics|||||||||||||||||Optik und Sensoren|B2||aha|||Technik||
+|M115<br>Technical Optics<br>M115a<br>Technical Optics|M115a|Technical Optics|5.0|||S|4|12|150.0|30.0|120.0|N||PF|J|3|60|J|||V|tpf|EN|EN|||
+|M146<br>Projektstudie Technik<br>M146a<br>Projektstudie Technik|M146<br>Projektstudie Technik<br>M146a<br>Projektstudie Technik|M146<br>Projektstudie Technik<br>M146a<br>Projektstudie Technik|||||||||||||||||Optik und Sensoren|B2||ba|||Technik||
+|M146<br>Projektstudie Technik<br>M146a<br>Projektstudie Technik|M146a|Projektstudie Technik|5.0|||S|4|12|150.0|30.0|120.0|N||SA|J|3||N|||PR|Doz|DE|DE|||
+|M108<br>Digitale Medien<br>M108a<br>Digitale Medien|M108<br>Digitale Medien<br>M108a<br>Digitale Medien|M108<br>Digitale Medien<br>M108a<br>Digitale Medien|||||||||||||||||Marketing &<br>Medienmanagement|B1||af|||Wirtschaft||
+|M108<br>Digitale Medien<br>M108a<br>Digitale Medien|M108a|Digitale Medien|5.0|||S|4|12|150.0|30.0|120.0|N||SA|J|3||N|||V|bau|DE|DE|||
+|M109<br>Seminar Marketing und Medienmanagement<br>M109a<br>Seminar Marketing &<br>Medienmanagement|M109<br>Seminar Marketing und Medienmanagement<br>M109a<br>Seminar Marketing &<br>Medienmanagement|M109<br>Seminar Marketing und Medienmanagement<br>M109a<br>Seminar Marketing &<br>Medienmanagement|||||||||||||||||Marketing &<br>Medienmanagement|B1||Doz|||Wirtschaft||
+|M109<br>Seminar Marketing und Medienmanagement<br>M109a<br>Seminar Marketing &<br>Medienmanagement|M109a|Seminar Marketing &<br>Medienmanagement|5.0|||E|1|12|37.5|7.5|142.5|J||SA|J|3||N|||S|af|DE|DE|||
+|M007<br>Planspiel Unternehmensgründung<br>M007a<br>Planspiel Unternehmensgründung|M007<br>Planspiel Unternehmensgründung<br>M007a<br>Planspiel Unternehmensgründung|M007<br>Planspiel Unternehmensgründung<br>M007a<br>Planspiel Unternehmensgründung|||||||||||||||||Finance & Service|B4||fko|||Wirtschaft||
+|M007<br>Planspiel Unternehmensgründung<br>M007a<br>Planspiel Unternehmensgründung|M007a|Planspiel Unternehmensgründung|5.0|||S|1|12|37.5|7.5|142.5|J||PF|J|3||N|||di|fko|DE|DE|||
+|M013<br>Finanzmärkte<br>M013a<br>Globale Finanzmärkte<br>International Finance and Risk<br>Management|M013<br>Finanzmärkte<br>M013a<br>Globale Finanzmärkte<br>International Finance and Risk<br>Management|M013<br>Finanzmärkte<br>M013a<br>Globale Finanzmärkte<br>International Finance and Risk<br>Management|||||||||||||||||Finance & Service|B4||gi|||Wirtschaft||
+|M013<br>Finanzmärkte<br>M013a<br>Globale Finanzmärkte<br>International Finance and Risk<br>Management|M013a|Globale Finanzmärkte|3.0|||S|2|12|75.0|15.0|75.0|N||K2|J|3|90|J|||VU|gi|DE|DE|||
+|M013<br>Finanzmärkte<br>M013a<br>Globale Finanzmärkte<br>International Finance and Risk<br>Management|M013a|International Finance and Risk<br>Management|2.0|||S|2|1|6.25|1.25|58.75|J|J|J|J|J|J|J|||VU|mwa|DE(EN)|DE(EN)|||
+|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik||||||||||||||||||||ba|||Technik||
+|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik|M036a|Automatisierung in der Fertigung||2.0||W|2|12|75.0|15.0|45.0|N||KM|J|3|75|J|||VU|ba|DE|DE|||
+|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik|M036b|Workshop CNC||1.0||W|1|12|37.5|7.5|22.5|J||AB|N|o. B.||N|||W|jg|DE|DE|||
+|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik|M036c|Workshop SPS||1.0||W|1|12|37.5|7.5|22.5|J||AB|N|o. B.||N|||W|ssc|DE|DE|||
+|M036<br>Automatisierung in der Fertigung<br>M036a<br>Automatisierung in der Fertigung<br>M036b<br>Workshop CNC<br>M036c<br>Workshop SPS<br>M036d<br>Workshop Steuerungstechnik|M036d|Workshop Steuerungstechnik||1.0||W|1|7|21.875|4.375|25.625|J||AB|N|o. B.||N|||W|bos|DE|DE|||
+|M031<br>Internationale Wirtschaft<br>M031a<br>Internationale Wirtschaft|M031<br>Internationale Wirtschaft<br>M031a<br>Internationale Wirtschaft|M031<br>Internationale Wirtschaft<br>M031a<br>Internationale Wirtschaft||||||||||||||||||||gi|||Wirtschaft||
+|M031<br>Internationale Wirtschaft<br>M031a<br>Internationale Wirtschaft|M031a|Internationale Wirtschaft||5.0||W|4|12|150.0|30.0|120.0|N||K2|J|3|90|J|||VU|gi|DE(EN)|EN|||
+|M028<br>Organisationslehre und Strategisches<br>Management<br>M028a<br>Organisationslehre<br>Strategisches Management|M028<br>Organisationslehre und Strategisches<br>Management<br>M028a<br>Organisationslehre<br>Strategisches Management|M028<br>Organisationslehre und Strategisches<br>Management<br>M028a<br>Organisationslehre<br>Strategisches Management||||||||||||||||||||fbo|||Wirtschaft||
+|M028<br>Organisationslehre und Strategisches<br>Management<br>M028a<br>Organisationslehre<br>Strategisches Management|M028a|Organisationslehre||2.5||W|2|12|75.0|15.0|60.0|N||KM|J|3|120|J|||V|fbo|DE|DE|||
+|M028<br>Organisationslehre und Strategisches<br>Management<br>M028a<br>Organisationslehre<br>Strategisches Management|M028a|Strategisches Management||2.5||W|2|12|75.0|15.0|60.0|N|N|N|N|N|N|N|||VU|fbo|DE|DE|||
+|M030<br>Enterprise Resource Planning<br>M030a<br>Enterprise Resource Planning|M030<br>Enterprise Resource Planning<br>M030a<br>Enterprise Resource Planning|M030<br>Enterprise Resource Planning<br>M030a<br>Enterprise Resource Planning||||||||||||||||||A1||msz|||Integrationsfach||
+|M030<br>Enterprise Resource Planning<br>M030a<br>Enterprise Resource Planning|M030a|Enterprise Resource Planning||5.0||W|4|12|150.0|30.0|120.0|N||KM|J|3|90|J|||VU|msz|DE|DE|||
+|M150<br>Digital Transformation<br>M150a<br>Digital Transformation|M150<br>Digital Transformation<br>M150a<br>Digital Transformation|M150<br>Digital Transformation<br>M150a<br>Digital Transformation||||||||||||||||||A2||gre|||Informatik||
+|M150<br>Digital Transformation<br>M150a<br>Digital Transformation|M150a|Digital Transformation||5.0||W|4|12|150.0|30.0|120.0|N||K2|J|3|90|J|||V|gre|DE/EN|DE/EN|||
+
+
+
+Fachhochschule Wedel, 01.06.2021 1 / 2
+
+
+|Col1|Col2|Col3|Aufwand pro Semester|Col5|Col6|Col7|Col8|Col9|Col10|Col11|Col12|Col13|Prüfung|Col15|Col16|Col17|Col18|Col19|Einordnung|Col21|Col22|Col23|Col24|Col25|Col26|Col27|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**ECTS pro**<br>**Sem.**|**ECTS pro**<br>**Sem.**|**ECTS pro**<br>**Sem.**|**Fq.**|**SWS**|** Hfgk.**|**WS**|**KoZ**|**EiZ**|**Anw.**|**Vorl.**|**Art**|** Ben.**|** Vers.**|**  Dauer**|**  OA.**|**Vert.**|**WB.**|**LF.**|**Mit.**|**Sprache**|**Sprache**|**Fachgebiet**|**Curricularer**<br>**Bezug**|
+|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Prfg.-Nr.**|**Veranstaltung**|**1.**|**2.**|**3.**||||**[min]**|**[h]**|**[h]**||||||**[min]**||||||**V.**|**M.**|||
+|M049<br>Security Management<br>M049a<br>Security Management|M049<br>Security Management<br>M049a<br>Security Management|M049<br>Security Management<br>M049a<br>Security Management|||||||||||||||||IT-Management|B3||gb|||Integrationsfach||
+|M049<br>Security Management<br>M049a<br>Security Management|M049a|Security Management||5.0||W|4|12|150.0|30.0|120.0|N||KM|J|3|90|J|||VU|gb|EN|EN|||
+|M032<br>IT-Governance, Change Management<br>M032a<br>Change Management<br>M032b<br>IT-Governance|M032<br>IT-Governance, Change Management<br>M032a<br>Change Management<br>M032b<br>IT-Governance|M032<br>IT-Governance, Change Management<br>M032a<br>Change Management<br>M032b<br>IT-Governance|||||||||||||||||IT-Management|B3||gre|||Wirtschaft||
+|M032<br>IT-Governance, Change Management<br>M032a<br>Change Management<br>M032b<br>IT-Governance|M032a|Change Management||2.0||W|2|12|75.0|15.0|45.0|N||KM|J|3|60|J|||V|ga|DE|DE|||
+|M032<br>IT-Governance, Change Management<br>M032a<br>Change Management<br>M032b<br>IT-Governance|M032b|IT-Governance||3.0||W|3|12|112.5|22.5|67.5|N||K2|J|3|60|J|||VU|kru|DE|DE|||
+|M143<br>Energietechnik<br>M143a<br>Energietechnik|M143<br>Energietechnik<br>M143a<br>Energietechnik|M143<br>Energietechnik<br>M143a<br>Energietechnik|||||||||||||||||Energie- und<br>Umwelttechnik|B5||smt|||Technik||
+|M143<br>Energietechnik<br>M143a<br>Energietechnik|M143a|Energietechnik||5.0||W|4|12|150.0|30.0|120.0|N||MP|J|3|20|J|||VU|smt|DE|DE|||
+|M145<br>Seminar Technik<br>M145a<br>Seminar Technik|M145<br>Seminar Technik<br>M145a<br>Seminar Technik|M145<br>Seminar Technik<br>M145a<br>Seminar Technik|||||||||||||||||Energie- und<br>Umwelttechnik|B5||Doz|||Technik||
+|M145<br>Seminar Technik<br>M145a<br>Seminar Technik|M145a|Seminar Technik||5.0||W|2|12|75.0|15.0|135.0|J||SA|J|3||N|||S|Doz|DE|DE|||
+|M016<br>Projekt Beschichtungstechnologie und<br>Sensortechnik<br>M016a<br>Sensortechnik<br>M016b<br>Projekt Beschichtungstechnologie|M016<br>Projekt Beschichtungstechnologie und<br>Sensortechnik<br>M016a<br>Sensortechnik<br>M016b<br>Projekt Beschichtungstechnologie|M016<br>Projekt Beschichtungstechnologie und<br>Sensortechnik<br>M016a<br>Sensortechnik<br>M016b<br>Projekt Beschichtungstechnologie|||||||||||||||||Optik und Sensoren|B2||aha|||Technik||
+|M016<br>Projekt Beschichtungstechnologie und<br>Sensortechnik<br>M016a<br>Sensortechnik<br>M016b<br>Projekt Beschichtungstechnologie|M016a|Sensortechnik||2.0||W|2|12|75.0|15.0|45.0|J||SA|J|3|20|J|||W|aha|DE|DE|||
+|M016<br>Projekt Beschichtungstechnologie und<br>Sensortechnik<br>M016a<br>Sensortechnik<br>M016b<br>Projekt Beschichtungstechnologie|M016b|Projekt Beschichtungstechnologie||3.0||W|2|12|75.0|15.0|75.0|J||SA|J|3||N|||PR|pf|DE|DE|||
+|M147<br>Seminar Technik<br>M147a<br>Seminar Technik|M147<br>Seminar Technik<br>M147a<br>Seminar Technik|M147<br>Seminar Technik<br>M147a<br>Seminar Technik|||||||||||||||||Optik und Sensoren|B2||Doz|||Technik||
+|M147<br>Seminar Technik<br>M147a<br>Seminar Technik|M147a|Seminar Technik||5.0||W|2|12|75.0|15.0|135.0|J||SA|J|3||N|||S|Doz|DE|DE|||
+|M002<br>Innovatives Marketing<br>M002a<br>Innovatives Marketing|M002<br>Innovatives Marketing<br>M002a<br>Innovatives Marketing|M002<br>Innovatives Marketing<br>M002a<br>Innovatives Marketing|||||||||||||||||Marketing &<br>Medienmanagement|B1||af|||Wirtschaft||
+|M002<br>Innovatives Marketing<br>M002a<br>Innovatives Marketing|M002a|Innovatives Marketing||5.0||w|4|12|150.0|30.0|120.0|N||KM|J|3|90|J|||VU|af|DE|DE|||
+|M034<br>Marktforschung<br>M034a<br>Marktforschung|M034<br>Marktforschung<br>M034a<br>Marktforschung|M034<br>Marktforschung<br>M034a<br>Marktforschung|||||||||||||||||Marketing &<br>Medienmanagement|B1||af|||Wirtschaft||
+|M034<br>Marktforschung<br>M034a<br>Marktforschung|M034a|Marktforschung||5.0||W|4|12|150.0|30.0|120.0|N||KM|J|3|90|J|||VU|af|DE|DE|||
+|M025<br>Leadership and Service Strategies<br>M025a<br>International Services<br>Leadership and Organization|M025<br>Leadership and Service Strategies<br>M025a<br>International Services<br>Leadership and Organization|M025<br>Leadership and Service Strategies<br>M025a<br>International Services<br>Leadership and Organization|||||||||||||||||Finance & Service|B4||gi|||Wirtschaft||
+|M025<br>Leadership and Service Strategies<br>M025a<br>International Services<br>Leadership and Organization|M025a|International Services||3.0||W|2|12|75.0|15.0|75.0|N||K2|J|3|90|J|||VU|gi|DE|DE|||
+|M025<br>Leadership and Service Strategies<br>M025a<br>International Services<br>Leadership and Organization|M025a|Leadership and Organization||2.0||W|2|12|75.0|15.0|45.0|N|N|N|N|N|N|N|||VU|gi|DE|DE|||
+|M104<br>Seminar Finance and Services<br>M104a<br>Seminar Finance & Services|M104<br>Seminar Finance and Services<br>M104a<br>Seminar Finance & Services|M104<br>Seminar Finance and Services<br>M104a<br>Seminar Finance & Services|||||||||||||||||Finance & Service|B4||Doz|||Wirtschaft||
+|M104<br>Seminar Finance and Services<br>M104a<br>Seminar Finance & Services|M104a|Seminar Finance & Services||5.0||W|1|12|37.5|7.5|142.5|J||SA|J|3||N|||S|gi|DE|DE|||
+|M050<br>Master-Thesis<br>M050a<br>Master-Thesis|M050<br>Master-Thesis<br>M050a<br>Master-Thesis|M050<br>Master-Thesis<br>M050a<br>Master-Thesis||||||||||||||||||||Doz|||Integrationsfach||
+|M050<br>Master-Thesis<br>M050a<br>Master-Thesis|M050a|Master-Thesis|||28.0|E|0|12|0.0|0.0|840.0|N||SA|J|2||N|||TS|Doz|DE|DE|||
+|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium||||||||||||||||||||Doz|||Integrationsfach||
+|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium|M058a|Kolloquium|||2.0|E|0|12|0.0|0.0|60.0|N|M050a|KO|J|2|60|N|||K|div|DE|DE|||
+
+
+Fachhochschule Wedel, 01.06.2021 2 / 2
+
+

@@ -5,7 +5,7 @@ import json
 import unicodedata
 import asyncio
 from dataclasses import dataclass, asdict
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict, Tuple, Any
 
 import requests
 from bs4 import BeautifulSoup
@@ -16,14 +16,15 @@ import ssl
 import certifi 
 import aiohttp
 import aiofiles  
-import pymupdf4llm  
+import pymupdf4llm
+import datetime  
 # from marker.converters.pdf import PdfConverter
 # from marker.models import create_model_dict
 # from marker.output import text_from_rendered
 # ========================================
 # Konfiguration
 # ========================================
-
+CURRENT_DATE = datetime.datetime(2025, 4, 1)
 BASE_URL = "https://www.fh-wedel.de"
 
 PRUEFUNGSORDNUNGEN_URL = (
@@ -32,8 +33,8 @@ PRUEFUNGSORDNUNGEN_URL = (
 
 # Studiengangs-spezifische Seiten (Beispiel – hier einfach Platzhalter)
 PROGRAM_PAGE_URLS: List[str] = [
-    "https://www.fh-wedel.de/bewerben/bachelor/informatik/",
-    "https://www.fh-wedel.de/bewerben/bachelor/medieninformatik/",
+    # "https://www.fh-wedel.de/bewerben/bachelor/informatik/",
+    # "https://www.fh-wedel.de/bewerben/bachelor/medieninformatik/",
 ]
 
 # neue Verzeichnisstruktur
@@ -54,10 +55,15 @@ PROGCODE_RX = re.compile(
 VERSION_RX = re.compile(r'(\d{2})\.(\d{1,2})([a-zA-Z]?)')
 
 DOCTYPE_PATTERNS = [
-    (re.compile(r'\bSPO\b', re.IGNORECASE), "Studien- und Pruefungsordnung"),
-    (re.compile(r'\bModulhandbuch\b', re.IGNORECASE), "Modulhandbuch"),
-    (re.compile(r'\bModul[üu]bersicht\b', re.IGNORECASE), "Moduluebersicht"),
-    (re.compile(r'\bCurriculum\b', re.IGNORECASE), "Studienverlaufsplan"),
+    (re.compile(r'\bRichtlinie_zum_technischen_Grundpraktikum.*\b', re.IGNORECASE), "Richtlinie_zum_technischen_Grundpraktikum"),
+    (re.compile(r'\bRegularien_im_Studium.*\b', re.IGNORECASE), "Regularien_im_Studium"),
+    (re.compile(r'\bUmrechnung_von_Noten.*\b', re.IGNORECASE), "Umrechnung_von_Noten"),
+    (re.compile(r'\bZLO.*\b', re.IGNORECASE), "Einschreib- und Zulassungsordnung"),
+    (re.compile(r'\bPV?O.*\b', re.IGNORECASE), "Pruefungsverfahrensordnung"),
+    (re.compile(r'\b(SP?O|PO_[MB]).*\b', re.IGNORECASE), "Studien- und Pruefungsordnung"),
+    (re.compile(r'\bModulhandbuch.*\b', re.IGNORECASE), "Modulhandbuch"),
+    (re.compile(r'\bModul[üu]e?bersicht.*\b', re.IGNORECASE), "Moduluebersicht"),
+    (re.compile(r'\bCurriculum.*\b', re.IGNORECASE), "Studienverlaufsplan"),
 ]
 
 PROGRAM_CODE_MAP = {
@@ -65,6 +71,8 @@ PROGRAM_CODE_MAP = {
     "winf": "Wirtschaftsinformatik",
     "wing": "Wirtschaftsingenieurwesen",
     "bwl": "Betriebswirtschaftslehre",
+    "ecomi": "E-Commerce",
+    "ecomw": "E-Commerce",
     "ecom": "E-Commerce",
     "minf": "Medieninformatik",
     "tinf": "Technische Informatik",
@@ -77,13 +85,14 @@ PROGRAM_CODE_MAP = {
     "wim": "Wirtschaftsinformatik - IT-Management",
     "sdbm": "Sustainable & Digital Business Management",
     "itmc": "IT-Management und Consulting",
+    "imca": "IT-Management und Consulting",
 }
 
 # Für Dokumententyp-spezifische Markdown-Konverter
 # "marker": gedacht für marker-pdf
 # "pymupdf": Fallback / Standard mit pymupdf4llm
 DOC_MARKDOWN_BACKEND: dict[str | None, str] = {
-    "Modulübersicht": "marker",
+    "Moduluebersicht": "marker",
     # "Studienverlaufsplan": "marker",
 }
 
@@ -104,6 +113,7 @@ def detect_doctype(name: str) -> Optional[str]:
     for rx, label in DOCTYPE_PATTERNS:
         if rx.search(name):
             return label
+    print(name)
     return "Sonstiges"
 
 
@@ -120,11 +130,14 @@ def detect_program_and_degree(name: str) -> Tuple[Optional[str], Optional[str]]:
 
 def detect_version(name: str) -> Optional[str]:
     name = nfc(name)
+    version = re.search(r"(V[1-9][0-9]?).pdf", name)
+    if version:
+        return version.string.replace(".pdf", "")
     m = VERSION_RX.search(name)
     if not m:
         return None
-    major, minor, suffix = m.groups()
-    return f"{int(major)}.{int(minor)}{suffix.lower()}".rstrip()
+    major, minor, _suffix = m.groups()
+    return f"{int(major)}.{int(minor)}".rstrip()
 
 
 def version_key(v: Optional[str]) -> Tuple[int, int, int]:
@@ -133,8 +146,8 @@ def version_key(v: Optional[str]) -> Tuple[int, int, int]:
     m = VERSION_RX.search(v)
     if not m:
         return (-1, -1, -1)
-    major, minor, suffix = m.groups()
-    return (int(major), int(minor), ord(suffix.lower()) if suffix else 0)
+    major, minor, _suffix = m.groups()
+    return (int(major), int(minor), 0)
 
 
 DATE_RANGE_RX = re.compile(
@@ -144,31 +157,38 @@ DATE_RANGE_RX = re.compile(
 )
 
 
-def parse_date_range(text: str) -> Tuple[Optional[str], Optional[str], Optional[int], Optional[int]]:
+def parse_date_range(text: str) -> Tuple[Optional[datetime.datetime], Optional[datetime.datetime]]:
     """
     Text wie "1.10.2023 bis 1.4.2025" -> (start_iso, end_iso, start_year, end_year)
     oder "01.10.2025" -> (start_iso, None, start_year, None)
     """
+    MONTHS = [
+        ("12", "Dezember")
+    ]
+    
     text = nfc(text)
+    for month in MONTHS:
+        if month[1] in text:
+            text = text.replace(f" {month[1]} ", f"{month[0]}.")
     m = DATE_RANGE_RX.search(text)
+
     if not m:
-        return None, None, None, None
+        return None, None
 
     d1, m1, y1, d2, m2, y2 = m.groups()
     start_iso = f"{int(y1):04d}-{int(m1):02d}-{int(d1):02d}"
-    start_year = int(y1)
-
+    start_time = datetime.datetime.fromisoformat(start_iso)
     if d2 and m2 and y2:
         end_iso = f"{int(y2):04d}-{int(m2):02d}-{int(d2):02d}"
-        end_year = int(y2)
         if end_iso == start_iso:
-            end_iso = None
-            end_year = None
+            end_time = None
+        else: 
+            end_time = datetime.datetime.fromisoformat(end_iso)
     else:
-        end_iso = None
-        end_year = None
-
-    return start_iso, end_iso, start_year, end_year
+        end_time = None
+    if start_time and end_time and end_time < start_time:
+        start_time, end_time = end_time, start_time
+    return start_time, end_time
 
 
 # ========================================
@@ -185,10 +205,10 @@ class Document:
     doctype: Optional[str]
     version: Optional[str]
 
-    start_date: Optional[int] = None       
-    end_date: Optional[int] = None
-    start_year: Optional[int] = None
-    end_year: Optional[int] = None
+    start_date: Optional[datetime.datetime] = None       
+    end_date: Optional[datetime.datetime] = None
+    # start_year: Optional[int] = None
+    # end_year: Optional[int] = None
 
     # aktueller Stand / archiviert
     is_current: Optional[bool] = None
@@ -200,7 +220,11 @@ class Document:
 
     # Zusatzinfos, v.a. von Studiengangsseiten
     html_context: Optional[str] = None     # Textblock um den Link herum
-
+    def to_json(self) -> dict[str, str | bool]:
+        res = asdict(self)
+        res["start_date"] = self.start_date and self.start_date.date().isoformat()
+        res["end_date"] = self.end_date and self.end_date.date().isoformat()
+        return res
 
 # ========================================
 # 1. HTML holen und Tabellen mit Zeiträumen auswerten
@@ -212,7 +236,7 @@ def fetch_html(url: str) -> str:
     return resp.text
 
 
-def extract_timeframes_from_pruefungsordnungen(html: str) -> Dict[Tuple[str, str, str], Dict[str, Optional[int | str]]]:
+def extract_timeframes_from_pruefungsordnungen(html: str) -> Dict[Tuple[str, str, str|None, str], Dict[str, Optional[datetime.datetime]]]:
     """
     Liest die Tabellen "Curricula Bachelor/Master" + "Vorherige Curricula" usw. aus
     und bildet eine Map:
@@ -223,7 +247,7 @@ def extract_timeframes_from_pruefungsordnungen(html: str) -> Dict[Tuple[str, str
     aufgebaut. 
     """
     soup = BeautifulSoup(html, "html.parser")
-    mapping: Dict[Tuple[str, str, str], Dict[str, Optional[int | str]]] = {}
+    mapping: Dict[Tuple[str, str, str|None, str], Dict[str, Optional[int | str]]] = {}
 
     for table in soup.select("table.contenttable"):
         # Header-Zeile bestimmen
@@ -233,65 +257,40 @@ def extract_timeframes_from_pruefungsordnungen(html: str) -> Dict[Tuple[str, str
         headers = [th.get_text(" ", strip=True) for th in header_row.find_all("th")]
         if not headers:
             continue
-
-        # Finde Spaltenindex für Zeiträume
-        try:
-            col_idx_range = headers.index("Gültig für den Immatrikulationszeitraum")
-        except ValueError:
-            col_idx_range = None
-
-        try:
-            col_idx_immatrik = headers.index("Immatrikulation ab dem")
-        except ValueError:
-            col_idx_immatrik = None
-
-        if col_idx_range is None and col_idx_immatrik is None:
-            # nicht die Tabellen, die wir brauchen
+        timeframe_idx = None
+        for i, h in enumerate(headers[::-1]):
+            if (timeframe_idx is None and "Genehmigung Senat" in h) or "Immatrikulation" in h:
+                timeframe_idx = i + 1
+        if timeframe_idx is None:
             continue
-
-        # "Studiengang" Spalte ist meist an Index 0 
-        # Uns interessiert aber primär, welche Links (PDFs) in der Zeile liegen.
-        for row in table.find_all("tr")[1:]:
+        for row in table.find_all("tr"):
             cells = row.find_all("td")
             if not cells:
                 continue
-
-            timeframe_cell = None
-            if col_idx_range is not None and col_idx_range < len(cells):
-                timeframe_cell = cells[col_idx_range]
-            elif col_idx_immatrik is not None and col_idx_immatrik < len(cells):
-                timeframe_cell = cells[col_idx_immatrik]
-
+            timeframe_cell = cells[-timeframe_idx] if len(cells) > timeframe_idx - 1 else timeframe_cell
             if timeframe_cell:
                 timeframe_text = timeframe_cell.get_text(" ", strip=True)
-                start_date, end_date, start_year, end_year = parse_date_range(timeframe_text)
+                start_date, end_date = parse_date_range(timeframe_text)
             else:
                 start_date = end_date = None
-                start_year = end_year = None
-
             # Alle PDF-Links in der Zeile einsammeln und auf Version / Studiengang mappen
             for a in row.select("a[href$='.pdf']"):
                 href = a.get("href")
                 if not href or not isinstance(href, str):
                     continue
-                link_text = a.get_text(" ", strip=True) or os.path.basename(href)
+                link_text = os.path.basename(href)
                 degree, program = detect_program_and_degree(link_text)
-                version = detect_version(link_text) or detect_version(os.path.basename(href))
-
+                version = detect_version(link_text)
+                doctype = detect_doctype(link_text)
                 if not version:
                     continue
 
                 degree = degree or "Allgemein"
                 program = program or "Sonstiges"
-
-                key = (degree, program, version)
-                # wenn mehrere Tabellenzeilen die gleiche Version beschreiben,
-                # nehmen wir die erste oder überschreiben – je nach Präferenz.
+                key = (degree, program, doctype, version)
                 mapping[key] = {
                     "start_date": start_date,
                     "end_date": end_date,
-                    "start_year": start_year,
-                    "end_year": end_year,
                 }
 
     return mapping
@@ -315,7 +314,7 @@ def crawl_pdfs_from_pruefungsordnungen(html: str) -> List[str]:
 
 
 def classify_pdfs(urls: List[str], source_page: str,
-                  timeframe_map: Dict[Tuple[str, str, str], Dict[str, Optional[int]]]
+                  timeframe_map: Dict[Tuple[str, str,str|None, str], Dict[str, Optional[datetime.datetime]]]
                   ) -> List[Document]:
     docs: List[Document] = []
 
@@ -329,14 +328,17 @@ def classify_pdfs(urls: List[str], source_page: str,
         program = program or "Sonstiges"
 
         start_date = end_date = None
-        start_year = end_year = None
+        # start_year = end_year = None
         if version:
-            tf = timeframe_map.get((degree, program, version))
+            
+            tf = timeframe_map.get((degree, program, doctype,  version))
             if tf:
                 start_date = tf["start_date"]
                 end_date = tf["end_date"]
-                start_year = tf["start_year"]
-                end_year = tf["end_year"]
+                if start_date and start_date > CURRENT_DATE:
+                    continue
+                # start_year = tf["start_year"]
+                # end_year = tf["end_year"]
 
         docs.append(Document(
             url=url,
@@ -348,8 +350,8 @@ def classify_pdfs(urls: List[str], source_page: str,
             version=version,
             start_date=start_date,
             end_date=end_date,
-            start_year=start_year,
-            end_year=end_year,
+            # start_year=start_year,
+            # end_year=end_year,
         ))
     return docs
 
@@ -407,14 +409,14 @@ def crawl_program_pages(page_urls: List[str],
             context_text = context_node.get_text(" ", strip=True) if context_node else None
 
             start_date = end_date = None
-            start_year = end_year = None
+            # start_year = end_year = None
             if version:
                 tf = timeframe_map.get((degree, program, version))
                 if tf:
                     start_date = tf["start_date"]
                     end_date = tf["end_date"]
-                    start_year = tf["start_year"]
-                    end_year = tf["end_year"]
+                    # start_year = tf["start_year"]
+                    # end_year = tf["end_year"]
 
             docs.append(Document(
                 url=url,
@@ -426,8 +428,8 @@ def crawl_program_pages(page_urls: List[str],
                 version=version,
                 start_date=start_date,
                 end_date=end_date,
-                start_year=start_year,
-                end_year=end_year,
+                # start_year=start_year,
+                # end_year=end_year,
                 html_context=context_text,
             ))
     return docs
@@ -442,13 +444,23 @@ def mark_current_versions(docs: List[Document]):
     for d in docs:
         key = (d.degree or "?", d.program or "?", d.doctype or "?")
         groups.setdefault(key, []).append(d)
+        d.is_current = (
+            d.start_date and d.start_date <= CURRENT_DATE and (not d.end_date or CURRENT_DATE <= d.end_date)
+        )
+        
+        # d.status = "aktuell" if d.is_current else "archiviert"
+    #     , d.version)
+    #     groups.setdefault(key, []).append(d)
 
     for _, items in groups.items():
-        latest = max(items, key=lambda x: version_key(x.version))
-        for d in items:
-            d.is_current = (d is latest or d.version == latest.version)
-            d.status = "aktuell" if d.is_current else "archiviert"
-
+        current_doc = max(items, key=lambda d: d.start_date or datetime.datetime(1901,1,1,1), default=None)
+        if not current_doc or not current_doc.start_date:
+            continue
+        current_doc.is_current = True
+        current_doc.status = "aktuell"
+        # for d in items:
+        #     d.is_current = (d.start_date and d.start_date <= CURRENT_DATE and (not d.end_date or CURRENT_DATE <= d.end_date))
+        #     d.status = "aktuell" if d.is_current else "archiviert"
 
 # ========================================
 # 5. Pfade für PDF & Markdown setzen
@@ -506,13 +518,13 @@ async def _download_single(session: aiohttp.ClientSession, doc: Document, semaph
 
 
 
-async def _download_pdfs_async(docs: List[Document], max_concurrent: int = 5):
+async def _download_pdfs_async(docs: List[Document], max_concurrent: int = 20):
 
     ssl_context = ssl.create_default_context(cafile=certifi.where())
 
     connector = aiohttp.TCPConnector(
         limit=max_concurrent,
-        ssl=ssl_context,   # WICHTIG: nutzt jetzt certifi-CA statt nur Windows-Store
+        ssl=ssl_context,  
     )
     timeout = aiohttp.ClientTimeout(total=60)
     semaphore = asyncio.Semaphore(max_concurrent)
@@ -550,42 +562,143 @@ def pdf_to_markdown_pymupdf(pdf_path: str) -> str:
     return pymupdf4llm.to_markdown(pdf_path)
 
 
-def pdf_to_markdown_marker(pdf_path: str) -> str:
+_MARKER_READY = False
+_MARKER_IMPORT_ERROR: Optional[Exception] = None
+_MARKER_ARTIFACT_DICT = None  # wird durch create_model_dict() gesetzt
+
+
+def _init_marker_once() -> None:
     """
+    Initialisiert Marker genau einmal (lazy).
+    Lädt die Modell-Artefakte via create_model_dict() und cached sie global.
     """
-    # TODO: hier marker-pdf integrieren
-    # vorerst Fallback auf pymupdf
-    return pdf_to_markdown_pymupdf(pdf_path)
+    global _MARKER_READY, _MARKER_IMPORT_ERROR, _MARKER_ARTIFACT_DICT
 
-
-def convert_pdf_to_markdown(doc: Document):
-    if not doc.local_pdf_path or not os.path.exists(doc.local_pdf_path):
+    if _MARKER_READY or _MARKER_IMPORT_ERROR is not None:
         return
-    if not doc.local_md_path:
-        return
-
-    # Falls Markdown bereits existiert, nicht nochmal konvertieren
-    if os.path.exists(doc.local_md_path):
-        return
-
-    backend = DOC_MARKDOWN_BACKEND.get(doc.doctype, "pymupdf")
 
     try:
-        if backend == "marker":
-            md = pdf_to_markdown_marker(doc.local_pdf_path)
-        else:
-            md = pdf_to_markdown_pymupdf(doc.local_pdf_path)
+        # Marker (marker-pdf) Python API
+        from marker.models import create_model_dict  # type: ignore
+
+        _MARKER_ARTIFACT_DICT = create_model_dict()
+        _MARKER_READY = True
     except Exception as e:
-        print(f"⚠️ Fehler bei Markdown-Konvertierung ({backend}) von {doc.local_pdf_path}: {e}")
+        _MARKER_IMPORT_ERROR = e
+
+
+def _write_marker_images(images: Any, out_dir: str) -> None:
+    """
+    Marker kann Bilder in unterschiedlichen Strukturen liefern (abhängig von Output/Renderer).
+    Hier wird defensiv behandelt:
+    - dict[name -> bytes]
+    - dict[name -> base64-str]
+    - dict[name -> {"data": <base64/bytes>, ...}]
+    """
+    if not images:
         return
 
-    ensure_dir(os.path.dirname(doc.local_md_path))
-    with open(doc.local_md_path, "w", encoding="utf-8") as f:
-        f.write(md)
+    os.makedirs(out_dir, exist_ok=True)
+
+    if isinstance(images, dict):
+        for name, payload in images.items():
+            if not name:
+                continue
+
+            data = None
+
+            if isinstance(payload, (bytes, bytearray)):
+                data = bytes(payload)
+
+            elif isinstance(payload, str):
+                # base64?
+                try:
+                    data = base64.b64decode(payload, validate=False)
+                except Exception:
+                    # kein base64 -> ignorieren
+                    data = None
+
+            elif isinstance(payload, dict):
+                # häufige Pattern: {"data": "..."} oder {"image": "..."}
+                for key in ("data", "image", "bytes", "b64"):
+                    if key in payload:
+                        val = payload[key]
+                        if isinstance(val, (bytes, bytearray)):
+                            data = bytes(val)
+                        elif isinstance(val, str):
+                            try:
+                                data = base64.b64decode(val, validate=False)
+                            except Exception:
+                                data = None
+                        break
+
+            if data:
+                # Name ggf. säubern
+                safe_name = str(name).replace("\\", "/").split("/")[-1]
+                out_path = os.path.join(out_dir, safe_name)
+                with open(out_path, "wb") as f:
+                    f.write(data)
 
 
-def convert_all_to_markdown(docs: List[Document]):
-    for d in tqdm(docs, desc="📝 Konvertiere PDFs nach Markdown"):
+def pdf_to_markdown_marker(pdf_path: str, image_output_dir: Optional[str] = None) -> str:
+    """
+    Konvertiert ein PDF via marker-pdf (Marker) nach Markdown.
+
+    image_output_dir:
+        Wenn gesetzt, werden von Marker extrahierte Bilder zusätzlich dort gespeichert.
+        (Je nach Marker-Config kann Markdown bereits relative Bild-Links enthalten.)
+    """
+    print(pdf_path)
+    _init_marker_once()
+    if not _MARKER_READY:
+        raise RuntimeError(
+            "marker-pdf (Marker) ist nicht verfügbar oder konnte nicht initialisiert werden.\n"
+            "Installiere z.B.: pip install marker-pdf\n"
+            "Hinweis: Marker benötigt Python 3.10+ und PyTorch.\n"
+            f"Ursache: {_MARKER_IMPORT_ERROR}"
+        )
+
+    # Lazy import nach Init
+    from marker.converters.pdf import PdfConverter  # type: ignore
+    from marker.output import text_from_rendered  # type: ignore
+
+    converter = PdfConverter(
+        artifact_dict=_MARKER_ARTIFACT_DICT,
+        # Optional könntest du hier config/processor_list/renderer etc. übergeben,
+        # siehe Marker-README (ConfigParser).
+    )
+
+    rendered = converter(pdf_path)
+
+    # Marker empfiehlt text_from_rendered(rendered) → (text, meta, images)
+    text, _meta, images = text_from_rendered(rendered)
+
+    if image_output_dir:
+        _write_marker_images(images, image_output_dir)
+
+    return text
+
+
+def convert_pdf_to_markdown(doc: Document): 
+    if not doc.local_pdf_path or not os.path.exists(doc.local_pdf_path): 
+        return 
+    if not doc.local_md_path: 
+        return 
+    if os.path.exists(doc.local_md_path): 
+        return 
+    backend = DOC_MARKDOWN_BACKEND.get(doc.doctype, "pymupdf") 
+    try: 
+        if backend == "marker": 
+            md = pdf_to_markdown_marker(doc.local_pdf_path) 
+        else: 
+            md = pdf_to_markdown_pymupdf(doc.local_pdf_path) 
+    except Exception as e: 
+        print(f"Fehler bei Markdown-Konvertierung ({backend}) von {doc.local_pdf_path}: {e}") 
+        return ensure_dir(os.path.dirname(doc.local_md_path)) 
+    with open(doc.local_md_path, "w", encoding="utf-8") as f: 
+        f.write(md) 
+def convert_all_to_markdown(docs: List[Document]): 
+    for d in tqdm(docs, desc="📝 Konvertiere PDFs nach Markdown"): 
         convert_pdf_to_markdown(d)
 
 
@@ -604,14 +717,14 @@ def write_outputs(docs: List[Document]):
     ensure_dir(DATA_BASE_DIR)
 
     with open(META_JSON, "w", encoding="utf-8") as f:
-        json.dump([asdict(d) for d in docs_sorted], f, indent=2, ensure_ascii=False)
+        json.dump([d.to_json() for d in docs_sorted], f, indent=2, ensure_ascii=False)
 
     with open(META_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
             "url", "filename", "source_page",
             "degree", "program", "doctype", "version",
-            "start_date", "end_date", "start_year", "end_year",
+            "start_date", "end_date",# "start_year", "end_year",
             "status",
             "local_pdf_path", "local_md_path",
             "html_context",
@@ -620,7 +733,8 @@ def write_outputs(docs: List[Document]):
             writer.writerow([
                 d.url, d.filename, d.source_page,
                 d.degree, d.program, d.doctype, d.version,
-                d.start_date, d.end_date, d.start_year, d.end_year,
+                d.start_date.date().isoformat() if d.start_date else None, 
+                d.end_date.date().isoformat() if d.end_date else None,
                 d.status,
                 d.local_pdf_path, d.local_md_path,
                 d.html_context,
