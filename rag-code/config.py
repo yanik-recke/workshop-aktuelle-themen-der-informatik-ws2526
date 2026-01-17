@@ -21,16 +21,22 @@ QDRANT_COLLECTION = "fh_wedel_pdfs"
 EMBEDDING_DIM = 1024  # Qwen3-0.6b embedding model produces 1024-dim vectors
 
 # === Modelle (über OpenAI-kompatibles API, z.B. LM Studio) ===
-OPENAI_CHAT_MODEL = "deepseek-r1:1.5b"
+#OPENAI_CHAT_MODEL = "deepseek-r1:1.5b"
 OPENAI_EMBED_MODEL = "qwen3-embedding:0.6b"
-#OPENAI_CHAT_MODEL = "qwen/qwen3-4b-2507"
+OPENAI_CHAT_MODEL = "gpt-4o"
 #OPENAI_EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"
 
 OPENAI_CLASSIFIER_MODEL = OPENAI_CHAT_MODEL  # eigenes Modell möglich
 
-# WICHTIG: Setze diese Umgebungsvariablen für LM Studio o.ä.:
-#   export OPENAI_API_KEY="dummy"
-#   export OPENAI_BASE_URL="http://localhost:1234/v1"
+# === API Base URLs ===
+# Separate URLs for embeddings (local Ollama) and chat (OpenAI API)
+OPENAI_EMBED_BASE_URL = os.getenv("OPENAI_EMBED_BASE_URL", "http://localhost:11434/v1")  # Ollama
+OPENAI_CHAT_BASE_URL = os.getenv("OPENAI_CHAT_BASE_URL", "https://api.openai.com/v1")    # OpenAI API
+
+# WICHTIG: Setze diese Umgebungsvariablen:
+#   export OPENAI_API_KEY="sk-..."  # Your OpenAI API key
+#   export OPENAI_EMBED_BASE_URL="http://localhost:11434/v1"  # Ollama for embeddings
+#   export OPENAI_CHAT_BASE_URL="https://api.openai.com/v1"   # OpenAI for chat
 
 # === RAG / Chat ===
 TOP_K = 5  # Increase for more diverse results

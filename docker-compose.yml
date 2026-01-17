@@ -63,9 +63,12 @@ services:
       - ./rag-code:/app/rag-code
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
-      # docker.internal weil ich Ollama lokal laufe, wegen GPU Acceleration
-      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-http://host.docker.internal:11434/v1}
+      # Separate URLs for embeddings (local Ollama) and chat (OpenAI API)
+      - OPENAI_EMBED_BASE_URL=http://host.docker.internal:11434/v1  # Ollama on host
+      - OPENAI_CHAT_BASE_URL=https://api.openai.com/v1              # OpenAI API
       - QDRANT_URL=http://qdrant:6333
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Required for Linux to access host
     command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
     healthcheck:
@@ -115,9 +118,12 @@ services:
       - ./rag-code:/app/rag-code
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
-      # Use host.docker.internal to access Ollama running on host machine
-      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-http://host.docker.internal:11434/v1}
+      # Separate URLs for embeddings (local Ollama) and chat (OpenAI API)
+      - OPENAI_EMBED_BASE_URL=http://host.docker.internal:11434/v1  # Ollama on host
+      - OPENAI_CHAT_BASE_URL=https://api.openai.com/v1              # OpenAI API
       - QDRANT_URL=http://qdrant:6333
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Required for Linux to access host
     command: python chat_cli.py
     stdin_open: true
     tty: true

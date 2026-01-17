@@ -19,6 +19,9 @@ from rag_pipeline import create_rag_pipeline, build_filters_from_context, run_ra
 from hybrid_retrieval import hybrid_search, print_retrieval_debug
 from comparison_handler import handle_comparison_query
 
+# NeMo Guardrails
+from nemoguardrails import RailsConfig, LLMRails
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -41,6 +44,9 @@ app.add_middleware(
 
 # Global RAG pipeline (initialized once)
 rag_pipeline = None
+
+# Global Guardrails instance
+guardrails: Optional[LLMRails] = None
 
 # Session storage (in-memory, use Redis in production)
 sessions: Dict[str, dict] = {}
@@ -143,8 +149,8 @@ def cleanup_old_sessions():
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize RAG pipeline on startup"""
-    global rag_pipeline
+    """Initialize RAG pipeline and Guardrails on startup"""
+    global rag_pipeline, guardrails
     logger.info("Initializing RAG pipeline...")
     try:
         rag_pipeline = create_rag_pipeline()
@@ -152,6 +158,16 @@ async def startup_event():
     except Exception as e:
         logger.error(f"Failed to initialize RAG pipeline: {e}")
         raise
+
+    # Initialize NeMo Guardrails
+    logger.info("Initializing NeMo Guardrails...")
+    try:
+        config = RailsConfig.from_path("guardrails")
+        guardrails = LLMRails(config)
+        logger.info("NeMo Guardrails initialized successfully")
+    except Exception as e:
+        logger.warning(f"Failed to initialize Guardrails (continuing without): {e}")
+        guardrails = None
 
 
 @app.on_event("shutdown")
@@ -205,6 +221,27 @@ async def chat(request: QueryRequest):
     """
     if not rag_pipeline:
         raise HTTPException(status_code=503, detail="RAG pipeline not initialized")
+
+    # Check input with guardrails
+    if guardrails:
+        try:
+            input_check = await guardrails.generate_async(
+                messages=[{"role": "user", "content": request.query}]
+            )
+            # If guardrails blocked the input, return the guardrails response
+            if input_check and input_check.get("content"):
+                guardrail_response = input_check["content"]
+                if "nicht beantworten" in guardrail_response.lower() or "off-topic" in guardrail_response.lower():
+                    logger.info(f"Guardrails blocked input: {request.query}")
+                    return QueryResponse(
+                        answer=guardrail_response,
+                        session_id=request.session_id or str(uuid.uuid4()),
+                        context={},
+                        keywords=[],
+                        debug_info={"guardrails": "input_blocked"} if request.debug else None,
+                    )
+        except Exception as e:
+            logger.warning(f"Guardrails input check failed: {e}")
 
     # Get or create session
     session_id, session = get_or_create_session(request.session_id)
@@ -326,8 +363,26 @@ async def chat(request: QueryRequest):
             answer = f"[Debug] Generation failed: {str(e)}"
 
     else:
-        # Normal RAG query
+        # Normal RAG query - also log retrieved documents
         try:
+            # First retrieve documents for logging
+            retrieved = hybrid_search(
+                query=expanded_query,
+                top_k=TOP_K,
+                filters=filters,
+                original_query=original_query,
+                keywords=keywords,
+            )
+
+            # Log retrieved documents
+            logger.info(f"=== Retrieved {len(retrieved)} documents for query: '{original_query}' ===")
+            for i, doc in enumerate(retrieved):
+                logger.info(f"  [{i+1}] Score: {doc.score:.4f} | "
+                           f"{doc.meta.get('doctype', 'N/A')} | "
+                           f"{doc.meta.get('program', 'N/A')} | "
+                           f"{doc.meta.get('degree', 'N/A')}")
+                logger.info(f"      Content preview: {doc.content[:150]}...")
+
             answer = run_rag_query(
                 rag_pipeline,
                 original_query=original_query,

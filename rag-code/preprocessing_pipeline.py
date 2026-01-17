@@ -25,7 +25,9 @@ def load_metadata(meta_file: Path) -> Dict[str, dict]:
         # Use local_md_path for the lookup key (just the filename)
         md_path = entry.get("local_md_path", "")
         if md_path:
-            filename = Path(md_path).name
+            # TODO ACHTUNG ! Mac vs Windows Normalize backslashes (Windows paths) to forward slashes before extracting filename
+            normalized_path = md_path.replace("\\", "/")
+            filename = Path(normalized_path).name
             lookup[filename] = entry
 
     print(f"[INFO] Metadaten geladen: {len(lookup)} Eintraege")
@@ -50,6 +52,10 @@ def find_docs_with_metadata(base_dir: Path, metadb: Dict[str, dict]) -> List[Dic
             continue
 
         if meta.get("status") and meta["status"] != "aktuell" or "Moduluebersicht".upper() in meta.get("filename", "").upper():
+            continue
+
+        # Filter: Only process Informatik 11.0_aktuell for faster testing
+        if "Bachelor/Informatik/11.0_aktuell" not in str(path):
             continue
 
         results.append({

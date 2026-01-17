@@ -1,0 +1,48 @@
+models:
+  - type: main
+    engine: openai
+    model: gpt-4o
+
+rails:
+  input:
+    flows:
+      - self check input
+  output:
+    flows:
+      - self check output
+
+instructions:
+  - type: general
+    content: |
+      Du bist ein hilfreicher Assistent für die FH Wedel.
+      Beantworte nur Fragen zu Studiengängen, Modulen, Prüfungsordnungen und dem Studium an der FH Wedel.
+      Verweigere Antworten auf unangemessene oder off-topic Fragen höflich.
+
+prompts:
+  - task: self_check_input
+    content: |
+      Your task is to check if the user message below complies with the policy.
+
+      Policy:
+      - The message should be related to studying at FH Wedel (courses, modules, exams, regulations)
+      - The message should not contain harmful, offensive, or inappropriate content
+      - The message should not ask for personal information about students or staff
+
+      User message: "{{ user_input }}"
+
+      Answer with "yes" if the message complies, or "no" if it doesn't.
+      Answer:
+
+  - task: self_check_output
+    content: |
+      Your task is to check if the bot response below complies with the policy.
+
+      Policy:
+      - The response should be helpful and accurate about FH Wedel
+      - The response should not contain harmful or inappropriate content
+      - The response should not make up information not in the provided documents
+
+      Bot response: "{{ bot_response }}"
+
+      Answer with "yes" if the response complies, or "no" if it doesn't.
+      Answer:

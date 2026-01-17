@@ -8,7 +8,10 @@ from haystack.components.generators import OpenAIGenerator
 from haystack.utils import Secret
 from haystack_integrations.components.retrievers.qdrant import QdrantEmbeddingRetriever
 
-from config import OPENAI_CHAT_MODEL, OPENAI_EMBED_MODEL, TOP_K, MAX_CONTEXT_TOKENS
+from config import (
+    OPENAI_CHAT_MODEL, OPENAI_EMBED_MODEL, TOP_K, MAX_CONTEXT_TOKENS,
+    OPENAI_EMBED_BASE_URL, OPENAI_CHAT_BASE_URL
+)
 from document_store import get_document_store
 
 import tiktoken
@@ -99,6 +102,7 @@ def create_rag_pipeline() -> Pipeline:
 
     text_embedder = OpenAITextEmbedder(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_EMBED_BASE_URL,  # Use local Ollama for embeddings
         model=OPENAI_EMBED_MODEL,
     )
 
@@ -112,6 +116,7 @@ def create_rag_pipeline() -> Pipeline:
 
     generator = OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CHAT_MODEL,
         generation_kwargs={"temperature": 0.3, "max_tokens": 512},
     )
@@ -169,10 +174,11 @@ def run_rag_query(
         
         generator = OpenAIGenerator(
             api_key=Secret.from_env_var("OPENAI_API_KEY"),
+            api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
             model=OPENAI_CHAT_MODEL,
             generation_kwargs={"temperature": 0.3, "max_tokens": 512},
         )
-        
+
         gen_result = generator.run(prompt=prompt_result["prompt"])
         replies = gen_result.get("replies", [])
     else:
@@ -217,13 +223,14 @@ def run_comparison_query(
     
     generator = OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CHAT_MODEL,
         generation_kwargs={"temperature": 0.3, "max_tokens": 800},  # More tokens for comparisons
     )
-    
+
     gen_result = generator.run(prompt=prompt_result["prompt"])
     replies = gen_result.get("replies", [])
-    
+
     if not replies:
         return "Ich konnte keinen Vergleich erstellen."
     return replies[0].strip()

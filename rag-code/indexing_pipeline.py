@@ -2,8 +2,13 @@ from __future__ import annotations
 
 import json
 import ntpath
+import os
 from pathlib import Path
 from typing import List, Dict
+
+# Set default OPENAI_API_KEY if not set
+if not os.environ.get("OPENAI_API_KEY"):
+    os.environ["OPENAI_API_KEY"] = "default"
 
 from haystack.dataclasses import Document
 from haystack.components.preprocessors import DocumentCleaner, DocumentSplitter
@@ -12,7 +17,7 @@ from haystack.components.writers import DocumentWriter
 from haystack.document_stores.types import DuplicatePolicy
 from haystack.utils import Secret
 
-from config import OPENAI_EMBED_MODEL
+from config import OPENAI_EMBED_MODEL, OPENAI_EMBED_BASE_URL
 from document_store import get_document_store
 from parsers.base_parser import BaseParser
 from preprocessing_pipeline import (
@@ -127,6 +132,7 @@ def deduplicate_chunks(docs: List[Document], similarity_threshold: float = 0.95)
 def embed_documents(docs: List[Document]) -> List[Document]:
     embedder = OpenAIDocumentEmbedder(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_EMBED_BASE_URL,  # Use local Ollama for embeddings
         model=OPENAI_EMBED_MODEL,
     )
     result = embedder.run(documents=docs)
