@@ -251,6 +251,49 @@ def run_comparison_query(
 
 def build_filters_from_context(context_state: Dict) -> Dict:
     """
-    Temporäre Dummy-Funktion.
+    Build Qdrant-compatible filters from context state.
+    Returns a Haystack filter dict for use with QdrantEmbeddingRetriever.
+
+    Haystack filter format:
+    {"operator": "AND", "conditions": [{"field": "meta.X", "operator": "in", "value": [...]}]}
     """
-    return {}
+    if not context_state:
+        return {}
+
+    conditions = []
+
+    if context_state.get("program"):
+        conditions.append({
+            "field": "meta.program",
+            "operator": "in",
+            "value": context_state["program"]
+        })
+
+    if context_state.get("degree"):
+        conditions.append({
+            "field": "meta.degree",
+            "operator": "in",
+            "value": context_state["degree"]
+        })
+
+    if context_state.get("doctype"):
+        conditions.append({
+            "field": "meta.doctype",
+            "operator": "in",
+            "value": context_state["doctype"]
+        })
+
+    if context_state.get("status"):
+        conditions.append({
+            "field": "meta.status",
+            "operator": "in",
+            "value": context_state["status"]
+        })
+
+    if not conditions:
+        return {}
+
+    if len(conditions) == 1:
+        return conditions[0]
+
+    return {"operator": "AND", "conditions": conditions}

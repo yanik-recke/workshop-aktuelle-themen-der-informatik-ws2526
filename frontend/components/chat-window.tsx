@@ -63,6 +63,14 @@ const models = [
   }
 ];
 
+const programs = [
+  { name: 'Alle Studiengänge', value: 'all' },
+  { name: 'Informatik', value: 'Informatik' },
+  { name: 'BWL', value: 'Betriebswirtschaftslehre' },
+  { name: 'Technische Informatik', value: 'Technische Informatik' },
+  { name: 'Wirtschaftsinformatik', value: 'Wirtschaftsinformatik' },
+];
+
 type MessagePart = {
   type: 'text' | 'reasoning' | 'source-url';
   text: string;
@@ -85,6 +93,7 @@ type Chat = {
 export function ChatTab() {
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(models[0].value);
+  const [program, setProgram] = useState<string>('all');
   const [webSearch, setWebSearch] = useState(false);
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
@@ -213,6 +222,7 @@ export function ChatTab() {
         body: JSON.stringify({
           query: message.text,
           session_id: chatId,
+          context: program && program !== 'all' ? { program: [program], degree: [], doctype: [], status: [] } : undefined,
         }),
       });
 
@@ -494,6 +504,23 @@ export function ChatTab() {
                   <GlobeIcon size={16} />
                   <span>Search</span>
                 </PromptInputButton>
+                <PromptInputSelect
+                  onValueChange={(value) => {
+                    setProgram(value);
+                  }}
+                  value={program}
+                >
+                  <PromptInputSelectTrigger>
+                    <PromptInputSelectValue placeholder="Studiengang" />
+                  </PromptInputSelectTrigger>
+                  <PromptInputSelectContent>
+                    {programs.map((prog) => (
+                      <PromptInputSelectItem key={prog.value} value={prog.value}>
+                        {prog.name}
+                      </PromptInputSelectItem>
+                    ))}
+                  </PromptInputSelectContent>
+                </PromptInputSelect>
                 <PromptInputSelect
                   onValueChange={(value) => {
                     setModel(value);

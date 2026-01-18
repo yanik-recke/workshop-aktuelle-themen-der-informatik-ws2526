@@ -282,6 +282,8 @@ async def chat(request: QueryRequest):
 
     # Build filters from context
     filters = build_filters_from_context(context_state)
+    if filters:
+        logger.info(f"Applying filters: {filters}")
 
     # Prepare conversation history
     conversation_history = "\n".join(
