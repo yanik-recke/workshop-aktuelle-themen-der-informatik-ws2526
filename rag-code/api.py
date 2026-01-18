@@ -159,14 +159,19 @@ async def startup_event():
         logger.error(f"Failed to initialize RAG pipeline: {e}")
         raise
 
-    # Initialize NeMo Guardrails
-    logger.info("Initializing NeMo Guardrails...")
-    try:
-        config = RailsConfig.from_path("guardrails")
-        guardrails = LLMRails(config)
-        logger.info("NeMo Guardrails initialized successfully")
-    except Exception as e:
-        logger.warning(f"Failed to initialize Guardrails (continuing without): {e}")
+    # Initialize NeMo Guardrails (optional, controlled by ENABLE_GUARDRAILS env var)
+    import os
+    if os.getenv("ENABLE_GUARDRAILS", "false").lower() == "true":
+        logger.info("Initializing NeMo Guardrails...")
+        try:
+            config = RailsConfig.from_path("guardrails")
+            guardrails = LLMRails(config)
+            logger.info("NeMo Guardrails initialized successfully")
+        except Exception as e:
+            logger.warning(f"Failed to initialize Guardrails (continuing without): {e}")
+            guardrails = None
+    else:
+        logger.info("NeMo Guardrails disabled (set ENABLE_GUARDRAILS=true to enable)")
         guardrails = None
 
 
@@ -222,26 +227,34 @@ async def chat(request: QueryRequest):
     if not rag_pipeline:
         raise HTTPException(status_code=503, detail="RAG pipeline not initialized")
 
-    # Check input with guardrails
+    # Check input with guardrails (input validation only)
     if guardrails:
         try:
+            # Use guardrails to check if input is appropriate
+            # We check the response for blocking indicators
             input_check = await guardrails.generate_async(
                 messages=[{"role": "user", "content": request.query}]
             )
-            # If guardrails blocked the input, return the guardrails response
             if input_check and input_check.get("content"):
                 guardrail_response = input_check["content"]
-                if "nicht beantworten" in guardrail_response.lower() or "off-topic" in guardrail_response.lower():
+                # Only block if guardrails explicitly refuses (off-topic detection)
+                block_indicators = [
+                    "ich bin ein assistent speziell für fragen zum studium",
+                    "off-topic",
+                    "kann ich nicht beantworten",
+                    "bitte stelle mir fragen zu studiengängen",
+                ]
+                if any(indicator in guardrail_response.lower() for indicator in block_indicators):
                     logger.info(f"Guardrails blocked input: {request.query}")
                     return QueryResponse(
-                        answer=guardrail_response,
+                        answer="Ich bin ein Assistent speziell für Fragen zum Studium an der FH Wedel. Bitte stelle mir Fragen zu Studiengängen, Modulen oder Prüfungsordnungen.",
                         session_id=request.session_id or str(uuid.uuid4()),
                         context={},
                         keywords=[],
                         debug_info={"guardrails": "input_blocked"} if request.debug else None,
                     )
         except Exception as e:
-            logger.warning(f"Guardrails input check failed: {e}")
+            logger.warning(f"Guardrails input check failed (continuing without): {e}")
 
     # Get or create session
     session_id, session = get_or_create_session(request.session_id)

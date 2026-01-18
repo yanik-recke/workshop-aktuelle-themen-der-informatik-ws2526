@@ -11,6 +11,6 @@ def get_document_store() -> QdrantDocumentStore:
             url=QDRANT_URL,  # Connect to Qdrant server instead of local file
             index=QDRANT_COLLECTION,
             embedding_dim=EMBEDDING_DIM,
-            recreate_index=False
+            recreate_index=False  # Data already indexed
         )
     return _document_store

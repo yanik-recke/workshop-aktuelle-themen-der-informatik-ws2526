@@ -54,10 +54,6 @@ def find_docs_with_metadata(base_dir: Path, metadb: Dict[str, dict]) -> List[Dic
         if meta.get("status") and meta["status"] != "aktuell" or "Moduluebersicht".upper() in meta.get("filename", "").upper():
             continue
 
-        # Filter: Only process Informatik 11.0_aktuell for faster testing
-        if "Bachelor/Informatik/11.0_aktuell" not in str(path):
-            continue
-
         results.append({
             "path": path,
             "meta": {

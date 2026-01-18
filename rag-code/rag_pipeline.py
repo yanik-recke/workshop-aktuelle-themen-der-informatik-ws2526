@@ -171,7 +171,20 @@ def run_rag_query(
             query=original_query,
             memory_summary=memory_summary,
         )
-        
+
+        # Debug: Log the FULL prompt being sent to LLM
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"=== FULL PROMPT SENT TO LLM ===")
+        logger.info(f"Number of documents: {len(documents)}")
+        for i, doc in enumerate(documents):
+            logger.info(f"--- DOC {i+1} FULL CONTENT ({len(doc.content)} chars) ---")
+            logger.info(doc.content)
+            logger.info(f"--- END DOC {i+1} ---")
+        logger.info(f"=== FULL RENDERED PROMPT ({len(prompt_result['prompt'])} chars) ===")
+        logger.info(prompt_result["prompt"])
+        logger.info(f"=== END PROMPT ===")
+
         generator = OpenAIGenerator(
             api_key=Secret.from_env_var("OPENAI_API_KEY"),
             api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat

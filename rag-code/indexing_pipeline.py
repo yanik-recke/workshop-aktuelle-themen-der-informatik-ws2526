@@ -222,11 +222,28 @@ def index_pdfs_with_metadata():
         print("[WARN] Keine Markdown-Dateien gefunden.")
         return
 
-    print(f"[INFO] Starte parser-basierte Indexierung von {len(sources)} Markdown-Dateien...")
+    # Filter to only include active (aktuell) documents
+    filtered_sources = []
+    filtered_metas = []
+    for path, meta in zip(sources, metas):
+        status = (meta.get("status") or "").lower()
+        if status == "aktuell":
+            filtered_sources.append(path)
+            filtered_metas.append(meta)
+        else:
+            print(f"[SKIP] Archiviertes Dokument übersprungen: {path.name} (status={status})")
+
+    print(f"[INFO] {len(filtered_sources)} aktuelle Dokumente von {len(sources)} gefunden")
+
+    if not filtered_sources:
+        print("[WARN] Keine aktiven Dokumente gefunden.")
+        return
+
+    print(f"[INFO] Starte parser-basierte Indexierung von {len(filtered_sources)} Markdown-Dateien...")
 
     all_docs: List[Document] = []
 
-    for path, meta in zip(sources, metas):
+    for path, meta in zip(filtered_sources, filtered_metas):
         docs = parse_pdf_with_correct_parser(path, meta)
         all_docs.extend(docs)
 

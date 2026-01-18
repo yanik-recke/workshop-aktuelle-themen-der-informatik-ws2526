@@ -62,10 +62,10 @@ services:
       # For development: mount source code for hot reload
       - ./rag-code:/app/rag-code
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
-      # Separate URLs for embeddings (local Ollama) and chat (OpenAI API)
-      - OPENAI_EMBED_BASE_URL=http://host.docker.internal:11434/v1  # Ollama on host
-      - OPENAI_CHAT_BASE_URL=https://api.openai.com/v1              # OpenAI API
+      - OPENAI_API_KEY=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
+      # Both use OpenAI API now (change to host.docker.internal:11434 for local Ollama)
+      - OPENAI_EMBED_BASE_URL=https://api.openai.com/v1
+      - OPENAI_CHAT_BASE_URL=https://api.openai.com/v1
       - QDRANT_URL=http://qdrant:6333
     extra_hosts:
       - "host.docker.internal:host-gateway"  # Required for Linux to access host
@@ -117,10 +117,10 @@ services:
       # For development: mount source code
       - ./rag-code:/app/rag-code
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
-      # Separate URLs for embeddings (local Ollama) and chat (OpenAI API)
-      - OPENAI_EMBED_BASE_URL=http://host.docker.internal:11434/v1  # Ollama on host
-      - OPENAI_CHAT_BASE_URL=https://api.openai.com/v1              # OpenAI API
+      - OPENAI_API_KEY=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
+      # Both use OpenAI API now (change to host.docker.internal:11434 for local Ollama)
+      - OPENAI_EMBED_BASE_URL=https://api.openai.com/v1
+      - OPENAI_CHAT_BASE_URL=https://api.openai.com/v1
       - QDRANT_URL=http://qdrant:6333
     extra_hosts:
       - "host.docker.internal:host-gateway"  # Required for Linux to access host
