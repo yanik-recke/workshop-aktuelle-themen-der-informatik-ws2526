@@ -269,10 +269,21 @@ async def chat(request: QueryRequest):
     context_state = detect_context(request.query, context_state)
     session["context_state"] = context_state
 
+    # Enrich query with selected program for better retrieval
+    # If a specific program is selected, prepend it to the query
+    enriched_query = request.query
+    selected_program = None
+    if context_state.get("program") and len(context_state["program"]) == 1:
+        selected_program = context_state["program"][0]
+        # Only enrich if the program isn't already mentioned in the query
+        if selected_program.lower() not in request.query.lower():
+            enriched_query = f"Studiengang {selected_program}: {request.query}"
+            logger.info(f"Enriched query with program context: '{enriched_query}'")
+
     # Expand query with LLM
     try:
         expanded_query, original_query, keywords = expand_query_with_llm(
-            request.query,
+            enriched_query,
             session["memory_summary"],
             session["conversation_buffer"],
         )
@@ -372,6 +383,7 @@ async def chat(request: QueryRequest):
                 conversation_history=hist_short,
                 filters=filters,
                 keywords=keywords,
+                selected_program=selected_program,
             )
         except Exception as e:
             logger.error(f"Generation failed: {e}")
@@ -406,6 +418,7 @@ async def chat(request: QueryRequest):
                 conversation_history=hist_short,
                 filters=filters,
                 keywords=keywords,
+                selected_program=selected_program,
             )
         except Exception as e:
             logger.error(f"Generation failed: {e}")

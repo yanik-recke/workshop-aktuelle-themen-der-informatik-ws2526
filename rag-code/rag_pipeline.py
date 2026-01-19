@@ -50,6 +50,12 @@ Wenn die Antwort nicht in den Dokumenten enthalten ist, sage "Das kann ich anhan
 Antworte auf Deutsch, es sei denn die Frage ist auf Englisch gestellt.
 Verwende keine LaTeX-Formatierung (wie \\boxed{}, \\text{}, etc.) in deiner Antwort.
 
+{% if selected_program %}
+### Ausgewählter Studiengang
+Der Nutzer fragt spezifisch zum Studiengang: **{{ selected_program }}**
+Beziehe deine Antwort auf diesen Studiengang, sofern relevant.
+{% endif %}
+
 ### Bisheriger Kontext
 {{ memory_summary or "Keiner" }}
 
@@ -145,14 +151,18 @@ def run_rag_query(
     filters: Dict = None,
     use_hybrid: bool = True,
     keywords: List[str] = None,
+    selected_program: str = None,
 ) -> str:
     """
     Führt eine RAG-Abfrage aus und gibt die generierte Antwort zurück.
     # todo add history again
     Uses hybrid search (keyword + semantic) by default for better retrieval.
+
+    Args:
+        selected_program: Optional program name to include in prompt context
     """
     from hybrid_retrieval import hybrid_search
-    
+
     if use_hybrid:
         # Use hybrid search for better keyword + semantic matching
         # Pass enhanced keywords for keyword matching, expanded_query for semantics
@@ -163,13 +173,14 @@ def run_rag_query(
             original_query=original_query,
             keywords=keywords,
         )
-        
+
         # Build prompt manually and run generator
         prompt_builder = PromptBuilder(template=PROMPT_TEMPLATE)
         prompt_result = prompt_builder.run(
             documents=documents,
             query=original_query,
             memory_summary=memory_summary,
+            selected_program=selected_program,
         )
 
         # Debug: Log the FULL prompt being sent to LLM
