@@ -1,0 +1,47 @@
+**M_ITS16.0** **Studienverlaufs- und Prüfungsplan IT-Sicherheit (M.Sc.)**
+
+|Col1|Col2|Col3|Aufwand pro Semester|Col5|Col6|Col7|Col8|Col9|Col10|Col11|Col12|Col13|Prüfung|Col15|Col16|Col17|Col18|Col19|Einordnung|Col21|Col22|Col23|Col24|Col25|Col26|Col27|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**ECTS pro**<br>**Sem.**|**ECTS pro**<br>**Sem.**|**ECTS pro**<br>**Sem.**|**Fq.**|**SWS**|** Hfgk.**|**WS**|**KoZ**|**EiZ**|**Anw.**|**Vorl.**|**Art**|** Ben.**|** Vers.**|**  Dauer**|**  OA.**|**Vert.**|**WB.**|**LF.**|**Mit.**|**Sprache**|**Sprache**|**Fachgebiet**|**Curricularer Bezug**|
+|**Modul-**<br>**Nr.**<br>**Modul**<br>**Prfg.-Nr.**<br>**Veranstaltung**|**Prfg.-Nr.**|**Veranstaltung**|**1.**|**2.**|**3.**||||**[min]**|**[h]**|**[h]**||||||**[min]**||||||**V.**|**M.**|||
+|M120<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit|M120<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit|M120<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit||||||||||||||||||||gb|||Informatik||
+|M120<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit|M120a|Web- und Applikationssicherheit|5.0|||S|4|12|150.0|30.0|120.0|N||SA|N|o. B.||N|||W|gb|DE|DE|||
+|M120<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit<br>M120a<br>Web- und Applikationssicherheit|M120a|Web- und Applikationssicherheit|5.0|||S|4|12|150.0|30.0|120.0|N||SA|J|3||N|||W|gb|DE|DE|||
+|M005<br>Funktionale Programmierung<br>M005a<br>Funktionale Programmierung<br>M005b<br>Übg. Funktionale Programmierung|M005<br>Funktionale Programmierung<br>M005a<br>Funktionale Programmierung<br>M005b<br>Übg. Funktionale Programmierung|M005<br>Funktionale Programmierung<br>M005a<br>Funktionale Programmierung<br>M005b<br>Übg. Funktionale Programmierung||||||||||||||||||||fhu|||Informatik||
+|M005<br>Funktionale Programmierung<br>M005a<br>Funktionale Programmierung<br>M005b<br>Übg. Funktionale Programmierung|M005a|Funktionale Programmierung|2.0|||S|2|12|75.0|15.0|45.0|N||KM|J|3|30|J|||V|si|DE|DE|||
+|M005<br>Funktionale Programmierung<br>M005a<br>Funktionale Programmierung<br>M005b<br>Übg. Funktionale Programmierung|M005b|Übg. Funktionale Programmierung|3.0|||S|2|12|75.0|15.0|75.0|J||AB|N|o. B.||N|||U|si|DE|DE|||
+|M006<br>Learning and Softcomputing<br>M006a<br>Learning & Softcomputing|M006<br>Learning and Softcomputing<br>M006a<br>Learning & Softcomputing|M006<br>Learning and Softcomputing<br>M006a<br>Learning & Softcomputing||||||||||||||||||||uh|||Informatik||
+|M006<br>Learning and Softcomputing<br>M006a<br>Learning & Softcomputing|M006a|Learning & Softcomputing|5.0|||S|4|12|150.0|30.0|120.0|J||AS|J|3||N|||di|uh|DE|DE|||
+|M009<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography|M009<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography|M009<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography||||||||||||||||||||gb|||Informatik||
+|M009<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography|M009a|Workshop Cryptography|5.0|||S|4|12|150.0|30.0|120.0|J||U|J|3||N|||W|gb|EN|EN|||
+|M009<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography<br>M009a<br>Workshop Cryptography|M009a|Workshop Cryptography|5.0|||S|4|12|150.0|30.0|120.0|J||AB|N|o. B.||N|||W|gb|EN|EN|||
+|M019<br>Security Engineering<br>M019a<br>Security Engineering|M019<br>Security Engineering<br>M019a<br>Security Engineering|M019<br>Security Engineering<br>M019a<br>Security Engineering||||||||||||||||||||gb|||Informatik||
+|M019<br>Security Engineering<br>M019a<br>Security Engineering|M019a|Security Engineering|5.0|||S|4|12|150.0|30.0|120.0|N||KM|J|3|60|J|||VU|gb|EN|EN|||
+|M170<br>Seminar IT-Sicherheit<br>M170a<br>Seminar IT-Sicherheit|M170<br>Seminar IT-Sicherheit<br>M170a<br>Seminar IT-Sicherheit|M170<br>Seminar IT-Sicherheit<br>M170a<br>Seminar IT-Sicherheit||||||||||||||||||||Doz|||Informatik||
+|M170<br>Seminar IT-Sicherheit<br>M170a<br>Seminar IT-Sicherheit|M170a|Seminar IT-Sicherheit|5.0|||W|2|3|18.75|3.75|146.25|J||SA|J|3||N|||S|NN|DE|DE|||
+|M027<br>Konzepte der Datenbanktechnologie<br>M027a<br>Konzepte der Datenbanktechnologie<br>M027b<br>Übg. Konzepte der Datenbanktechnologie|M027<br>Konzepte der Datenbanktechnologie<br>M027a<br>Konzepte der Datenbanktechnologie<br>M027b<br>Übg. Konzepte der Datenbanktechnologie|M027<br>Konzepte der Datenbanktechnologie<br>M027a<br>Konzepte der Datenbanktechnologie<br>M027b<br>Übg. Konzepte der Datenbanktechnologie||||||||||||||||||||mpr|||Informatik||
+|M027<br>Konzepte der Datenbanktechnologie<br>M027a<br>Konzepte der Datenbanktechnologie<br>M027b<br>Übg. Konzepte der Datenbanktechnologie|M027a|Konzepte der Datenbanktechnologie||3.0||W|2|12|75.0|15.0|75.0|N||KM|J|3|60|J|||V|mpr|DE|DE|||
+|M027<br>Konzepte der Datenbanktechnologie<br>M027a<br>Konzepte der Datenbanktechnologie<br>M027b<br>Übg. Konzepte der Datenbanktechnologie|M027b|Übg. Konzepte der Datenbanktechnologie||2.0||W|2|12|75.0|15.0|45.0|J||AB|N|o. B.||N|||U|mpr|DE|DE|||
+|M029<br>Berechenbarkeit und Verifkation<br>M029a<br>Berechenbarkeit und Komplexität<br>Formale Spezifkation und Verifkation|M029<br>Berechenbarkeit und Verifkation<br>M029a<br>Berechenbarkeit und Komplexität<br>Formale Spezifkation und Verifkation|M029<br>Berechenbarkeit und Verifkation<br>M029a<br>Berechenbarkeit und Komplexität<br>Formale Spezifkation und Verifkation||||||||||||||||||||iw|||Informatik||
+|M029<br>Berechenbarkeit und Verifkation<br>M029a<br>Berechenbarkeit und Komplexität<br>Formale Spezifkation und Verifkation|M029a|Berechenbarkeit und Komplexität||2.5||W|3|12|112.5|22.5|52.5|N||KM|J|3|60|J|||V|iw|DE(EN)|DE/EN|||
+|M029<br>Berechenbarkeit und Verifkation<br>M029a<br>Berechenbarkeit und Komplexität<br>Formale Spezifkation und Verifkation|M029a|Formale Spezifkation und Verifkation||2.5||W|3|12|112.5|22.5|52.5|N|N|N|N|N|N|N|||VU|uh|DE(EN)|DE/EN|||
+|M121<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit|M121<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit|M121<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit||||||||||||||||||||kal|||Informatik||
+|M121<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit|M121a|Workshop Netzwerksicherheit||5.0||W|4|12|150.0|30.0|120.0|N||SA|N|o. B.||N|||W|kal|DE|DE|||
+|M121<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit<br>M121a<br>Workshop Netzwerksicherheit|M121a|Workshop Netzwerksicherheit||5.0||W|4|12|150.0|30.0|120.0|N||SA|J|3||N|||W|kal|DE|DE|||
+|M035<br>Distributed Systems<br>M035a<br>Distributed Systems<br>M035b<br>Tutorial: Distributed Systems|M035<br>Distributed Systems<br>M035a<br>Distributed Systems<br>M035b<br>Tutorial: Distributed Systems|M035<br>Distributed Systems<br>M035a<br>Distributed Systems<br>M035b<br>Tutorial: Distributed Systems||||||||||||||||||||uh|||Informatik||
+|M035<br>Distributed Systems<br>M035a<br>Distributed Systems<br>M035b<br>Tutorial: Distributed Systems|M035a|Distributed Systems||3.0||W|2|12|75.0|15.0|75.0|N||KM|J|3|90|J|||V|uh|EN|EN|||
+|M035<br>Distributed Systems<br>M035a<br>Distributed Systems<br>M035b<br>Tutorial: Distributed Systems|M035b|Tutorial: Distributed Systems||2.0||W|2|12|75.0|15.0|45.0|J||AB|N|o. B.||N|||U|uh|EN|EN|||
+|M047<br>Projekt IT-Sicherheit<br>M047a<br>Projekt IT-Sicherheit|M047<br>Projekt IT-Sicherheit<br>M047a<br>Projekt IT-Sicherheit|M047<br>Projekt IT-Sicherheit<br>M047a<br>Projekt IT-Sicherheit||||||||||||||||||||gb|||Informatik||
+|M047<br>Projekt IT-Sicherheit<br>M047a<br>Projekt IT-Sicherheit|M047a|Projekt IT-Sicherheit||5.0||W|4|12|150.0|30.0|120.0|J||SA|J|3||N|||PR|gb|DE(EN)|EN|||
+|M049<br>Security Management<br>M049a<br>Security Management|M049<br>Security Management<br>M049a<br>Security Management|M049<br>Security Management<br>M049a<br>Security Management||||||||||||||||||||gb|||Integrationsfach||
+|M049<br>Security Management<br>M049a<br>Security Management|M049a|Security Management||5.0||W|4|12|150.0|30.0|120.0|N||KM|J|3|90|J|||VU|gb|EN|EN|||
+|M050<br>Master-Thesis<br>M050a<br>Master-Thesis|M050<br>Master-Thesis<br>M050a<br>Master-Thesis|M050<br>Master-Thesis<br>M050a<br>Master-Thesis||||||||||||||||||||Doz|||Informatik||
+|M050<br>Master-Thesis<br>M050a<br>Master-Thesis|M050a|Master-Thesis|||28.0|E|0|12|0.0|0.0|840.0|N||SA|J|2||N|||TS|Doz|DE|DE|||
+|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium||||||||||||||||||||Doz|||Informatik||
+|M058<br>Master-Kolloquium<br>M058a<br>Kolloquium|M058a|Kolloquium|||2.0|E|0|12|0.0|0.0|60.0|N|M050a|KO|J|2|60|N|||K|div|DE|DE|||
+
+
+
+Fachhochschule Wedel, 01.06.2021 1 / 1
+
+
