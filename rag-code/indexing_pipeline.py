@@ -73,7 +73,7 @@ def split_documents(docs: List[Document]) -> List[Document]:
         doctype = (doc.meta.get("doctype") or "").lower()
         chunk_type = doc.meta.get("chunk_type", "")
         # Skip splitting for structured documents
-        if doctype in ["studienverlaufsplan", "modulhandbuch"] or chunk_type in ["module_overview", "module_detail"]:
+        if doctype in ["studienverlaufsplan", "modulhandbuch"] or chunk_type in ["module_overview", "module_detail", "semester_overview"]:
             skip_split.append(doc)
         else:
             to_split.append(doc)

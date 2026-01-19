@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env file
-load_dotenv()
+# Load .env file (override=True to replace system env vars with .env values)
+load_dotenv(override=True)
 
 # === Pfade ===
 PROJECT_ROOT = Path(__file__).parent
@@ -18,22 +18,28 @@ QDRANT_COLLECTION = "fh_wedel_pdfs"
 
 # Achtung: Muss zur Dimension deines Embedding-Modells passen
 # (z.B. 1536 wie bei vielen OpenAI-kompatiblen Embedding-Modellen)
-EMBEDDING_DIM = 1024  # Qwen3-0.6b embedding model produces 1024-dim vectors
+EMBEDDING_DIM = 1536  # OpenAI text-embedding-3-small produces 1536-dim vectors
 
-# === Modelle (über OpenAI-kompatibles API, z.B. LM Studio) ===
-OPENAI_CHAT_MODEL = "deepseek-r1:1.5b"
-OPENAI_EMBED_MODEL = "qwen3-embedding:0.6b"
-#OPENAI_CHAT_MODEL = "qwen/qwen3-4b-2507"
-#OPENAI_EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"
+# === Modelle ===
+# OpenAI
+OPENAI_CHAT_MODEL = "gpt-4o-mini"  # Fast and capable for chat
+OPENAI_EMBED_MODEL = "text-embedding-3-small"  # OpenAI embedding model (1536 dim)
+OPENAI_RERANK_MODEL = "gpt-4o-mini"  # For reranking chunks
 
-OPENAI_CLASSIFIER_MODEL = OPENAI_CHAT_MODEL  # eigenes Modell möglich
+# For local LM Studio (set OPENAI_BASE_URL in .env)
+# OPENAI_CHAT_MODEL = "gpt-oss-20b"
+# OPENAI_EMBED_MODEL = "qwen3-embedding:0.6b"
+# OPENAI_RERANK_MODEL = "gpt-oss-20b"
+
+OPENAI_CLASSIFIER_MODEL = OPENAI_CHAT_MODEL
 
 # WICHTIG: Setze diese Umgebungsvariablen für LM Studio o.ä.:
 #   export OPENAI_API_KEY="dummy"
 #   export OPENAI_BASE_URL="http://localhost:1234/v1"
 
 # === RAG / Chat ===
-TOP_K = 5  # Increase for more diverse results
+TOP_K = 10  # Increase for more diverse results
+USE_LLM_RERANK = True  # Set True to enable LLM-based reranking (slower but better)
 MAX_MEMORY_TURNS = 5
 MAX_CONTEXT_TOKENS = 5000
 # === Fachhochschule Wedel Kategorien ===

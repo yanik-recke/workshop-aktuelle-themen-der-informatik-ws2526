@@ -15,8 +15,9 @@ class RegulationsParser(BaseParser):
     doctypes = ["ZLO", "PVO", "SPO"]  
 
 
-    RE_SECTION = re.compile(r"^\s*([IVXLC]+\.)\s+(.*)")
-    RE_PARAGRAPH = re.compile(r"^\s*§\s*(\d+)\s*(.*)")
+    # Match sections like "## **§ 4 Regelstudienzeit**" or "§ 4 Regelstudienzeit"
+    RE_SECTION = re.compile(r"^\s*#*\s*\**\s*([IVXLC]+\.)\s+(.*)")
+    RE_PARAGRAPH = re.compile(r"^\s*#*\s*\**\s*§\s*(\d+)\s*(.*)")
     RE_ABS = re.compile(r"^\s*\((\d+)\)\s+(.*)")
 
     def parse(self, path: Path, meta: Dict) -> List[Document]:
@@ -33,14 +34,24 @@ class RegulationsParser(BaseParser):
         current_paragraph_title: Optional[str] = None
         buffer: List[str] = []
 
+        program = base_meta.get("program", "Unbekannt")
+        degree = base_meta.get("degree", "Unbekannt")
+        
         def flush_paragraph():
             """Speichert den aktuellen Paragraph als Document."""
             if not buffer or not current_paragraph_num:
                 return
 
-            content = "\n".join(buffer).strip()
-            if not content:
+            raw_content = "\n".join(buffer).strip()
+            if not raw_content:
                 return
+            
+            # Add context header for better retrieval
+            context_header = f"Prüfungsordnung {program} ({degree}) an der FH Wedel\n"
+            content = context_header + raw_content
+            
+            # Clean paragraph title (remove trailing **)
+            clean_title = current_paragraph_title.rstrip('*').strip() if current_paragraph_title else None
 
             docs.append(
                 Document(
@@ -49,7 +60,7 @@ class RegulationsParser(BaseParser):
                         **base_meta,
                         "section": current_section,
                         "paragraph": current_paragraph_num,
-                        "paragraph_title": current_paragraph_title,
+                        "paragraph_title": clean_title,
                     },
                 )
             )

@@ -54,7 +54,7 @@ Verwende keine LaTeX-Formatierung (wie \\boxed{}, \\text{}, etc.) in deiner Antw
 {% if documents %}
 {% for doc in documents %}
 [Dokument {{ loop.index }}] {{ doc.meta.get("doctype", "") }} | {{ doc.meta.get("program", "") }} | {{ doc.meta.get("degree", "") }}{% if doc.meta.get("comparison_entity") %} | FÜR: {{ doc.meta.get("comparison_entity") }}{% endif %}
-{{ doc.content[:1200] }}
+{{ doc.content[:2500] }}
 {% endfor %}
 {% else %}
 (Keine Dokumente gefunden)
@@ -83,7 +83,7 @@ Verwende keine LaTeX-Formatierung (wie \\boxed{}, \\text{}, etc.) in deiner Antw
 ### Dokumente
 {% for doc in documents %}
 [{{ doc.meta.get("comparison_entity", "?") }}] {{ doc.meta.get("doctype", "") }} | {{ doc.meta.get("program", "") }}
-{{ doc.content[:1000] }}
+{{ doc.content[:2000] }}
 {% endfor %}
 
 ### Frage
