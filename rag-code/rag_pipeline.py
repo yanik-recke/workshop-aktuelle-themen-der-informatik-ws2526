@@ -8,7 +8,10 @@ from haystack.components.generators import OpenAIGenerator
 from haystack.utils import Secret
 from haystack_integrations.components.retrievers.qdrant import QdrantEmbeddingRetriever
 
-from config import OPENAI_CHAT_MODEL, OPENAI_EMBED_MODEL, TOP_K, MAX_CONTEXT_TOKENS
+from config import (
+    OPENAI_CHAT_MODEL, OPENAI_EMBED_MODEL, TOP_K, MAX_CONTEXT_TOKENS,
+    OPENAI_EMBED_BASE_URL, OPENAI_CHAT_BASE_URL
+)
 from document_store import get_document_store
 
 import tiktoken
@@ -46,6 +49,12 @@ Beantworte die Frage **nur** basierend auf den bereitgestellten Dokumenten.
 Wenn die Antwort nicht in den Dokumenten enthalten ist, sage "Das kann ich anhand der vorliegenden Dokumente nicht beantworten."
 Antworte auf Deutsch, es sei denn die Frage ist auf Englisch gestellt.
 Verwende keine LaTeX-Formatierung (wie \\boxed{}, \\text{}, etc.) in deiner Antwort.
+
+{% if selected_program %}
+### Ausgewählter Studiengang
+Der Nutzer fragt spezifisch zum Studiengang: **{{ selected_program }}**
+Beziehe deine Antwort auf diesen Studiengang, sofern relevant.
+{% endif %}
 
 ### Bisheriger Kontext
 {{ memory_summary or "Keiner" }}
@@ -99,6 +108,7 @@ def create_rag_pipeline() -> Pipeline:
 
     text_embedder = OpenAITextEmbedder(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_EMBED_BASE_URL,  # Use local Ollama for embeddings
         model=OPENAI_EMBED_MODEL,
     )
 
@@ -112,6 +122,7 @@ def create_rag_pipeline() -> Pipeline:
 
     generator = OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CHAT_MODEL,
         generation_kwargs={"temperature": 0.3, "max_tokens": 512},
     )
@@ -140,14 +151,18 @@ def run_rag_query(
     filters: Dict = None,
     use_hybrid: bool = True,
     keywords: List[str] = None,
+    selected_program: str = None,
 ) -> str:
     """
     Führt eine RAG-Abfrage aus und gibt die generierte Antwort zurück.
     # todo add history again
     Uses hybrid search (keyword + semantic) by default for better retrieval.
+
+    Args:
+        selected_program: Optional program name to include in prompt context
     """
     from hybrid_retrieval import hybrid_search
-    
+
     if use_hybrid:
         # Use hybrid search for better keyword + semantic matching
         # Pass enhanced keywords for keyword matching, expanded_query for semantics
@@ -158,21 +173,36 @@ def run_rag_query(
             original_query=original_query,
             keywords=keywords,
         )
-        
+
         # Build prompt manually and run generator
         prompt_builder = PromptBuilder(template=PROMPT_TEMPLATE)
         prompt_result = prompt_builder.run(
             documents=documents,
             query=original_query,
             memory_summary=memory_summary,
+            selected_program=selected_program,
         )
-        
+
+        # Debug: Log the FULL prompt being sent to LLM
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"=== FULL PROMPT SENT TO LLM ===")
+        logger.info(f"Number of documents: {len(documents)}")
+        for i, doc in enumerate(documents):
+            logger.info(f"--- DOC {i+1} FULL CONTENT ({len(doc.content)} chars) ---")
+            logger.info(doc.content)
+            logger.info(f"--- END DOC {i+1} ---")
+        logger.info(f"=== FULL RENDERED PROMPT ({len(prompt_result['prompt'])} chars) ===")
+        logger.info(prompt_result["prompt"])
+        logger.info(f"=== END PROMPT ===")
+
         generator = OpenAIGenerator(
             api_key=Secret.from_env_var("OPENAI_API_KEY"),
+            api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
             model=OPENAI_CHAT_MODEL,
             generation_kwargs={"temperature": 0.3, "max_tokens": 512},
         )
-        
+
         gen_result = generator.run(prompt=prompt_result["prompt"])
         replies = gen_result.get("replies", [])
     else:
@@ -217,13 +247,14 @@ def run_comparison_query(
     
     generator = OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CHAT_MODEL,
         generation_kwargs={"temperature": 0.3, "max_tokens": 800},  # More tokens for comparisons
     )
-    
+
     gen_result = generator.run(prompt=prompt_result["prompt"])
     replies = gen_result.get("replies", [])
-    
+
     if not replies:
         return "Ich konnte keinen Vergleich erstellen."
     return replies[0].strip()
@@ -231,6 +262,49 @@ def run_comparison_query(
 
 def build_filters_from_context(context_state: Dict) -> Dict:
     """
-    Temporäre Dummy-Funktion.
+    Build Qdrant-compatible filters from context state.
+    Returns a Haystack filter dict for use with QdrantEmbeddingRetriever.
+
+    Haystack filter format:
+    {"operator": "AND", "conditions": [{"field": "meta.X", "operator": "in", "value": [...]}]}
     """
-    return {}
+    if not context_state:
+        return {}
+
+    conditions = []
+
+    if context_state.get("program"):
+        conditions.append({
+            "field": "meta.program",
+            "operator": "in",
+            "value": context_state["program"]
+        })
+
+    if context_state.get("degree"):
+        conditions.append({
+            "field": "meta.degree",
+            "operator": "in",
+            "value": context_state["degree"]
+        })
+
+    if context_state.get("doctype"):
+        conditions.append({
+            "field": "meta.doctype",
+            "operator": "in",
+            "value": context_state["doctype"]
+        })
+
+    if context_state.get("status"):
+        conditions.append({
+            "field": "meta.status",
+            "operator": "in",
+            "value": context_state["status"]
+        })
+
+    if not conditions:
+        return {}
+
+    if len(conditions) == 1:
+        return conditions[0]
+
+    return {"operator": "AND", "conditions": conditions}

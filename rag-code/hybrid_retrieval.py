@@ -9,7 +9,7 @@ from haystack_integrations.components.retrievers.qdrant import QdrantEmbeddingRe
 from haystack.utils import Secret
 from qdrant_client import models
 
-from config import OPENAI_EMBED_MODEL, TOP_K, QDRANT_COLLECTION
+from config import OPENAI_EMBED_MODEL, OPENAI_EMBED_BASE_URL, TOP_K, QDRANT_COLLECTION
 from document_store import get_document_store
 
 
@@ -63,6 +63,7 @@ def semantic_search(query: str, top_k: int = 10, filters: Dict = None) -> List[D
     
     embedder = OpenAITextEmbedder(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_EMBED_BASE_URL,  # Use local Ollama for embeddings
         model=OPENAI_EMBED_MODEL,
     )
     

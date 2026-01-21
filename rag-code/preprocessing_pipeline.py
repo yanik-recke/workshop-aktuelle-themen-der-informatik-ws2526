@@ -25,7 +25,9 @@ def load_metadata(meta_file: Path) -> Dict[str, dict]:
         # Use local_md_path for the lookup key (just the filename)
         md_path = entry.get("local_md_path", "")
         if md_path:
-            filename = Path(md_path).name
+            # TODO ACHTUNG ! Mac vs Windows Normalize backslashes (Windows paths) to forward slashes before extracting filename
+            normalized_path = md_path.replace("\\", "/")
+            filename = Path(normalized_path).name
             lookup[filename] = entry
 
     print(f"[INFO] Metadaten geladen: {len(lookup)} Eintraege")

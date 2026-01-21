@@ -10,6 +10,7 @@ from config import (
     DOCTYPES,
     STATUSES,
     OPENAI_CLASSIFIER_MODEL,
+    OPENAI_CHAT_BASE_URL,
 )
 
 
@@ -32,6 +33,7 @@ def _get_classifier() -> OpenAIGenerator:
     # eigener Client für Klassifizierung
     return OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CLASSIFIER_MODEL,
         generation_kwargs={"temperature": 0},
     )
