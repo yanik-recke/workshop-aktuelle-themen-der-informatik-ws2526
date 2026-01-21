@@ -1,0 +1,7 @@
+data_fh_wedel
+rag-code/__pycache__/
+rag-code/parsers/__pycache__/
+rag-code/qdrant_data/
+.lock
+fhwedel_docs.csv
+fhwedel_docs.json

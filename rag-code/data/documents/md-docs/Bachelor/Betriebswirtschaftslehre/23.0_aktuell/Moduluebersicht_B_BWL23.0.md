@@ -1,0 +1,72 @@
+![](_page_0_Picture_1.jpeg)
+
+![](_page_0_Picture_2.jpeg)
+
+| Semester 1                                                  | Semester 2                                                                | Semester 3                                   | Semester 4                                        | Semester 5                          | Semester 6                         | Semester 7          |
+|-------------------------------------------------------------|---------------------------------------------------------------------------|----------------------------------------------|---------------------------------------------------|-------------------------------------|------------------------------------|---------------------|
+| Grundlagen<br>Rechnungswesen<br>W 5 ECTS                    | Finanz- und<br>Nachhaltigkeits-<br>berichterstattung<br>W 5 ECTS          | Business Planning w 5 ECTS                   | Controlling & Unternehmensführung w 5 ECTS        |                                     | Entre- & Intrapreneurship W 5 ECTS |                     |
+| Grundlagen der<br>Betriebswirtschafts-lehre<br>W 5 ECTS     | Investition & Finanzierung  W 5 ECTS                                      | Servicemanagement,<br>Marketing und Vertrieb | Übung Controlling W 5 ECTS                        |                                     | BWL-Projekt                        | Betriebspraktikum   |
+| Einführung in die<br>Volkswirtschafts-<br>lehre<br>W 5 ECTS | Einführung in das<br>wissenschftliche Arbeiten<br>W 5 ECTS                | Produktionsplanung und -<br>steuerung        | Human Resource<br>Management<br>W 5 ECTS          | Auslands- oder                      | W 10 ECTS                          | W 17 ECTS           |
+| Business & Commercial<br>English                            | Unternehmens-<br>planspiel<br>W 5 ECTS                                    | Einführung in<br>Datenbanken<br>I 5 ECTS     | Geschäftsprozesse mit<br>ERP-Systemen<br>X 5 ECTS | Praxissemester (dual) <sup>1)</sup> | Soft Skills                        |                     |
+| Einführung in die<br>Programmierung                         | Office-Anwendungen  I 5 ECTS                                              | Induktive Statistik                          | Datenschutz & Wirtschafts-<br>privatrecht         |                                     | Vertiefung                         | Thesis & Kolloquium |
+| Analysis  M 5 ECTS                                          | Deskriptive Statistik &<br>Grundlagen der Linearen<br>Algebra<br>M 5 ECTS | Vertiefung<br>v 5 ects                       | Vertiefung<br>V 5 ECTS                            | W 30 ECTS                           | V 10 ECTS                          | W 13 ECTS           |
+| I INFORMATIK                                                | T TECHNIK                                                                 | W WIRTSCHAFT                                 | M MATHEMATIK                                      | X INTEGRATIONSFACH                  | V VERTIEFUNG/WAHL                  | S SOFT SKILLS       |
+
+![](_page_1_Picture_1.jpeg)
+
+![](_page_1_Picture_2.jpeg)
+
+|                                      | Semester 3                                                           | Semester 4                                                | Semester 6                                                              | Semester 6                                                |
+|--------------------------------------|----------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------|
+| Marketing & Vertrieb                 | Grundlagen der<br>Wirtschaftspsychologie                             | Strategisches Marketing- & Vertriebsmanagement            | Operatives<br>Marketing- &<br>Vertriebsmanagement                       | Seminar<br>Marketing & Vertrieb                           |
+|                                      | X 5 ECTS                                                             | W 5 ECTS                                                  | W 5 ECTS                                                                | W 5 ECTS                                                  |
+| Servicemanagement                    | Grundlagen der<br>Wirtschaftspsychologie                             | Servicemärkte:<br>Wettbewerb, Strategien,<br>Branchen     | Servicemanagement:<br>Qualität, Leadership und<br>Organisation          | Seminar<br>Servicemanagement                              |
+|                                      | X 5 ECTS                                                             | W 5 ECTS                                                  | W 5 ECTS                                                                | W 5 ECTS                                                  |
+| Accounting, Auditing & Taxation      | Integrierte Berichterstattung & Unternehmens- besteuerung 1 W 5 ECTS | Prüfungswesen &<br>Praxisworkshop<br>IT-Audit<br>W 5 ECTS | Konzernrechnungs-legung<br>& Unternehmens-<br>besteuerung 2<br>W 5 ECTS | Seminar<br>Accounting, Auditing &<br>Taxation<br>W 5 ECTS |
+|                                      |                                                                      |                                                           |                                                                         | Seminar                                                   |
+| Supply Chain & Operations Management | Einkaufs- &<br>Supplymanagement                                      | Management von<br>Produktionssystemen                     | Logistikmanagement                                                      | Supply Chain & Operations Management                      |
+|                                      | W 5 ECTS                                                             | W 5 ECTS                                                  | W 5 ECTS                                                                | W 5 ECTS                                                  |
+| Data Analytics                       | Grundlagen<br>Data Science                                           | Prognose & Simulation                                     | Data Analytics und<br>BI-Anwendungen                                    | Seminar<br>Data Analytics                                 |
+| I INFORMATIK T TECHNIK               | X 5 ECTS W WIRTSCHAFT                                                | X 5 ECTS  M MATHEMATIK                                    | X 5 ECTS  X INTEGRATIONSFACH                                            | X 5 ECTS V VERTIEFUNG/WAHL                                |
+
+![](_page_2_Picture_1.jpeg)
+
+![](_page_2_Picture_2.jpeg)
+
+| Semester 1                                                 | Semester 2                                                  | Semester 3                                           | Semester 4                                         | Semester 5                | Semester 6                          | Semester 7          |
+|------------------------------------------------------------|-------------------------------------------------------------|------------------------------------------------------|----------------------------------------------------|---------------------------|-------------------------------------|---------------------|
+| Unternehmens-Planspiel                                     | Grundlagen der<br>Betriebswirtschafts-lehre                 | Finanz- und<br>Nachhaltigkeits-<br>berichterstattung | Business Planning                                  | Entre- & Intrapreneurship |                                     |                     |
+| Investition & Finanzierung  W 5 ECTS                       | Grundlagen Rechnungswesen W 5 ECTS                          | W 5 ECTS  Übung Controlling  W 5 ECTS                | Servicemanagement, Marketing und Vertrieb W 5 ECTS | W 5 ECTS  BWL-Projekt     |                                     | Betriebspraktikum   |
+| Einführung in das<br>wissenschftliche Arbeiten<br>w 5 ECTS | Einführung in die<br>Volkswirtschafts-<br>lehre<br>W 5 ECTS | Controlling & Unternehmensführung W 5 ECTS           | Produktionsplanung und -<br>steuerung              | W 10 ECTS                 | Auslands- oder                      | W 17 ECTS           |
+| Datenschutz & Wirtschafts-<br>privatrecht                  | Business & Commercial English                               | Human Resource<br>Management<br>W 5 ECTS             | Soft Skills                                        |                           | Praxissemester (dual) <sup>1)</sup> |                     |
+| Analysis M 5 ECTS                                          | Einführung in die<br>Programmierung<br>I 5 ECTS             | Office-Anwendungen                                   | Einführung in<br>Datenbanken<br>I 5 ECTS           | Vertiefung                |                                     | Thesis & Kolloquium |
+| Deskriptive Statistik & Grundlagen der Linearen Algebra    | Induktive Statistik M 5 ECTS                                | Geschäftsprozesse mit<br>ERP-Systemen                | Vertiefung<br>v 5 ects                             | V 15 ECTS                 | W 30 ECTS                           | W 13 ECTS           |
+| I INFORMATIK                                               | T TECHNIK                                                   | W WIRTSCHAFT                                         | M MATHEMATIK                                       | X INTEGRATIONSFACH        | V VERTIEFUNG/WAHL                   | S SOFT SKILLS       |
+
+![](_page_3_Picture_1.jpeg)
+
+![](_page_3_Picture_2.jpeg)
+
+|                                         | Semester 4                                                           | Semester 5                                         | Semester 5                                                | Semester 5                                                              |
+|-----------------------------------------|----------------------------------------------------------------------|----------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------|
+| Marketing & Vertrieb                    | Grundlagen der<br>Wirtschaftspsychologie                             | Seminar<br>Marketing & Vertrieb                    | Strategisches Marketing- &<br>Vertriebsmanagement         | Operatives<br>Marketing- &<br>Vertriebsmanagement                       |
+|                                         | X 5 ECTS                                                             | W 5 ECTS                                           | W 5 ECTS                                                  | W 5 ECTS                                                                |
+| Servicemanagement                       | Grundlagen der<br>Wirtschaftspsychologie                             | Seminar<br>Servicemanagement                       | Servicemärkte:<br>Wettbewerb, Strategien,<br>Branchen     | Servicemanagement:<br>Qualität, Leadership und<br>Organisation          |
+|                                         | X 5 ECTS                                                             | W 5 ECTS                                           | W 5 ECTS                                                  | W 5 ECTS                                                                |
+| Accounting, Auditing & Taxation         | Integrierte Berichterstattung & Unternehmens- besteuerung 1 W 5 ECTS | Seminar Accounting, Auditing & Taxation  W 5 ECTS  | Prüfungswesen &<br>Praxisworkshop<br>IT-Audit<br>W 5 ECTS | Konzernrechnungs-legung<br>& Unternehmens-<br>besteuerung 2<br>w 5 ECTS |
+| Supply Chain &<br>Operations Management | Einkaufs- &<br>Supplymanagement                                      | Seminar<br>Supply Chain & Operations<br>Management | Management von<br>Produktionssystemen                     | Logistikmanagement                                                      |
+|                                         | W 5 ECTS                                                             | W 5 ECTS                                           | W 5 ECTS                                                  | W 5 ECTS                                                                |
+| Data Analytics                          | Grundlagen<br>Data Science                                           | Seminar Data Analytics                             | Prognose & Simulation                                     | Data Analytics und<br>BI-Anwendungen                                    |
+| I INFORMATIK T TECHNIK                  | X 5 ECTS  W WIRTSCHAFT                                               | X 5 ECTS  M MATHEMATIK                             | X 5 ECTS  X INTEGRATIONSFACH                              | X 5 ECTS  V VERTIEFUNG/WAHL                                             |
+|                                         |                                                                      |                                                    |                                                           |                                                                         |
+
+#### Anmerkungen
+
+![](_page_4_Picture_2.jpeg)
+
+- 1) Das Auslandssemester ist in diesem Studiengang obligatorisch. Dual Studierende verbringen das entsprechende Semester stattdessen als Praxissemester in ihrem Unternehmen.
+- 2) Die folgenden Leistungen müssen bis zum Ende des 5. Studiensemesters erbracht werden und sind ebenfalls Voraussetzung für die Zulassung zum Auslandssemester. Ohne erfolgreiche Übergangsprüfung erfolgt die Exmatrikulation.
+
+ Analysis Übung Analysis Grundlagen Rechnungswesen Einführung in die Programmierung Übung Einführung in die Programmierung Grundlagen der Betriebswirtschaftslehre
+
+3) Weitere Informationen zu Prüfungstypen und Vorbedingungen zu Prüfungen finden sich im Studienverlaufsplan. Die Inhalte der einzelnen Lehrveranstaltungen sind im Modulhandbuch beschrieben.

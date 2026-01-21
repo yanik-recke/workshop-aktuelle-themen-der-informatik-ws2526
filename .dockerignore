@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+wsvenv*/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+rag-code/__pycache__/
+rag-code/parsers/__pycache__/
+rag-code/qdrant_data/
+rag-code/data_fh_wedel/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+projektbericht/
+*.md
+!rag-code/readme.md
+
+# Large files
+*.pdf
+*.zip
+*.tar.gz
