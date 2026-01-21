@@ -6,7 +6,7 @@ from typing import Deque, Tuple, Dict, List
 from haystack.components.generators import OpenAIGenerator
 from haystack.utils import Secret
 
-from config import OPENAI_CHAT_MODEL
+from config import OPENAI_CHAT_MODEL, OPENAI_CHAT_BASE_URL
 
 # -------------------------------------------------------
 # Load Metadata Cache (all extracted metadata)
@@ -77,6 +77,7 @@ def filter_stopwords(keywords: List[str]) -> List[str]:
 def _get_query_llm() -> OpenAIGenerator:
     return OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CHAT_MODEL,
         generation_kwargs={"temperature": 0.2, "max_tokens": 512},  # Increased to avoid truncation
     )

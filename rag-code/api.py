@@ -19,6 +19,9 @@ from rag_pipeline import create_rag_pipeline, build_filters_from_context, run_ra
 from hybrid_retrieval import hybrid_search, print_retrieval_debug
 from comparison_handler import handle_comparison_query
 
+# NeMo Guardrails
+from nemoguardrails import RailsConfig, LLMRails
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -41,6 +44,9 @@ app.add_middleware(
 
 # Global RAG pipeline (initialized once)
 rag_pipeline = None
+
+# Global Guardrails instance
+guardrails: Optional[LLMRails] = None
 
 # Session storage (in-memory, use Redis in production)
 sessions: Dict[str, dict] = {}
@@ -143,8 +149,8 @@ def cleanup_old_sessions():
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize RAG pipeline on startup"""
-    global rag_pipeline
+    """Initialize RAG pipeline and Guardrails on startup"""
+    global rag_pipeline, guardrails
     logger.info("Initializing RAG pipeline...")
     try:
         rag_pipeline = create_rag_pipeline()
@@ -152,6 +158,21 @@ async def startup_event():
     except Exception as e:
         logger.error(f"Failed to initialize RAG pipeline: {e}")
         raise
+
+    # Initialize NeMo Guardrails (optional, controlled by ENABLE_GUARDRAILS env var)
+    import os
+    if os.getenv("ENABLE_GUARDRAILS", "false").lower() == "true":
+        logger.info("Initializing NeMo Guardrails...")
+        try:
+            config = RailsConfig.from_path("guardrails")
+            guardrails = LLMRails(config)
+            logger.info("NeMo Guardrails initialized successfully")
+        except Exception as e:
+            logger.warning(f"Failed to initialize Guardrails (continuing without): {e}")
+            guardrails = None
+    else:
+        logger.info("NeMo Guardrails disabled (set ENABLE_GUARDRAILS=true to enable)")
+        guardrails = None
 
 
 @app.on_event("shutdown")
@@ -206,6 +227,35 @@ async def chat(request: QueryRequest):
     if not rag_pipeline:
         raise HTTPException(status_code=503, detail="RAG pipeline not initialized")
 
+    # Check input with guardrails (input validation only)
+    if guardrails:
+        try:
+            # Use guardrails to check if input is appropriate
+            # We check the response for blocking indicators
+            input_check = await guardrails.generate_async(
+                messages=[{"role": "user", "content": request.query}]
+            )
+            if input_check and input_check.get("content"):
+                guardrail_response = input_check["content"]
+                # Only block if guardrails explicitly refuses (off-topic detection)
+                block_indicators = [
+                    "ich bin ein assistent speziell für fragen zum studium",
+                    "off-topic",
+                    "kann ich nicht beantworten",
+                    "bitte stelle mir fragen zu studiengängen",
+                ]
+                if any(indicator in guardrail_response.lower() for indicator in block_indicators):
+                    logger.info(f"Guardrails blocked input: {request.query}")
+                    return QueryResponse(
+                        answer="Ich bin ein Assistent speziell für Fragen zum Studium an der FH Wedel. Bitte stelle mir Fragen zu Studiengängen, Modulen oder Prüfungsordnungen.",
+                        session_id=request.session_id or str(uuid.uuid4()),
+                        context={},
+                        keywords=[],
+                        debug_info={"guardrails": "input_blocked"} if request.debug else None,
+                    )
+        except Exception as e:
+            logger.warning(f"Guardrails input check failed (continuing without): {e}")
+
     # Get or create session
     session_id, session = get_or_create_session(request.session_id)
 
@@ -219,10 +269,21 @@ async def chat(request: QueryRequest):
     context_state = detect_context(request.query, context_state)
     session["context_state"] = context_state
 
+    # Enrich query with selected program for better retrieval
+    # If a specific program is selected, prepend it to the query
+    enriched_query = request.query
+    selected_program = None
+    if context_state.get("program") and len(context_state["program"]) == 1:
+        selected_program = context_state["program"][0]
+        # Only enrich if the program isn't already mentioned in the query
+        if selected_program.lower() not in request.query.lower():
+            enriched_query = f"Studiengang {selected_program}: {request.query}"
+            logger.info(f"Enriched query with program context: '{enriched_query}'")
+
     # Expand query with LLM
     try:
         expanded_query, original_query, keywords = expand_query_with_llm(
-            request.query,
+            enriched_query,
             session["memory_summary"],
             session["conversation_buffer"],
         )
@@ -232,6 +293,8 @@ async def chat(request: QueryRequest):
 
     # Build filters from context
     filters = build_filters_from_context(context_state)
+    if filters:
+        logger.info(f"Applying filters: {filters}")
 
     # Prepare conversation history
     conversation_history = "\n".join(
@@ -320,14 +383,33 @@ async def chat(request: QueryRequest):
                 conversation_history=hist_short,
                 filters=filters,
                 keywords=keywords,
+                selected_program=selected_program,
             )
         except Exception as e:
             logger.error(f"Generation failed: {e}")
             answer = f"[Debug] Generation failed: {str(e)}"
 
     else:
-        # Normal RAG query
+        # Normal RAG query - also log retrieved documents
         try:
+            # First retrieve documents for logging
+            retrieved = hybrid_search(
+                query=expanded_query,
+                top_k=TOP_K,
+                filters=filters,
+                original_query=original_query,
+                keywords=keywords,
+            )
+
+            # Log retrieved documents
+            logger.info(f"=== Retrieved {len(retrieved)} documents for query: '{original_query}' ===")
+            for i, doc in enumerate(retrieved):
+                logger.info(f"  [{i+1}] Score: {doc.score:.4f} | "
+                           f"{doc.meta.get('doctype', 'N/A')} | "
+                           f"{doc.meta.get('program', 'N/A')} | "
+                           f"{doc.meta.get('degree', 'N/A')}")
+                logger.info(f"      Content preview: {doc.content[:150]}...")
+
             answer = run_rag_query(
                 rag_pipeline,
                 original_query=original_query,
@@ -336,6 +418,7 @@ async def chat(request: QueryRequest):
                 conversation_history=hist_short,
                 filters=filters,
                 keywords=keywords,
+                selected_program=selected_program,
             )
         except Exception as e:
             logger.error(f"Generation failed: {e}")

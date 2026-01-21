@@ -35,7 +35,7 @@ import {
   PromptInputTools,
 } from '@/components/ai-elements/prompt-input';
 import { useState, useEffect } from 'react';
-import { CopyIcon, GlobeIcon, RefreshCcwIcon, PlusIcon, TrashIcon, MessageSquareIcon } from 'lucide-react';
+import { CopyIcon, GlobeIcon, RefreshCcwIcon, PlusIcon, TrashIcon, MessageSquareIcon, GraduationCapIcon } from 'lucide-react';
 import {
   Source,
   Sources,
@@ -48,20 +48,17 @@ import {
   ReasoningTrigger,
 } from '@/components/ai-elements/reasoning';
 
-const models = [
-  {
-    name: 'Gemini',
-    value: 'gemini',
-  },
-  {
-    name: 'ChatGPT',
-    value: 'gpt',
-  },
-  {
-    name: 'Llama',
-    value: 'llama',
-  }
+
+const programs = [
+  { name: 'Alle Studiengänge', value: 'all' },
+  { name: 'Informatik', value: 'Informatik' },
+  { name: 'BWL', value: 'Betriebswirtschaftslehre' },
+  { name: 'Technische Informatik', value: 'Technische Informatik' },
+  { name: 'Wirtschaftsinformatik', value: 'Wirtschaftsinformatik' },
 ];
+
+// Programs for the welcome screen (excluding "Alle Studiengänge")
+const selectablePrograms = programs.filter(p => p.value !== 'all');
 
 type MessagePart = {
   type: 'text' | 'reasoning' | 'source-url';
@@ -84,7 +81,7 @@ type Chat = {
 
 export function ChatTab() {
   const [input, setInput] = useState('');
-  const [model, setModel] = useState<string>(models[0].value);
+  const [program, setProgram] = useState<string>('all');
   const [webSearch, setWebSearch] = useState(false);
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
@@ -213,6 +210,7 @@ export function ChatTab() {
         body: JSON.stringify({
           query: message.text,
           session_id: chatId,
+          context: program && program !== 'all' ? { program: [program], degree: [], doctype: [], status: [] } : undefined,
         }),
       });
 
@@ -391,6 +389,40 @@ export function ChatTab() {
         <div className="flex-1 overflow-hidden">
           <Conversation className="h-full overflow-x-hidden">
           <ConversationContent>
+            {/* Welcome screen when no messages */}
+            {messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                <GraduationCapIcon className="size-16 text-primary mb-6" />
+                <h2 className="text-2xl font-semibold mb-3">Willkommen beim FH Wedel Chat Bot</h2>
+                <p className="text-muted-foreground mb-6 max-w-md">
+                  Ich kann dir bei Fragen zu den Studiengängen der FH Wedel helfen.
+                  Wähle einen Studiengang aus oder stelle eine allgemeine Frage.
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center max-w-lg">
+                  {selectablePrograms.map((prog) => (
+                    <button
+                      key={prog.value}
+                      onClick={() => setProgram(prog.value)}
+                      className={`px-4 py-2 rounded-full border transition-colors ${
+                        program === prog.value
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-background hover:bg-accent border-border hover:border-primary'
+                      }`}
+                    >
+                      {prog.name}
+                    </button>
+                  ))}
+                </div>
+                {program !== 'all' && (
+                  <p className="mt-4 text-sm text-primary">
+                    Filter aktiv: <span className="font-medium">{programs.find(p => p.value === program)?.name}</span>
+                  </p>
+                )}
+                <p className="mt-6 text-sm text-muted-foreground">
+                  Stelle deine Frage unten ein, um loszulegen.
+                </p>
+              </div>
+            )}
             {messages.map((message) => (
               <div key={message.id}>
                 {message.role === 'assistant' && message.parts.filter((part) => part.type === 'source-url').length > 0 && (
@@ -496,17 +528,17 @@ export function ChatTab() {
                 </PromptInputButton>
                 <PromptInputSelect
                   onValueChange={(value) => {
-                    setModel(value);
+                    setProgram(value);
                   }}
-                  value={model}
+                  value={program}
                 >
                   <PromptInputSelectTrigger>
-                    <PromptInputSelectValue />
+                    <PromptInputSelectValue placeholder="Studiengang" />
                   </PromptInputSelectTrigger>
                   <PromptInputSelectContent>
-                    {models.map((model) => (
-                      <PromptInputSelectItem key={model.value} value={model.value}>
-                        {model.name}
+                    {programs.map((prog) => (
+                      <PromptInputSelectItem key={prog.value} value={prog.value}>
+                        {prog.name}
                       </PromptInputSelectItem>
                     ))}
                   </PromptInputSelectContent>

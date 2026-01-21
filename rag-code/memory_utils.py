@@ -4,12 +4,13 @@ from typing import Deque, List, Tuple
 from haystack.components.generators import OpenAIGenerator
 from haystack.utils import Secret
 
-from config import OPENAI_CHAT_MODEL, MAX_MEMORY_TURNS
+from config import OPENAI_CHAT_MODEL, OPENAI_CHAT_BASE_URL, MAX_MEMORY_TURNS
 
 
 def _get_memory_llm() -> OpenAIGenerator:
     return OpenAIGenerator(
         api_key=Secret.from_env_var("OPENAI_API_KEY"),
+        api_base_url=OPENAI_CHAT_BASE_URL,  # Use OpenAI API for chat
         model=OPENAI_CHAT_MODEL,
         generation_kwargs={"temperature": 0},
     )

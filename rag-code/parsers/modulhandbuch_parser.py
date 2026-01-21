@@ -3,204 +3,152 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from haystack.dataclasses import Document
 
 from .base_parser import BaseParser
 
-MAX_CHUNK_SIZE = 450  # embedding-optimiert, etwas größer erlaubt
+MAX_CHUNK_SIZE = 2000  # Characters per chunk
 
 
 class ModulhandbuchParser(BaseParser):
     """
     Parser für FH-Wedel Modulhandbücher.
-    Extrahiert strukturierte Modulbereiche und erzeugt hochwertige RAG-Chunks.
+    Parses markdown files with format like:
+    - **MB001 – Analysis**
+    |Verantwortliche:|Name|
+    ...
     """
 
     doctypes = ["Modulhandbuch"]
 
-    # Häufig vorkommende Abschnittsüberschriften
-    SECTION_HEADERS = [
-        r"Modulname", r"Modultitel", r"Modulnummer", r"Studiengang", r"Semester",
-        r"Voraussetzungen", r"Lernziele", r"Inhalte?", r"Arbeitsaufwand",
-        r"Prüfungsform", r"Literatur", r"Dozent(?:in)?", r"Lehrform"
-    ]
+    # Pattern to match module headers like "- **MB001 – Analysis**" or "**MB001 – Analysis**"
+    MODULE_HEADER_RX = re.compile(r"^-?\s*\*\*([MT]B\d{3})\s*[–-]\s*(.+?)\*\*\s*$")
 
-    MODULE_START = re.compile(r"(Modulname|Modultitel)\s*[:\-]?", re.IGNORECASE)
+    # Pattern to match table of contents entries like "MB001 – Analysis"
+    TOC_ENTRY_RX = re.compile(r"^([MT]B\d{3})\s*[–-]\s*(.+)$")
 
-    # ---------------------------------------------------------
-    # Markdown Extraction
-    # ---------------------------------------------------------
     def _load_text(self, path: Path) -> str:
         """Read markdown file text."""
         return self._read_markdown(path)
 
-    # ---------------------------------------------------------
-    # Module Split
-    # ---------------------------------------------------------
-    def _split_into_modules(self, text: str) -> List[str]:
-        """Split the entire document into module blocks."""
-        blocks = []
-        current = []
-
-        for line in text.splitlines():
-            if re.search(self.MODULE_START, line):
-                if current:
-                    blocks.append("\n".join(current))
-                    current = []
-            current.append(line)
-
-        if current:
-            blocks.append("\n".join(current))
-
-        return blocks
-
-    # ---------------------------------------------------------
-    # Section Extraction
-    # ---------------------------------------------------------
-    def _extract_sections(self, module_text: str) -> Dict[str, str]:
+    def _extract_modules(self, text: str) -> List[Tuple[str, str, str]]:
         """
-        Input: Textblock eines Moduls
-        Output: { "Lernziele": "...", "Inhalte": "...", ... }
+        Extract modules from the markdown text.
+        Returns list of (module_code, module_name, module_content).
         """
-        sections: Dict[str, List[str]] = {}
-        current_title = "Einleitung"
-        sections[current_title] = []
+        lines = text.splitlines()
+        modules = []
+        current_code = None
+        current_name = None
+        current_content = []
+        in_toc = True  # Start assuming we're in table of contents
 
-        for line in module_text.splitlines():
-            stripped = line.strip()
+        for line in lines:
+            # Check if this is a module header (marks end of TOC)
+            header_match = self.MODULE_HEADER_RX.match(line.strip())
+            if header_match:
+                in_toc = False
+                # Save previous module if exists
+                if current_code and current_content:
+                    modules.append((current_code, current_name, "\n".join(current_content)))
 
-            # Abschnitts-Header erkennen
-            matched_header = None
-            for header in self.SECTION_HEADERS:
-                if re.match(header + r"\s*[:\-]?", stripped, flags=re.I):
-                    matched_header = stripped
-                    break
-
-            if matched_header:
-                # normalize header name
-                current_title = re.sub(r"[:\-]\s*$", "", matched_header)
-                sections[current_title] = []
-            else:
-                sections[current_title].append(stripped)
-
-        # Join blocks
-        return {title: "\n".join(v).strip() for title, v in sections.items()}
-
-    # ---------------------------------------------------------
-    # Chunking
-    # ---------------------------------------------------------
-    def _section_to_chunks(
-        self, 
-        module_name: str, 
-        sections: Dict[str, str],
-        program: str = "",
-        degree: str = "",
-    ) -> List[Document]:
-        chunks: List[Document] = []
-        
-        # Context header to include in each chunk for better retrieval
-        context_header = f"Modul: {module_name}\nStudiengang: {program} ({degree})\n\n"
-
-        for subsection, content in sections.items():
-            if not content.strip():
+                current_code = header_match.group(1)
+                current_name = header_match.group(2).strip()
+                current_content = [line]
                 continue
 
-            lines = content.split("\n")
-            current = []
-            length = len(context_header)  # Account for header
+            # Skip TOC entries
+            if in_toc:
+                continue
 
-            for line in lines:
-                if length + len(line) > MAX_CHUNK_SIZE:
-                    chunk_content = context_header + f"Abschnitt: {subsection}\n" + "\n".join(current)
-                    chunks.append(
-                        Document(
-                            content=chunk_content,
-                            meta={
-                                "module_name": module_name,
-                                "section": subsection,
-                            }
-                        )
-                    )
-                    current = []
-                    length = len(context_header)
+            # Add line to current module content
+            if current_code:
+                current_content.append(line)
 
-                current.append(line)
-                length += len(line)
+        # Don't forget the last module
+        if current_code and current_content:
+            modules.append((current_code, current_name, "\n".join(current_content)))
 
-            if current:
-                chunk_content = context_header + f"Abschnitt: {subsection}\n" + "\n".join(current)
-                chunks.append(
-                    Document(
-                        content=chunk_content,
-                        meta={
-                            "module_name": module_name,
-                            "section": subsection,
-                        }
-                    )
-                )
+        return modules
 
-        return chunks
+    def _extract_toc_modules(self, text: str) -> List[Tuple[str, str]]:
+        """
+        Extract module list from table of contents.
+        Returns list of (module_code, module_name).
+        """
+        modules = []
+        lines = text.splitlines()
 
-    # ---------------------------------------------------------
-    # Main parse()
-    # ---------------------------------------------------------
+        for line in lines:
+            # Stop at "# **Module**" section
+            if line.strip().startswith("# **Module"):
+                break
+
+            match = self.TOC_ENTRY_RX.match(line.strip())
+            if match:
+                modules.append((match.group(1), match.group(2).strip()))
+
+        return modules
+
     def parse(self, path: Path, meta: Dict) -> List[Document]:
         """
-        BaseParser-konform:
-        - nimmt path als Path
-        - gibt List[Document] zurück
-        - erzeugt strukturierte Chunks
-        - setzt Metadaten
+        Parse Modulhandbuch markdown file.
+        Creates:
+        1. A summary document with all module names
+        2. Individual documents for each module
         """
         text = self._load_text(path)
-        module_blocks = self._split_into_modules(text)
-
-        documents: List[Document] = []
 
         base_meta = self._base_meta(meta)
         program = base_meta.get("program", "Unbekannter Studiengang")
         degree = base_meta.get("degree", "Unbekannter Abschluss")
-        
-        # Collect all module names for summary
-        all_modules = []
 
-        for block in module_blocks:
-            sections = self._extract_sections(block)
-            module_name = (
-                sections.get("Modulname")
-                or sections.get("Modultitel")
-                or "Unbekanntes Modul"
-            ).strip()
-            
-            all_modules.append(module_name)
+        documents: List[Document] = []
 
-            section_docs = self._section_to_chunks(
-                module_name, 
-                sections,
-                program=program,
-                degree=degree,
-            )
+        # Extract modules from TOC for the summary
+        toc_modules = self._extract_toc_modules(text)
 
-            # Metadaten anreichern
-            for d in section_docs:
-                d.meta = {**base_meta, **d.meta}
+        # Extract full module content
+        full_modules = self._extract_modules(text)
 
-            documents.extend(section_docs)
-        
-        # Create a summary document listing all modules in this handbook
-        if all_modules:
+        # Use TOC for module names if available, otherwise use extracted modules
+        module_names = [f"{code} – {name}" for code, name in toc_modules] if toc_modules else [f"{code} – {name}" for code, name, content in full_modules]
+
+        # Create summary document
+        if module_names:
             summary_content = f"""Modulhandbuch für {program} ({degree}) an der FH Wedel
 Studiengang: {program}
 Abschluss: {degree}
-Anzahl Module: {len(all_modules)}
+Anzahl Module: {len(module_names)}
 
 Liste aller Module im Modulhandbuch:
-""" + "\n".join(f"  - {m}" for m in all_modules if m != "Unbekanntes Modul")
-            
+""" + "\n".join(f"  - {name}" for name in module_names)
+
             summary_meta = dict(base_meta)
             summary_meta["chunk_type"] = "module_overview"
-            documents.insert(0, Document(content=summary_content, meta=summary_meta))
+            documents.append(Document(content=summary_content, meta=summary_meta))
+
+        # Create individual module documents
+        for code, name, content in full_modules:
+            # Clean up content - remove excessive whitespace
+            cleaned_content = re.sub(r'\n{3,}', '\n\n', content)
+
+            # Truncate if needed
+            if len(cleaned_content) > MAX_CHUNK_SIZE:
+                cleaned_content = cleaned_content[:MAX_CHUNK_SIZE] + "..."
+
+            doc_content = f"""Modul: {code} – {name}
+Studiengang: {program} ({degree})
+
+{cleaned_content}"""
+
+            doc_meta = dict(base_meta)
+            doc_meta["module_code"] = code
+            doc_meta["module_name"] = name
+            doc_meta["chunk_type"] = "module_detail"
+
+            documents.append(Document(content=doc_content, meta=doc_meta))
 
         return documents

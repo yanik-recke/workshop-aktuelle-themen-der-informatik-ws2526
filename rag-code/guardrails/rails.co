@@ -1,0 +1,17 @@
+define user ask about studies
+  "Was sind die Module im Informatik Studium?"
+  "Welche Prüfungen muss ich ablegen?"
+  "Wie viele ECTS hat das Modul?"
+  "Was steht in der Prüfungsordnung?"
+
+define user off topic
+  "Erzähl mir einen Witz"
+  "Was ist das Wetter heute?"
+  "Kannst du mir bei meinen Hausaufgaben helfen?"
+
+define bot refuse off topic
+  "Ich bin ein Assistent speziell für Fragen zum Studium an der FH Wedel. Bitte stelle mir Fragen zu Studiengängen, Modulen oder Prüfungsordnungen."
+
+define flow
+  user off topic
+  bot refuse off topic
