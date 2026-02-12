@@ -1,1 +1,39 @@
 \chapter{Design und Entwicklung des Frontends}
+
+Im Rahmen des Projekts wurde dem Frontend eine eher geringere Priorität zugewiesen.
+Das liegt vor allem daran, dass eine Oberfläche zur Texteingabe und Chat-Speicherung
+schnell entwickelt ist und man besonders in Zeiten von großen Sprachmodellen
+schnell einfache und gute Prototypen entwickeln kann.
+
+Besonders im Bereich der UI Entwicklung für LLM Tools gibt es mittlerweile
+etliche Libraries und Tools, welche verwendet werden können, um schnell 
+gute Chatapplikationen zu bauen. Für eine grobe Grundstruktur wurde \emph{v0} verwendet.
+Darauf aufbauend ließ sich gut mit \emph{AI Elements} \cite{aielements} weiterarbeiten. 
+Es handelt sich dabei um eine Component Library mit \cite{shadcn/ui} als Basis.
+
+Der Technologiestack basiert auf dem modernen React-Framework \emph{Next.js}, wobei 
+\emph{TypeScript} für eine robuste Typisierung und \emph{Tailwind CSS} für das 
+Styling zum Einsatz kommen. Durch die Verwendung von \emph{AI Elements} konnten 
+komplexe UI-Muster wie Streaming-Antworten, Quellenangaben und Gedankengänge 
+(Reasoning) effizient abgebildet werden.
+
+Die Anwendung ist in zwei Hauptbereiche unterteilt: Eine Sidebar zur Verwaltung 
+der Chat-Historie und das zentrale Chat-Fenster. Die Historie wird serverseitig 
+in einer \emph{MongoDB} persistiert, was es ermöglicht, Konversationen über 
+Sitzungen hinweg zu speichern. Die Kommunikation mit dem RAG-Backend erfolgt, wie in den Anforderungen
+in \ref{chap: intro} definiert,
+über eine REST-API, wobei beim Senden einer Anfrage auch kontextuelle 
+Informationen, wie der ausgewählte Studiengang, übermittelt werden können.
+
+Ein besonderes Augenmerk wurde auf die Benutzererfahrung gelegt. So bietet die 
+Oberfläche einen Willkommensbildschirm für neue Chats, der den Nutzer direkt 
+zur Auswahl eines Studiengangs animiert. Dies dient dazu, die Qualität der 
+RAG-Antworten durch eine Vorfilterung des Kontexts zu verbessern. Zudem wurden 
+Funktionen wie das Kopieren von Antworten oder das Regenerieren von Nachrichten 
+implementiert, um den Standard moderner LLM-Schnittstellen zu erfüllen.
+
+Technisch gesehen nutzt das Frontend die API-Routen von Next.js, um eine sichere 
+Verbindung zur MongoDB herzustellen, während die eigentliche LLM-Logik im 
+Python-Backend verbleibt. Dieser hybride Ansatz erlaubt es, das Frontend 
+leichtgewichtig zu halten und gleichzeitig vom mächtigen Python-Ökosystem für 
+RAG-Anwendungen zu profitieren.

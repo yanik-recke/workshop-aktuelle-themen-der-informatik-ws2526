@@ -1,6 +1,8 @@
 # PDF output - usually a bad idea to keep this in Git
 *.pdf
 
+example
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

@@ -1,4 +1,47 @@
 \chapter{Einleitung}
 \label{chap: intro}
 
-Hier kommt die Einleitung hin ...
+Im Rahmen des Moduls \emph{Workshop: Aktuelle Entwicklungen der Informatik}
+sollte ein Chatbot für die FH Wedel entwickelt werden.
+
+Folgende Eigenschaften sollte der Chatbot erfüllen (entnommen aus \cite{aufgabenstellung}):
+
+\begin{itemize}
+    \item Er hat Wissen über die Einschreibe / Zulassungsordnung und die einzelnen Studienordnungen (Studienverlaufsplan, Modulhandbuch) der FH-Wedel und kann dazu Fragen beantworten
+    \item Er basiert auf einem großen Sprachmodell
+    \item Er spricht das Modell über LLM-spezifische APIs direkt oder über das LangChaun Framework an
+    \item Er ist in Python oder TypeScript realisiert
+    \item Er steht als Bibliothek zur Verfügung oder bietet eine REST API an
+    \item Er kann über ein einfaches Text-Interface zur Demonstration bedient werden
+    \item Er ist optional in eine Web-Seite eingebunden
+\end{itemize}
+
+Zunächst wurden im Rahmen der Vorlesungseinheiten die Grundlagen und Konzepte erlernt,
+um einen solchen Chatbot zu implementieren. Dazu gehörte unter anderem das Ansprechen
+von LLMs via \emph{OpenAI API} oder das Konzept von \emph{RAG} Anwendungen.
+
+In Eigenarbeit wurde weitere Recherche betrieben, z.B. zum Thema Prompt Engineering, aber auch 
+insbesondere zu Vektor Embeddings und semantischer Suche. Es wurde schnell klar, dass die Qualität
+eines solchen Chatbots stark von den Daten abhängt, die ihm bereitgestellt werden,
+weswegen hierrauf ein besonderer Fokus gelegt wurde.
+
+Durch das Hosten von lokalen Modellen z.B. mit \emph{Ollama} oder \emph{llama.cpp}
+konnten schnell erste Versuche gestartet werden und auch direkt erste
+Erfolge verzeichnet werden. Man merkte aber schnell, dass man um
+das Anbinden von größeren Modellen, welche in der Cloud gehosted werden, nicht
+herumkommen würde, wenn man vernünftige Ergebnisse erzielen wollte.
+
+Das Projekt lässt sich strukturell wie folgt aufteilen:
+
+\begin{itemize}
+    \item Datenbeschaffung (inkl. Parsing der Daten, etc.)
+    \item Vektorisierung von Daten und Einbettung in Vector Stores
+    \item Anbindung von größeren Chatmodellen
+    \item Bereitstellung von Tools (mittels MCP), um die Fähigkeiten zu erweitern
+    \item Testing und Qualitätsmessung
+    \item Deployment
+\end{itemize}
+
+Großer Fokus wurde auf die Beschaffung und das Parsen der Daten gelegt, da, wie oben bereits
+erwähnt, die Resultate eines solchen Projekts and der Qualität der 
+Daten hängen.
