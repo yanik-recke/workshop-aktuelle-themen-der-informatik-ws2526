@@ -1,1 +1,115 @@
 \chapter{Wie wird das Projekt gestartet?}
+\label{chap: anleitung}
+
+Der einfachste Weg, das Projekt vollständig zum Laufen zu bringen, führt über
+\emph{Docker} und \emph{Docker Compose}. Alle benötigten Dienste -- Frontend,
+RAG-API, Vektordatenbank und Chat-Persistenz -- sind in einer einzigen
+\texttt{docker-compose.yml} beschrieben und lassen sich mit wenigen Befehlen starten.
+
+\section{Voraussetzungen}
+
+Folgende Software muss auf dem Zielsystem installiert sein:
+
+\begin{itemize}
+    \item \textbf{Docker} (inkl. Docker Compose v2)
+    \item Ein \textbf{OpenAI-kompatibler API-Zugang} -- entweder ein echter OpenAI API Key
+    oder ein lokal laufendes Modell, das die OpenAI-API emuliert
+    (z.\,B. \emph{Ollama} oder \emph{LM Studio})
+\end{itemize}
+
+\section{Konfiguration}
+
+Vor dem ersten Start muss die Umgebungskonfiguration eingerichtet werden.
+Dazu wird die mitgelieferte Beispieldatei kopiert:
+
+\begin{lstlisting}[language=bash, caption={Konfigurationsdatei anlegen}]
+cp .env.example .env
+\end{lstlisting}
+
+In der \texttt{.env}-Datei wird festgelegt, welcher LLM-Dienst verwendet werden soll.
+Je nach Szenario sind unterschiedliche Einträge relevant:
+
+\begin{itemize}
+    \item \textbf{OpenAI API}: \texttt{OPENAI\_API\_KEY} auf den eigenen Key setzen,
+    \texttt{OPENAI\_BASE\_URL} auf \texttt{https://api.openai.com/v1}.
+    \item \textbf{Ollama (lokal)}: \texttt{OPENAI\_API\_KEY=dummy},
+    \texttt{OPENAI\_BASE\_URL=http://url/}.
+    \item \textbf{LM Studio}: \texttt{OPENAI\_BASE\_URL=http://host.docker.internal:1234/v1}.
+\end{itemize}
+
+\section{Erster Start: Daten laden und indizieren}
+
+Beim allerersten Start müssen die Dokumente der FH Wedel heruntergeladen
+und in die Vektordatenbank eingespeist werden. Dazu stehen zwei auskommentierte
+Setup-Dienste in der \texttt{docker-compose.yml} bereit, die bei Bedarf aktiviert
+werden können. Alternativ lassen sich die Skripte auch direkt ausführen:
+
+\begin{lstlisting}[language=bash, caption={Dokumente herunterladen und indizieren}]
+# PDFs von der FH-Wedel-Website herunterladen
+python rag-code/download_pdfs.py
+
+# Dokumente verarbeiten und in Qdrant einbetten
+python rag-code/indexing_pipeline.py
+\end{lstlisting}
+
+Der Indizierungsschritt kann je nach Anzahl der Dokumente und verwendetem Modell
+einige Minuten bis zu einer halben Stunde in Anspruch nehmen, da für jedes
+Dokument Embeddings berechnet und in \emph{Qdrant} gespeichert werden.
+Dieser Schritt muss nur einmalig durchgeführt werden -- die Daten bleiben
+in einem Docker-Volume erhalten.
+
+\section{Starten der Anwendung}
+
+Sind die Dokumente indiziert, genügt ein einzelner Befehl, um alle Dienste
+hochzufahren:
+
+\begin{lstlisting}[language=bash, caption={Alle Dienste starten}]
+docker compose up frontend -d
+\end{lstlisting}
+
+Durch die Abhängigkeitsstruktur in der \texttt{docker-compose.yml} werden dabei
+automatisch auch alle anderen benötigten Dienste gestartet. Nach kurzer Initialisierungszeit
+sind die Dienste über folgende Adressen erreichbar:
+
+\begin{itemize}
+    \item \textbf{Frontend} (Next.js-Weboberfläche): \texttt{http://localhost:3000}
+    \item \textbf{RAG-API} (FastAPI-Backend): \texttt{http://localhost:8000}
+    \item \textbf{Qdrant-Dashboard}: \texttt{http://localhost:6333/dashboard}
+    \item \textbf{MongoDB}: \texttt{localhost:27017}
+\end{itemize}
+
+Die Weboberfläche unter Port 3000 ist der primäre Einstiegspunkt für den Endnutzer.
+Dort kann nach der Auswahl eines Studiengangs direkt mit dem Chatbot interagiert werden.
+
+\section{Nutzung der CLI-Schnittstelle}
+
+Alternativ zur Weboberfläche steht eine interaktive Kommandozeilenschnittstelle
+zur Verfügung. Diese ist besonders während der Entwicklung oder für schnelle
+Tests praktisch:
+
+\begin{lstlisting}[language=bash, caption={CLI-Modus starten}]
+docker compose run --rm rag-cli
+\end{lstlisting}
+
+\section{Logs und Fehlerdiagnose}
+
+Die Logs aller laufenden Dienste lassen sich mit folgendem Befehl verfolgen:
+
+\begin{lstlisting}[language=bash, caption={Logs beobachten}]
+docker compose logs -f
+\end{lstlisting}
+
+Zum Stoppen aller Dienste:
+
+\begin{lstlisting}[language=bash, caption={Alle Dienste stoppen}]
+docker compose down
+\end{lstlisting}
+
+\section{Hinweise zur Entwicklung}
+
+Für die aktive Entwicklung am Projekt sind in der \texttt{docker-compose.yml}
+Bind-Mounts eingerichtet, sodass Änderungen am Quellcode im laufenden Container
+direkt sichtbar sind. Das Backend startet mit dem Flag \texttt{--reload}, was
+bei Dateiänderungen einen automatischen Neustart des \emph{uvicorn}-Servers
+auslöst. Gleiches gilt für das Next.js-Frontend, das im Entwicklungsmodus
+ebenfalls mit Hot Reload betrieben wird.

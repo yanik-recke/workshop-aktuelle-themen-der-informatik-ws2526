@@ -1,1 +1,167 @@
 \chapter{Guardrails mit \emph{NeMo}}
+\label{chap: guardrails}
+
+\section{Motivation und Grundkonzept}
+
+Große Sprachmodelle (LLMs) sind äußerst leistungsfähig, bringen aber auch Risiken mit sich:
+Sie können sachlich falsche Informationen generieren, auf unangemessene Anfragen eingehen oder
+schlicht außerhalb ihres vorgesehenen Anwendungsbereichs verwendet werden. Gerade in produktiven
+Systemen, die in einem klar definierten Kontext eingesetzt werden -- wie dem hier entwickelten
+Chatbot für die FH Wedel -- ist es daher wünschenswert, das Verhalten des Modells
+kontrollierbar einzuschränken.
+
+Dieses Konzept wird unter dem Begriff \emph{Guardrails} zusammengefasst. Guardrails sind
+Mechanismen, die das Ein- und Ausgabeverhalten eines LLM-Systems begrenzen und in definierten
+Bahnen halten. Sie können auf verschiedene Weisen realisiert werden: als einfache Schlüsselwortfilter,
+als regelbasierte Systeme oder als vollständige Frameworks, die selbst wiederum LLMs zur Validierung
+einsetzen.
+
+\section{NeMo Guardrails}
+
+\emph{NeMo Guardrails} ist ein Open-Source-Framework von \emph{NVIDIA}, das speziell für die
+Absicherung von LLM-basierten Applikationen entwickelt wurde \cite{nemoguardrails}. Es ermöglicht
+Entwicklern, in einer eigens konzipierten domänenspezifischen Sprache namens \emph{Colang}
+Regeln und Gesprächsflüsse zu definieren, die das Verhalten eines Chatbots steuern.
+
+Die Architektur von NeMo Guardrails besteht im Wesentlichen aus drei Komponenten:
+
+\begin{itemize}
+    \item \textbf{Konfigurationsdatei} (\emph{config.yml}): Hier wird das zugrundeliegende Sprachmodell
+    festgelegt sowie definiert, welche Flows auf Eingabe- und Ausgabeebene aktiv sein sollen.
+    Zusätzlich können allgemeine Systemanweisungen und aufgabenspezifische Prompts hinterlegt werden.
+    \item \textbf{Colang-Dateien} (\emph{.co}): In diesen Dateien werden konkrete Gesprächsflüsse
+    und Verhaltensregeln in der Colang-Syntax beschrieben. Man definiert, welche Art von Nutzereingaben
+    welchem Muster entsprechen und wie der Bot darauf reagieren soll.
+    \item \textbf{LLMRails}: Die zentrale Python-Klasse, die zur Laufzeit die Konfiguration lädt und
+    Anfragen durch die definierten Flows leitet, bevor sie an das eigentliche Sprachmodell weitergegeben werden.
+\end{itemize}
+
+\subsection{Colang}
+
+\emph{Colang} ist eine von NVIDIA entwickelte Skriptsprache, die ausdrücklich für die
+Beschreibung von Konversationslogik und Sicherheitsregeln in LLM-Anwendungen entworfen wurde.
+Sie ermöglicht es, abstrakt zu definieren, welche Absichten (\emph{intents}) ein Nutzer haben kann und
+welche Reaktionen (\emph{flows}) darauf erfolgen sollen -- ohne dabei auf klassische regelbasierte
+Systeme angewiesen zu sein.
+
+Ein einfaches Beispiel aus dem Projekt zeigt die Grundstruktur:
+
+\begin{lstlisting}[caption={Colang-Definition für Off-Topic-Abweisung}]
+define user off topic
+  "Erzaehl mir einen Witz"
+  "Was ist das Wetter heute?"
+
+define bot refuse off topic
+  "Ich bin ein Assistent speziell fuer Fragen zum Studium an der FH
+   Wedel. Bitte stelle mir Fragen zu Studiengaengen, Modulen oder
+   Pruefungsordnungen."
+
+define flow
+  user off topic
+  bot refuse off topic
+\end{lstlisting}
+
+Das Framework verwendet die angegebenen Beispielsätze, um über semantische Ähnlichkeit
+zu erkennen, welchem Intent eine Nutzeranfrage entspricht. Die eigentliche Klassifikation
+übernimmt dabei das konfigurierte LLM, was Colang flexibler macht als rein regelbasierte Ansätze.
+
+\subsection{Self-Check Flows}
+
+Neben eigenen Flows bietet NeMo Guardrails sogenannte \emph{Self-Check}-Mechanismen. Dabei
+wird das Sprachmodell selbst genutzt, um zu beurteilen, ob eine Eingabe oder Ausgabe einer
+vorgegebenen Policy entspricht. In der Konfiguration des Projekts wurden sowohl ein
+\emph{self check input} als auch ein \emph{self check output} Flow definiert:
+
+\begin{lstlisting}[caption={Ausschnitt aus config.yml}]
+rails:
+  input:
+    flows:
+      - self check input
+  output:
+    flows:
+      - self check output
+\end{lstlisting}
+
+Der zugehörige Prompt für die Eingabeprüfung prüft, ob eine Nutzernachricht thematisch zum
+Studium an der FH Wedel passt und keine unangemessenen Inhalte enthält. Analoges gilt für
+die Ausgabeprüfung, die sicherstellen soll, dass die Antwort keine halluzinierten oder
+schädlichen Inhalte enthält. Beide Flows können unabhängig voneinander aktiviert oder
+deaktiviert werden.
+
+\section{Einsatz im Projekt}
+
+Im Rahmen dieses Projekts wurden NeMo Guardrails exemplarisch integriert, um die Machbarkeit
+zu demonstrieren und die Grundstruktur für eine spätere produktive Nutzung zu schaffen.
+Die Guardrails sind als optionales Feature implementiert und lassen sich über die
+Umgebungsvariable \texttt{ENABLE\_GUARDRAILS} aktivieren:
+
+\begin{lstlisting}[language=Python, caption={Initialisierung der Guardrails beim Start der API}]
+if os.getenv("ENABLE_GUARDRAILS", "false").lower() == "true":
+    config = RailsConfig.from_path("guardrails")
+    guardrails = LLMRails(config)
+\end{lstlisting}
+
+Ist das Feature aktiviert, wird beim Eingang einer Nutzeranfrage am \texttt{/chat}-Endpunkt zunächst
+eine Eingabeprüfung durchgeführt. Erkennt das Framework die Anfrage als thematisch unpassend -- etwa
+weil sie nichts mit dem Studium an der FH Wedel zu tun hat -- wird eine entsprechende Ablehnungsnachricht
+zurückgegeben und die RAG-Pipeline gar nicht erst aufgerufen:
+
+\begin{lstlisting}[language=Python, caption={Eingabeprüfung im Chat-Endpunkt}]
+input_check = await guardrails.generate_async(
+    messages=[{"role": "user", "content": request.query}]
+)
+if any(indicator in guardrail_response.lower()
+       for indicator in block_indicators):
+    return QueryResponse(
+        answer="Ich bin ein Assistent speziell fuer Fragen zum Studium
+                an der FH Wedel. ...",
+        ...
+    )
+\end{lstlisting}
+
+Schlägt die Initialisierung der Guardrails fehl, läuft das System ohne sie weiter (\emph{graceful degradation}).
+So wird sichergestellt, dass ein Konfigurationsproblem mit NeMo Guardrails nicht den gesamten Dienst
+beeinträchtigt.
+
+Die Ausgabeprüfung ist in der Konfigurationsdatei zwar vorgesehen, im aktuellen Stand des Projekts
+jedoch noch nicht im Code aktiviert. Sie stellt einen der nächsten logischen Ausbauschitte dar.
+
+\section{Potenzielle Vorteile}
+
+Auch wenn NeMo Guardrails im Projekt nur exemplarisch zum Einsatz kam, bietet das Framework
+für den produktiven Betrieb eines solchen Chatbots erhebliche Vorteile:
+
+\begin{itemize}
+    \item \textbf{Themenbegrenzung}: Durch das Erkennen und Abweisen von Off-Topic-Anfragen
+    bleibt der Chatbot auf seinen definierten Anwendungsbereich beschränkt. Im Kontext der FH Wedel
+    bedeutet das, dass Fragen zu Studiengängen, Modulen und Prüfungsordnungen priorisiert und
+    irrelevante Anfragen frühzeitig abgefangen werden.
+    \item \textbf{Schutz vor Prompt Injection}: NeMo Guardrails kann dabei helfen, manipulative
+    Eingaben abzufangen, die darauf abzielen, das Verhalten des Modells zu unterwandern oder
+    systemkritische Informationen zu extrahieren.
+    \item \textbf{Ausgabenkontrolle}: Durch die Ausgabeprüfung können Halluzinationen oder
+    thematisch unpassende Antworten erkannt und zurückgehalten werden, bevor sie den Nutzer
+    erreichen. Dies ist insbesondere in einem akademischen Kontext wichtig, in dem die Richtigkeit
+    von Informationen zu Prüfungsordnungen oder Zulassungsvoraussetzungen direkte
+    Konsequenzen haben kann.
+    \item \textbf{Deklarative Regelstruktur}: Die Colang-Syntax erlaubt es, Richtlinien
+    übersichtlich und ohne umfangreichen Programmieraufwand zu definieren und anzupassen.
+    Neue Regeln oder Gesprächsflüsse können hinzugefügt werden, ohne die eigentliche
+    Anwendungslogik zu berühren.
+    \item \textbf{Auditierbarkeit}: Da das Regelwerk in separaten Dateien hinterlegt ist, lässt
+    sich nachvollziehen, welche Einschränkungen für das System gelten -- was für den Einsatz in
+    institutionellen Umgebungen von Vorteil ist.
+\end{itemize}
+
+\section{Bewertung}
+
+Die Integration von NeMo Guardrails fügt sich gut in die bestehende Architektur ein und
+verursacht im Grundbetrieb keinen nennenswerten Mehraufwand, solange das Feature deaktiviert bleibt.
+Der wesentliche Nachteil liegt darin, dass die Self-Check-Mechanismen selbst auf ein LLM zurückgreifen:
+Jede Eingabe- oder Ausgabeprüfung bedeutet einen zusätzlichen API-Aufruf, was Latenz und Kosten erhöht.
+
+Für den produktiven Einsatz wäre eine sorgfältige Abwägung notwendig, welche Flows tatsächlich
+aktiviert werden sollten und ob die dadurch gewonnene Sicherheit den Mehraufwand rechtfertigt.
+Eine reine Eingabeprüfung -- wie im Projekt umgesetzt -- stellt dabei einen guten Kompromiss dar:
+Sie schützt vor offensichtlichen Fehlverwendungen, ohne bei jeder Antwort zusätzliche Kosten
+zu verursachen.
