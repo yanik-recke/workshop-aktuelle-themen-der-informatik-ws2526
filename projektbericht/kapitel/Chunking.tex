@@ -1,1 +1,426 @@
 \chapter{Chunking und Embedding Strategien}
+\label{chap:chunking}
+
+\section{Überblick}
+
+Die Architektur der Pipeline gliedert sich in die Teile Indexierung, Retrieval und Generation, welche in den folgenden Abschnitten näher erklärt werden. Die Indexierung beinhaltet die Erstellung der Markdown-Dateien durch verschiedene Parser, sowie die Erstellung und das Embedding strukturierter Chunks mit anschließender Speicherung in der Vektordatenbank. Das Retrieval nutzt die Query, um durch Query Expansion, hybride Suchansätze und Reranking die relevantesten Inhalte an das LLM für die Generierung zu liefern. Bei der Generierung werden außerdem verschiedene Prompt-Templates für eine verbesserte Antwort genutzt.
+
+Die verwendeten Technologien sind in der  folgenden Tabelle zu sehen.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|l|p{8.5cm}|}
+\hline
+\textbf{Komponente} & \textbf{Technologie} \\
+\hline
+Framework & Haystack 2.x \\
+Vektordatenbank & Qdrant (lokal) \\
+Embedding-Modell & OpenAI text-embedding-3-small (1536 Dimensionen) \\
+LLM & OpenAI gpt-4o-mini \\
+Dokumentformat & Markdown (konvertiert aus PDFs) \\
+\hline
+\end{tabular}
+
+\caption{Verwendete Komponenten und Technologien}
+\label{tab:komponenten_technologien}
+
+\end{table}
+\section{Chunking-Strategien}
+
+\subsection{Parsing}
+Das Grundprinzip des Chunkings ist das Dokumenttypspezifische Parsing, da generisches Chunking für die strukturierten Dokumente ungeeignet war. Hierbei werden die verschiedenen Dokumente, je nach Typ, anders gechunkt und mit Metadaten angereichert. Die wichtigsten Parser sind hierbei die folgenden drei Hauptparser und ein Base-Parser für normalen unstrukturierten Text. Im folgenden Code ist die Auswahl der Parser zu sehen, die je nach Dokumenttyp ausgewählt werden.
+
+\begin{lstlisting}[language=Python, caption={Parser Auswahl}]
+PARSERS = [
+    CurriculumParser(),  # Studienverlaufsplaene
+    ModulhandbuchParser(),   # Modulhandbuecher  
+    RegulationsParser(),  # SPO, PVO, ZLO
+]
+
+def select_parser(filename: str):
+    if "CURRICULUM" in filename.upper():
+        return CurriculumParser()
+    if "MODULHANDBUCH" in filename.upper():
+        return ModulhandbuchParser()
+    if re.match(".*(SPO|PVO|ZLO|RICHTLINIEN).*", filename.upper()):
+        return RegulationsParser()
+    return None  # Fallback
+\end{lstlisting}
+
+\subsubsection{Curriculum-Parser}
+Der Curriculum-Parser befasst sich mit allen Studienverlaufsplänen und Curricula. Der Schwerpunkt liegt hier darin die einzelnen Module mit allen Daten wie Semesterzuordnungen und ECTS aus den Markdown Tabellen zu extrahieren. Die Tabellen haben in Markdown die folgende Form:
+
+| MB001 Analysis<br>TB001<br>... | ... | 5 | | | | | | | |
+
+Der Parser wurde implementiert, so dass er die verschiedenen Informationen aus den Spalten extrahiert und einzeln speichert. Hierfür wird das Dokument zuerst in Zeilen unterteilt und dann werden die einzelnen Spalten analysiert. Anschließend wird die vollständige Modulliste durch die Kombination der einzelnen Werte gebaut.
+\begin{lstlisting}[language=Python, caption={Regulatinsparser-Implementierung}]
+def parse(self, path: Path, meta: Dict) -> List[Document]:
+
+    # Sammle Semester- und ECTS-Informationen
+    for line in lines:
+        cells = self._parse_table_row(line)
+        code = self._extract_module_code(cells)
+        semester = self._detect_semester(cells)  # Aus ECTS-Spalten
+        ects = self._extract_ects(cells)         # Summe der Spalten
+        module_semesters[code] = semester
+        module_ects[code] = ects
+    
+    # Baue vollstaendige Modulliste
+    for line in lines:
+        code, title = self._extract_module_info(cell)
+        modules.append({
+            "code": code,
+            "title": title,
+            "semester": module_semesters.get(code),
+            "ects": module_ects.get(code),
+        })
+\end{lstlisting}
+
+Die erzeugten Chunks gliedern sich in die drei Typen Modulübersicht, Semesterübersicht und Moduldetail, die in der folgenden Tabelle ersichtlich sind. 
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{3.6cm}|p{4.8cm}|p{8.0cm}|}
+\hline
+\textbf{Chunk-Typ} & \textbf{Beschreibung} & \textbf{Beispielinhalt} \\
+\hline
+module\_overview & Gesamtuebersicht aller Module & Modulübersicht für Informatik (Bachelor) \dots Anzahl Module: 42 \\
+semester\_overview & Module pro Semester & Module im 3. Semester -- Informatik (Bachelor) \dots Gesamt-ECTS: 30 \\
+module\_detail & Einzelnes Modul mit Kontext & Modul MB001: Analysis, Semester 1, ECTS: 5 \\
+\hline
+\end{tabular}
+\caption{Verwendete Chunk-Typen}
+\label{tab:chunk_typen}
+\end{table}
+
+Die Herausforderungen und Lösungen beim Parsing von Curriculum-Dateien sind hier dargestellt:
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{8.0cm}|p{8.0cm}|}
+\hline
+\textbf{Problem} & \textbf{Lösung} \\
+\hline
+Modulnamen über \texttt{<br>}-Tags verteilt & Regex-basierte Extraktion mit Fallback auf Folgezeilen \\
+ECTS verteilt über 7 Semesterspalten & Summierung aller positiven Werte in den Spalten 3--9 \\
+Fehlende Semesterzuordnung & Erkennung anhand der Spalte mit positivem ECTS-Wert \\
+\hline
+\end{tabular}
+\caption{Probleme und Loesungen bei der Extraktion}
+\label{tab:probleme_loesungen}
+\end{table}
+
+\subsubsection{Modulhandbuch-Parser}
+Der Modulhandbuch Parser extrahiert strukturierte Modulbeschreibungen mit Lernzielen und Inhalten aus den Modulhandbüchern. Die verschiedenen Sektionen werden hier  über ihre Bezeichner erkannt.
+
+\begin{lstlisting}[language=Python, caption={Sektionen}]
+SECTION_HEADERS = [
+    "Modulname", "Modultitel", "Modulnummer", "Studiengang", "Semester",
+    "Voraussetzungen", "Lernziele", "Inhalte", "Arbeitsaufwand",
+    "Pruefungsform", "Literatur", "Dozent", "Lehrform"
+]
+\end{lstlisting}
+
+Die Chunking-Strategie reduziert die maximale Chunkgröße auf 450 Zeichen, was für die Embeddings optimal ist und jeder Chunk erhält einen Kontext-Header mit folgender Struktur:
+
+\begin{lstlisting}[language=Python, caption={Kontext-Header}]
+context_header = f"Modul: {module_name}\nStudiengang: {program} ({degree})\n\n"
+chunk_content = context_header + f"Abschnitt: {subsection}\n" + content
+\end{lstlisting}
+
+Die erzeugten Dokumente sind die Modulübersicht, welche eine Liste aller Module im Handbuch enthält und die Sektions-Chunks, die die einzelnen Abschnitte pro Modul wie Lernziele beinhalten. So können die verschiedenen Informationen den konkreten Modulen direkt zugewiesen werden, was im Retrieval Prozess sehr nützlich ist.
+
+\subsubsection{Regulations-Parser}
+Der Regulations-Parser extrahiert einzelne Paragraphen aus den Prüfungs- und Studiengangsordnungen (SPO, PVO, ZLO). Das geschieht über ein Regex-Muster, welches die Paragraphen erkennt  und die jeweiligen Sektionen und Absätze unterteilt.
+Die entstehenden Chunks bestehen aus den einzelnen Paragraphen mit einem Kontext-Header, um den Studiengang und Abschluss zu speichern. Die Chunkstruktur sieht wie folgt aus:
+
+\begin{lstlisting}[language=Python, caption={Regulations Chunks}]
+# Jeder Paragraph wird zu einem Chunk mit Kontext-Header
+context_header = f"Pruefungsordnung {program} ({degree}) an der FH Wedel\n"
+content = context_header + raw_paragraph_content
+\end{lstlisting}
+
+Die Metadaten jedes Chunks sind die Sektion wie z.B. "I. Allgemeines", der Paragraph mit der entsprechenden Nummer und der Paragraph-Titel wie z.B. "Regelstudienzeit". Diese Unterteilung auf einzelne Paragraphen mit den entsprechenden Metadaten erlaubt eine gute Einordnung und Speicherung der Texte für den nachfolgenden Retrieval-Prozess.
+
+\subsection{Metadaten-Injektion}
+Ein Konzept, das die Retrieval-Qualität verbessert ist außerdem die direkte Metadaten-injektion, so dass die Chunks die Metadaten direkt in ihren Content gespeichert bekommen, um die semantische Suche zu verbessern. Das geschieht, indem ein Kontext schrittweise mit allen verfügbaren Metadaten gefüllt wird und dann an den Anfang des Chunks gehängt wird. Der Ablauf ist hier zu sehen.
+\begin{lstlisting}[language=Python, caption={Metadaten Injektion}]
+def build_embed_text(doc: Document) -> str:
+    context_parts = []
+    
+    if meta.get("degree"):
+        context_parts.append(f"Studienabschluss: {meta['degree']}")
+    if meta.get("program"):
+        context_parts.append(f"Studiengang: {meta['program']}")
+    if meta.get("doctype"):
+        context_parts.append(f"Dokumenttyp: {meta['doctype']}")
+    if meta.get("semester"):
+        context_parts.append(f"Semester: {meta['semester']}")
+    if meta.get("ects"):
+        context_parts.append(f"ECTS: {meta['ects']}")
+    # ...
+    
+    context_header = "Kontext: " + ", ".join(context_parts) + "."
+    return f"{context_header}\n\n{doc.content}"
+\end{lstlisting}
+
+Dadurch entsteht ein Output in dieser Form, was die semantische Suche deutlich verbessert:
+
+\subsection{Deduplizierung}
+Um die Chunk-Anzahl zu reduzieren und einer Redundanz im Retrieval entgegen zu wirken, wurde außerdem eine Deduplizierung implementiert, die identische Chunks aus verschiedenen Versionen entfernt. Dadurch konnte die Chunk-Anzahl von 69000 auf 44500 Chunks gesenkt werden.
+
+\section{Retrieval-Strategien}
+Das zentrale Konzept des Retrieval-Prozesses ist das hybride Retrieval, also die Kombination aus Keyword-Suche und semantischer Suche für die optimale Abdeckung. Anschließend werden die Scores kombiniert und durch Query-Intention-Matching und Studiengangs-Matching angepasst. Diese Chunks werden anschließend durch verschiedene Reranking Algorithmen neu angeordnet, um eine maximale Relevanz zu gewährleisten.
+\subsection{hybrid search}
+Die hybride Suche unterteilt sich in die Keyword-Suche und die semantische Suche.
+Bei der Keyword Suche werden die Vorkommen von Keywords im Chunk betrachtet, wobei besonders lange und aussagekräftige Wörter bevorzugt werden. Der Ablauf ist im folgenden zu sehen.
+
+\begin{lstlisting}[language=Python, caption={Keyword Matching}]
+def keyword_search(query: str, top_k: int, keywords: List[str]) -> List[Document]:
+    # Alle Dokumente laden (fuer lokales Qdrant)
+    all_docs = store.filter_documents()
+    
+    matched_docs = []
+    for doc in all_docs:
+        content_lower = doc.content.lower()
+        # Score = Anteil der gefundenen Keywords
+        matches = sum(1 for kw in keywords if kw in content_lower)
+        if matches > 0:
+            doc.score = matches / len(keywords)
+            matched_docs.append(doc)
+    
+    return sorted(matched_docs, key=lambda d: d.score, reverse=True)[:top_k]
+\end{lstlisting}
+
+Bei der semantischen Suche wird die Nutzeranfrage zuerst in ihre Vektorrepräsentation umgewandelt und dann vom Retriever verwendet, um anhand semantischer Ähnlichkeit die relevantesten Chunks aus der Vektordatenbank abzurufen. Der Vorgang ist im folgenden Code-Abschnitt sichtbar.
+
+
+\begin{lstlisting}[language=Python, caption={Semantische Suche}]
+def semantic_search(query: str, top_k: int) -> List[Document]:
+    embedder = OpenAITextEmbedder(model="text-embedding-3-small")
+    retriever = QdrantEmbeddingRetriever(document_store=store)
+    
+    query_embedding = embedder.run(text=query)["embedding"]
+    return retriever.run(query_embedding=query_embedding)["documents"]
+\end{lstlisting}
+
+\subsection{Score Fusion}
+Nach der erfolgreichen hybriden Suche werden die Punkte kombiniert und eine Intentionserkennung durchgeführt, um anhand der Metadaten zu bestimmen, welche Dokumenttypen am relevantesten sind. Dies geschieht auf Basis von Modul und Regulations-Keyword Matching und ist im folgenden zu sehen.
+Nach Bestimmung der Nutzerintention erhalten Chunks mit entsprechenden Dokumenttypen einen Punkte-Boost von 0,2 bis 0,25 Punkten.
+
+\begin{lstlisting}[language=Python, caption={Semantische Suche}]
+REGULATION_KEYWORDS = [
+    "regelstudienzeit", "pruefung", "klausur", "zulassung", "voraussetzung",
+    "pruefungsordnung", "frist", "thesis", "ects", "creditpoints", ...
+]
+
+MODULE_KEYWORDS = [
+    "modul", "vorlesung", "lernziel", "inhalt", "dozent",
+    "curriculum", "studienverlauf", "semester", ...
+]
+
+# Detect Intent
+def detect_query_intent(query: str) -> str:
+    regulation_score = sum(1 for kw in REGULATION_KEYWORDS if kw in query.lower())
+    module_score = sum(1 for kw in MODULE_KEYWORDS if kw in query.lower())
+    
+    if regulation_score > module_score:
+        return "regulation"
+    elif module_score > regulation_score:
+        return "module"
+    return "general"
+
+# Boosting
+if query_intent == "regulation":
+    if "spo" in filename or "pvo" in filename:
+        doc_scores[doc_id] += 0.25    # Boost fuer SPO/PVO
+elif query_intent == "module":
+    if "modulhandbuch" in filename:
+        doc_scores[doc_id] += 0.25    # Boost fuer Modulhandbuch
+    elif "curriculum" in filename:
+        doc_scores[doc_id] += 0.20
+\end{lstlisting}
+
+\subsection{Reranking}
+
+Nach dem Retrieval werden die relevantesten Chunks nochmal durch verschiedene Reranking Methoden sortiert. Die erste Methode hierfür ist das Keyword basierte Reranking durch den BM25-Algorithmus. BM25 ist ein probabilistischer Ranking Algorithmus für Information Retrieval und bewertet wie relevant ein Dokument für eine Suchanfrage ist, basierend auf Term Frequency also wie oft ein Suchbegriff vorkommt, Document Length Normalization, so dass längere Dokumente keine unfairen Vorteile haben und Saturation, also dass häufigere Vorkommen abnehmenden Nutzen haben.
+
+Die zweite Methode ist das LLM-basierte Reranking, wobei alle Chunks mit der Anfrage an ein LLM übergeben werden, welches diese neu sortiert und eine Reihenfolge nach Relevanz zurückgibt. Diese Methode ist optional und kann über ein Flag gesetzt werden, sorgt allerdings für bessere Resultate. Der Prompt für das Reranking Modell ist in folgendem Code zu sehen:
+
+\begin{lstlisting}[language=Python, caption={Reranking Prompt}]
+BATCH_RERANK_PROMPT = """Du bist ein Experte fuer Relevanz-Bewertung.
+
+Frage: {query}
+
+Hier sind {num_chunks} Textabschnitte. Sortiere sie nach Relevanz.
+Gib NUR die Chunk-Nummern zurueck, sortiert vom relevantesten zum unwichtigsten.
+Format: Eine Zeile mit kommagetrennten Nummern, z.B.: 3,1,5,2,4
+
+{chunks}
+
+Sortierte Reihenfolge (nur Nummern):"""
+\end{lstlisting}
+
+Eine weitere wichtige Funktionalität ist die Query Expansion, bei der die Nutzeranfrage durch ein LLM umgeschrieben wird, um das semantische Retrieval deutlich zu verbessern. Hierbei werden Synonyme, Keywords und andere relevante Wörter hinzugefügt und die Anfrage so umgeschrieben, dass der Kontext bzw. die Intention des Nutzers deutlicher ist und mögliche Rechtschreibfehler behoben. Der Prompt für die Query Expansion ist hier zu sehen:
+
+\begin{lstlisting}[language=Python, caption={Query Expansion Prompt}]
+def expand_query_with_llm(query: str, memory_summary: str, history) -> Tuple[str, str, List[str]]:
+    prompt = f"""
+    You rewrite user queries to improve semantic retrieval for a RAG system.
+    
+    Your tasks:
+    1. Detect relevant context from the question
+    2. Expand the query by adding synonyms, related keywords, module names
+    3. You MUST NOT invent any new facts
+    4. Always scope to "FH Wedel"
+    
+    User query: {query}
+    
+    Return JSON:
+    {{
+      "original_query": "<original>",
+      "expanded_query": "<expanded retrieval query>",
+      "keywords": ["keyword1", "keyword2", ...]
+    }}
+    """
+    
+    return expanded_query, original_query, keywords
+\end{lstlisting}
+
+\section{Generation}
+
+ \subsection{Prompt Templates}
+Der Hauptptompt für die meisten Anfragen ist der folgende:
+
+\begin{lstlisting}[language=Python, caption={Generation Prompt}]
+PROMPT_TEMPLATE = """
+Du bist ein hilfreicher Assistent fuer die FH Wedel.
+Beantworte die Frage **nur** basierend auf den bereitgestellten Dokumenten.
+Wenn die Antwort nicht in den Dokumenten enthalten ist, sage 
+"Das kann ich anhand der vorliegenden Dokumente nicht beantworten."
+Antworte auf Deutsch, es sei denn die Frage ist auf Englisch gestellt.
+
+### Bisheriger Kontext
+{{ memory_summary or "Keiner" }}
+
+### Dokumente
+{% for doc in documents %}
+[Dokument {{ loop.index }}] {{ doc.meta.get("doctype") }} | {{ doc.meta.get("program") }}
+{{ doc.content[:2500] }}
+{% endfor %}
+
+### Frage
+{{ query }}
+
+### Antwort
+"""
+\end{lstlisting}
+
+Sollte der Chatbot allerdings erkennen, dass eine Vergleichsfrage vom Nutzer gestellt wurde über die Kontextdetection wird stattdessen der folgende Prompt an das LLM übergeben:
+
+\begin{lstlisting}[language=Python, caption={Comparison Prompt}]
+COMPARISON_PROMPT_TEMPLATE = """
+Du bist ein hilfreicher Assistent fuer die FH Wedel.
+Der Nutzer moechte einen Vergleich zwischen zwei Dingen.
+
+Strukturiere deine Antwort wie folgt:
+1. Kurze Beschreibung von {{ entity1 }}
+2. Kurze Beschreibung von {{ entity2 }}
+3. Wichtige Unterschiede
+4. Gemeinsamkeiten (falls relevant)
+
+Basiere deine Antwort NUR auf den bereitgestellten Dokumenten.
+
+### Dokumente
+{% for doc in documents %}
+[{{ doc.meta.get("comparison_entity") }}] {{ doc.meta.get("doctype") }}
+{{ doc.content[:2000] }}
+{% endfor %}
+
+### Frage
+{{ query }}
+"""
+\end{lstlisting}
+
+\subsection{Generator Konfiguration}
+
+Die Konfiguration des Chatbots lässt sich leicht anpassen, um andere Generationsmodelle oder deterministischere Antworten zu generieren. Die standard konfiguration sieht wie folgt aus:
+
+\begin{lstlisting}[language=Python, caption={Comparison Prompt}]
+generator = OpenAIGenerator(
+    api_key=Secret.from_env_var("OPENAI_API_KEY"),
+    model="gpt-4o-mini",
+    generation_kwargs={
+        "temperature": 0.3,    # Niedrig fuer faktische Antworten
+        "max_tokens": 512,     # Standard-Antworten
+    },
+)
+\end{lstlisting}
+
+\section{Verworfene Ansätze}
+Im Laufe der Entwicklung des Chatbots wurden viele Ansätze ausprobiert und wieder verworfen. Die wichtigsten Erkentnisse waren die folgenden:
+
+1. Generisches Satzsplitting für alle Dokumente. Dieser Ansatz wurde schnell verworfen, da die wichtigen Informationen zertrennt wurden und vor allem Tabellen und andere strukturierte Daten viele Informationen und kontext verloren. Die Lösung hierfür war das Dokumentenspezifische Splitten über eigene Parser.
+
+2. Reine semantische Suche. Da das Embeddingmodell relativ klein ist und die exakten Begriffe und deutsche Fachbegriffe oft nicht korrekt abgerufen wurden, wurde eine hybride Suche mit Keyword-Komponente integriert, was die Retrieval-Qualität stark verbesserte. 
+
+3. Metadaten-Filter statt Injektion. Hier sollte die integrierte Qdrant Funktionalität zum Filtern von Begriffen verwendet werden, allerdings war diese zu restriktiv, so dass relevante Dokumente ausgeschlossen wurden.
+
+4. Character-based Splitting. Das Splitten der Chunks in eine feste Zeichenanzahl von ca 500 Zeichen führte dazu, dass Sätze mitten im Wort abgeschnitten wurden und zusammenhängende Informationen und 
+Kontext getrennt wurden, indem semantische Grenzen nicht respektiert wurden. Die Lösung hierfür war das Satz-basierte Splitting unstrukturierter Dokumente.
+
+5. Während der Entwicklung kamen außerdem viele kleinere Probleme wie das korrekte Auslesen einzelner Paragraphen und ECTS oder die korrekte Speicherung der Metadaten, die alle schrittweise behoben wurden. Die Nutzung lokaler LLMs für die einzelnen API-Anfragen wurde auch verworfen, da die Antwortzeiten und Qualität der Antworten nicht ausreichend waren.
+
+\section{Konfigurationsparameter}
+
+Die Konfigurationsparameter, die der Nutzer anpassen kann, sind die folgenden:
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|l|l|l|p{5.8cm}|}
+\hline
+\textbf{Parameter} & \textbf{Wert} & \textbf{Datei} & \textbf{Beschreibung} \\
+\hline
+TOP\_K & 10 & config.py & Anzahl der finalen Chunks \\
+MAX\_CHUNK\_SIZE & 450 & modulhandbuch\_parser.py & Maximale Chunk-Größe \\
+split\_length & 5 & indexing\_pipeline.py & Sätze pro Chunk \\
+split\_overlap & 1 & indexing\_pipeline.py & Überlappung in Sätzen \\
+USE\_LLM\_RERANK & False & config.py & LLM-Reranking aktivieren \\
+EMBEDDING\_DIM & 1536 & config.py & Embedding-Dimensionen \\
+\hline
+\end{tabular}
+\caption{Wichtige Konfigurationsparameter}
+\label{tab:konfigurationsparameter}
+\end{table}
+
+\section{Dateiübersicht}
+
+Die relevantesten Dateien sind für besseres Verständnis hier aufgezeigt:
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{5.2cm}|p{8.2cm}|}
+\hline
+\textbf{Datei} & \textbf{Zweck} \\
+\hline
+indexing\_pipeline.py & Hauptpipeline für die Indexierung \\
+hybrid\_retrieval.py & Implementierung der hybriden Suche \\
+reranker.py & BM25 + LLM-Reranking \\
+query\_expansion.py & Query-Erweiterung mit LLM \\
+context\_detection.py & Kontext-Erkennung \\
+rag\_pipeline.py & Generierung mit Prompts \\
+curriculum\_parser.py & Parser für den Studienverlaufsplan \\
+modulhandbuch\_parser.py & Parser für das Modulhandbuch \\
+regulations\_parser.py & Parser fuer SPO/PVO/ZLO \\
+document\_store.py & Qdrant-Konfiguration \\
+\hline
+\end{tabular}
+\caption{Dateien und ihre Aufgaben}
+\label{tab:dateien_zweck}
+\end{table}
+
+
+
+
+
+
+
