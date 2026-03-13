@@ -1,1 +1,230 @@
 \chapter{MCP Server Entwicklung und Integration}
+\label{chap:mcp}
+
+\section{Das Model Context Protocol}
+
+\emph{Model Context Protocol} (MCP) ist ein offener Standard, der im November 2024 von
+\emph{Anthropic} veröffentlicht wurde \cite{mcpspec}. Ziel ist es, eine universelle,
+herstellerunabhängige Schnittstelle zu schaffen, über die KI-Modelle mit externen
+Werkzeugen, Datenquellen und Diensten kommunizieren können -- vergleichbar mit dem
+Stellenwert, den HTTP für den Datenaustausch im Web einnimmt.
+
+\subsection{Architektur}
+
+MCP folgt einer klassischen Client-Server-Architektur:
+
+\begin{itemize}
+    \item \textbf{MCP-Host}: Die KI-Anwendung (z.\,B. der Chatbot), die MCP-Clients
+    verwaltet und das Sprachmodell betreibt.
+    \item \textbf{MCP-Client}: Eine Komponente innerhalb des Hosts, die eine dedizierte
+    Verbindung zu einem MCP-Server unterhält und Anfragen weiterleitet.
+    \item \textbf{MCP-Server}: Ein eigenständiger Prozess oder Dienst, der konkrete
+    Fähigkeiten -- sogenannte \emph{Primitives} -- exponiert \cite{mcpspec}.
+\end{itemize}
+
+\subsection{Primitives}
+
+Das Protokoll definiert drei grundlegende Arten von Fähigkeiten, die ein Server anbieten
+kann \cite{mcpspec}:
+
+\begin{itemize}
+    \item \textbf{Tools}: Ausführbare Funktionen, die das Modell per Tool-Call aufrufen
+    kann. Ein Tool erhält strukturierte Parameter und gibt ein Ergebnis zurück. Dies ist
+    das zentrale Konzept im Rahmen dieses Projekts.
+    \item \textbf{Resources}: Lesbare Datenquellen (z.\,B. Dateien oder Datenbankeinträge),
+    die dem Modell als Kontext bereitgestellt werden können.
+    \item \textbf{Prompts}: Vordefinierte Prompt-Vorlagen, die der Host zur Laufzeit
+    abrufen und befüllen kann.
+\end{itemize}
+
+\subsection{Transportmechanismen}
+
+Die Kommunikation zwischen Client und Server erfolgt über austauschbare Transport\-schichten.
+MCP unterstützt primär zwei Varianten \cite{mcpspec}:
+
+\begin{itemize}
+    \item \textbf{STDIO}: Der MCP-Server wird als Kindprozess gestartet; die Kommunikation
+    erfolgt über Standard\-eingabe und -ausgabe. Dieser Ansatz eignet sich besonders für
+    lokale Integrationen.
+    \item \textbf{HTTP mit Server-Sent Events (SSE)}: Der Server läuft als eigenständiger
+    HTTP-Dienst. Nachrichten vom Server zum Client werden über SSE übertragen, während
+    Anfragen per HTTP-POST gesendet werden. Dieser Ansatz ist für verteilte Systeme geeignet.
+\end{itemize}
+
+Alle Nachrichten werden im Format \emph{JSON-RPC 2.0} ausgetauscht, was eine klare
+Trennung von Anfragen, Antworten und Benachrichtigungen ermöglicht.
+
+\section{Implementierung: Calendar MCP Server}
+
+Der entwickelte \emph{Calendar MCP Server} ist ein eigenständiger Java-Dienst auf Basis
+von \emph{Spring Boot 3.4.1} und der \emph{Spring AI}-Bibliothek in Version 1.0.0-M5.
+Er liest Kalenderdaten aus einer ICS-Datei und stellt sie dem Chatbot über das MCP-Protokoll
+als Tools zur Verfügung. Der Server nutzt den STDIO-Transport und kommuniziert über
+Standard\-eingabe und -ausgabe mit dem MCP-Client.
+
+\subsection{Projektstruktur}
+
+Das Projekt gliedert sich in drei inhaltliche Schichten:
+
+\begin{itemize}
+    \item \textbf{Model} (\texttt{CalendarEvent}): Ein Java-Record, der einen Kalender\-eintrag
+    repräsentiert und die relevanten Felder -- Titel, Beschreibung, Ort, Start- und Endzeitpunkt,
+    Organisator sowie einen Flag für ganztägige Ereignisse -- kapselt.
+    \item \textbf{Service} (\texttt{IcsParserService}): Liest eine ICS-Datei mithilfe der
+    Bibliothek \emph{ical4j}, parst die enthaltenen VEVENT-Komponenten und hält die Ereignisse
+    im Arbeitsspeicher vor. Der Pfad zur ICS-Datei ist über die Konfigurationseigenschaft
+    \texttt{calendar.ics.file.path} einstellbar.
+    \item \textbf{Tools} (\texttt{CalendarTools}): Definiert die nach außen exponierten
+    MCP-Werkzeuge und delegiert deren Ausführung an den \texttt{IcsParserService}.
+\end{itemize}
+
+\subsection{Tool-Definitionen}
+
+Spring AI erlaubt es, MCP-Tools direkt als annotierte Java-Methoden zu definieren.
+Die Annotation \texttt{@Tool} versieht eine Methode mit einer maschinenlesbaren Beschreibung,
+anhand derer das Sprachmodell entscheiden kann, ob und wann es das Werkzeug aufruft.
+Parameter werden mit \texttt{@ToolParam} beschrieben \cite{springai}.
+
+Der \texttt{CalendarTools}-Dienst exponiert folgende Werkzeuge:
+
+\begin{itemize}
+    \item \texttt{getAllEvents} -- gibt alle Kalendereinträge zurück
+    \item \texttt{getEventsForDate} -- liefert Ereignisse für ein bestimmtes Datum (ISO-Format)
+    \item \texttt{getEventsInRange} -- gibt Ereignisse innerhalb eines Zeitraums zurück
+    \item \texttt{getUpcomingEvents} -- liefert bevorstehende Ereignisse der nächsten $n$ Tage
+    \item \texttt{getTodaysEvents} -- gibt die heutigen Termine zurück
+    \item \texttt{searchEvents} -- durchsucht Titel, Beschreibung und Ort nach einem Stichwort
+    \item \texttt{getCalendarInfo} -- liefert Metadaten wie die Gesamtzahl der Einträge
+    \item \texttt{reloadCalendar} / \texttt{loadCalendarFromPath} -- lädt den Kalender neu
+    bzw. aus einem alternativen Dateipfad
+\end{itemize}
+
+Ein Beispiel zeigt die Tool-Definition für die Datumssuche:
+
+\begin{lstlisting}[language=java, caption={Tool-Definition mit Spring AI}]
+@Tool(description = "Get calendar events for a specific date. "
+    + "The date should be provided in ISO format (YYYY-MM-DD).")
+public String getEventsForDate(
+    @ToolParam(description = "The date to get events for "
+        + "in ISO format (YYYY-MM-DD)") String date
+) {
+    LocalDate parsedDate = parseDate(date);
+    if (parsedDate == null) {
+        return "Error: Invalid date format. Please use ISO format.";
+    }
+    List<CalendarEvent> events = icsParserService.getEventsForDate(parsedDate);
+    return formatEventsResponse(events, "Events for " + parsedDate);
+}
+\end{lstlisting}
+
+\subsection{Server-Konfiguration}
+
+Die Registrierung der Tools als MCP-Endpunkte erfolgt über einen Spring-\texttt{@Bean},
+der einen \texttt{ToolCallbackProvider} aus den annotierten Methoden der
+\texttt{CalendarTools}-Klasse erzeugt:
+
+\begin{lstlisting}[language=java, caption={Registrierung der Tools als MCP-Server-Endpunkt}]
+@Bean
+public ToolCallbackProvider calendarToolCallbackProvider(
+    CalendarTools calendarTools
+) {
+    return MethodToolCallbackProvider.builder()
+            .toolObjects(calendarTools)
+            .build();
+}
+\end{lstlisting}
+
+Spring AI übernimmt auf dieser Basis automatisch die Generierung der JSON-Schema-Beschreibungen
+für jeden Tool-Parameter sowie die gesamte MCP-Protokollkommunikation. In der
+\texttt{application.properties} wird der STDIO-Modus aktiviert und ein Webserver explizit
+deaktiviert, da die gesamte Kommunikation über Standard\-ein- und -ausgabe abläuft:
+
+\begin{lstlisting}[caption={Relevante Konfigurationseinstellungen}]
+spring.ai.mcp.server.name=calendar-mcp-server
+spring.ai.mcp.server.version=1.0.0
+spring.ai.mcp.server.stdio=true
+spring.main.web-application-type=none
+spring.main.banner-mode=off
+\end{lstlisting}
+
+\subsection{ICS-Parser}
+
+Das Parsen der ICS-Dateien übernimmt die Bibliothek \emph{ical4j}. Der
+\texttt{IcsParserService} liest beim Start der Anwendung die konfigurierte Datei ein,
+konvertiert alle \texttt{VEVENT}-Komponenten in \texttt{CalendarEvent}-Records und
+hält diese im Arbeitsspeicher als Liste vor. Dabei wird zwischen Ganztages\-ereignissen
+(reines Datum ohne Uhrzeit) und Ereignissen mit konkretem Zeitstempel unterschieden.
+Alle Ereignisse werden aufsteigend nach Startzeit sortiert.
+
+Die Suche nach Ereignissen in einem Datumsbereich sowie die Volltextsuche über Titel,
+Beschreibung und Ort werden direkt auf dieser In-Memory-Liste mit Java-Stream-Operationen
+durchgeführt, was für typische Hochschulkalender mit einigen Hundert Einträgen ausreichend
+performant ist.
+
+\section{Integration in die Applikation}
+
+\subsection{STDIO-Transport}
+
+Da der Calendar MCP Server den STDIO-Transportmechanismus verwendet, startet der
+MCP-Client den Server als Kindprozess und kommuniziert über dessen Standard\-eingabe
+und -ausgabe. Der aufrufende Client muss lediglich den Startbefehl des Servers kennen
+-- in diesem Fall den Pfad zur kompilierten JAR-Datei:
+
+\begin{lstlisting}[caption={Exemplarische MCP-Client-Konfiguration (JSON)}]
+{
+  "mcpServers": {
+    "calendar": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "/pfad/zum/calendar-mcp-server.jar"
+      ],
+      "env": {
+        "calendar.ics.file.path": "/pfad/zum/kalender.ics"
+      }
+    }
+  }
+}
+\end{lstlisting}
+
+Der Client -- im Kontext dieses Projekts das Python-Backend mit \emph{LangChain} --
+registriert die vom Server exponierten Tools und stellt sie dem Sprachmodell als
+aufrufbare Funktionen zur Verfügung. Das Modell entscheidet dann eigenständig, ob
+bei einer Nutzeranfrage ein Kalender-Tool aufgerufen werden soll, etwa wenn der Nutzer
+nach Prüfungsterminen oder Einschreibefristen fragt.
+
+\subsection{Datenfluss}
+
+Der vollständige Ablauf einer kalenderbezogenen Anfrage gliedert sich wie folgt:
+
+\begin{enumerate}
+    \item Der Nutzer stellt eine Anfrage, die Termininformationen erfordert (z.\,B.
+    \emph{„Wann ist die Anmeldephase für das Sommersemester?"}).
+    \item Das Sprachmodell erkennt anhand der Tool-Beschreibungen, dass
+    \texttt{searchEvents} mit dem Stichwort \emph{„Anmeldung"} geeignet ist.
+    \item Der MCP-Client serialisiert den Tool-Call als JSON-RPC-Nachricht und schreibt
+    sie in die Standard\-eingabe des Server-Prozesses.
+    \item Der Server führt die Suche auf den gecachten Kalendereinträgen durch und
+    gibt das formatierte Ergebnis über die Standard\-ausgabe zurück.
+    \item Das Sprachmodell integriert das Ergebnis in eine natürlichsprachliche Antwort.
+\end{enumerate}
+
+\section{Bewertung}
+
+Die Verwendung von MCP bietet gegenüber einer direkten, proprietären Tool-Integration
+mehrere Vorteile: Der Calendar MCP Server ist vollständig unabhängig vom restlichen
+System und kann separat gewartet, getestet und ausgetauscht werden. Durch die
+Standardisierung des Protokolls könnte derselbe Server -- ohne Anpassungen -- auch
+von anderen MCP-kompatiblen Clients genutzt werden, etwa von \emph{Claude Desktop}
+oder anderen LLM-Anwendungen.
+
+Die In-Memory-Haltung der Kalendereinträge ist für den vorgesehenen Einsatzzweck
+angemessen; bei sehr großen Kalendern oder Echtzeit-Anforderungen wäre ein direkter
+Datenbankzugriff sinnvoller. Der \texttt{reloadCalendar}-Tool erlaubt es,
+die Daten zur Laufzeit zu aktualisieren, ohne den Server neu starten zu müssen.
+
+Ein Nachteil des STDIO-Transports ist, dass der Server-Prozess für jede Client-Sitzung
+neu gestartet werden muss, sofern keine persistente Prozessverwaltung eingesetzt wird.
+Für produktive Szenarien mit vielen gleichzeitigen Nutzern wäre der HTTP/SSE-Transport
+die robustere Wahl, da der Server dann als dauerhaft laufender Dienst betrieben werden
+kann.
