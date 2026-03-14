@@ -1,3 +1,33 @@
-\chapter{  Fazit}
+\chapter{Fazit}
 
-... und hier der Schluss.
+Zusammenfassend lässt sich sagen, dass im Rahmen des Projekts viel gelernt wurde.
+Eine der größten Herausforderungen bestand darin, zu entscheiden, welche Themengebiete und Ansätze
+vertieft werden sollten. Mittlerweile gibt es eine riesige Auswahl an Libraries, Dependencies, Tools,
+Agenten und vieles mehr. Das macht es schwierig den Überblick zu behalten. Man bewegt sich in einem
+Feld in dem es täglich enorme Weiterentwicklungen gibt.
+
+RAG gilt mittlerweile schon fast nicht mehr als der Ansatz der Wahl. Viele setzen auf gänzlich autonome Agenten (siehe OpenClawd).
+Trotzdem ergab sich im Rahmen dieses Projekts, dass sich besonders bei einem Usecase dieser Art, RAG noch 
+lohnen kann. Die Daten sind primär statisch, wobei die Termine aus dem FH Wedel Kalender noch
+die sich am ehesten veränderenden Daten darstellen. Durch die Data Ingestion Pipeline, welche bei der Aktualisierung
+von Daten (z.B. den Modulhandbüchern), kann das Updaten der Daten einfach automatisiert werden, ohne viel
+manuellen Aufwand zu betreiben.
+
+Eine weitere Herausforderung zeigte sich beim Abruf der Daten. Zwar sind die Daten auf der FH Wedel Website
+in Form von PDF Dateien abrufbar, aber teilweise in einem sehr schwierig zu parsenden Format. Ein großer Teil 
+der Zeit wurde in die Auswahl und Anpassung verschiedenster Parser Libraries investiert. 
+
+Etwas weniger Zeit nahm die Entwicklung der Frontend Anwendung in Anspruch. Hier wurde
+mit \emph{v0} ein simples Frontend Design erstellt, was mit Claude Code noch nachbearbeitet wurde.
+
+Interessant war, mit welcher Geschwindigkeit erste Ergebnisse erzielt werden konnten. Diese mangelten zwar am Anfang
+in Qualität, aber es war beeindruckend wie schnell ein funktionierender Chatbot entwickelt werden konnte.
+Mit den etlichen Tools (sowohl aus dem Python Ökosystem, als auch den Abhängigkeiten aus dem Spring Framework)
+konnte man schnell eine Anwendung entwickeln, die Informationen aus einem Vector Store abrufen konnte.
+
+Zusammenfassend kann man sagen, dass die Qualiät eines solchen Chatbots stark an der Qualität der diesem
+zur verfügenden Daten steht. Large Language Modelle sind mittlerweile (besonders seit Opus 4.5) 
+sehr gut im Verstehen von Benutzeranfragen zu bestimmten Domänen. Wir sind der Meinung, dass es nicht
+zwingend nötig ist ein eigenens Modell fine zu tunen oder speziell zu trainieren, sondern das die Anbindung 
+mittels einer API und einer Bereitstellung der Daten über die Studiengänge der FH Wedel absolut ausreichend ist und
+qualitativ akzeptable Ergebnisse erzeugen kann.

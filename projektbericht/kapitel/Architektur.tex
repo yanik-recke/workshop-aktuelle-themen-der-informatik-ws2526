@@ -1,7 +1,23 @@
 \chapter{Architektur}
-\newpage
+\label{chap:architektur}
+
+Das System gliedert sich in vier Hauptkomponenten, die eng miteinander verzahnt sind:
+ein \textbf{Next.js-Frontend} für die Nutzerinteraktion, ein \textbf{Python-Backend}
+(LangChain/Haystack) mit REST-API, eine \textbf{Qdrant-Vektordatenbank} für die
+semantische Suche sowie ein \textbf{Java-MCP-Server} (entwickelt mit SpringAI) für die Kalenderintegration.
+Optionale Guardrails über \emph{NeMo} können vor- und nachgeschaltet werden.
+Die Datenbasis bilden PDF-Dokumente der FH Wedel (Studienordnungen, Modulhandbücher,
+Zulassungsordnung), die durch eine vorgelagerte Ingestion-Pipeline aufbereitet werden.
 
 \section{Data-Ingestion Pipeline}
+
+Bevor der Chatbot Fragen beantworten kann, müssen die Quelldokumente verarbeitet
+und indexiert werden. Die Data-Ingestion Pipeline übernimmt diesen einmaligen
+(bzw.\ bei Datenaktualisierungen wiederholten) Vorbereitungsschritt: Die PDFs
+werden dokumenttypspezifisch geparst, in Markdown überführt, in semantisch
+sinnvolle Chunks aufgeteilt, mit Metadaten angereichert und schließlich als
+Vektoren in \emph{Qdrant} gespeichert. Als Embedding-Modell kommt
+\texttt{text-embedding-3-small} von OpenAI zum Einsatz.
 
 \begin{figure}[h!]
     \centering
@@ -14,6 +30,13 @@
 
 \section{RAG-Pipeline}
 
+Die RAG-Pipeline beschreibt das Zusammenspiel der dauerhaft laufenden Dienste.
+Das Frontend kommuniziert über eine REST-API mit dem Python-Backend. Dieses
+prüft zunächst die Eingabe über NeMo Guardrails, führt
+anschließend die Retrieval- und Generierungsschritte durch und gibt die Antwort
+zurück. Der MCP-Server wird bei Bedarf als Prozess gestartet und stellt
+dem Sprachmodell Kalender-Tools zur Verfügung.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.74]{bilder/architektur-rag-pipeline.pdf}
@@ -24,6 +47,15 @@
 \newpage
 
 \section{Query Processing Pipeline}
+
+Trifft eine Nutzeranfrage im Backend ein, durchläuft sie eine mehrstufige
+Verarbeitungspipeline: Zunächst wird die Query durch \emph{Query Expansion}
+angereichert, um die Trefferquote bei der Vektorsuche zu verbessern. Die
+eigentliche Suche kombiniert semantische und lexikalische Suche (\emph{hybride Suche}).
+Die Kandidaten werden anschließend durch ein \emph{Reranking}-Modell neu sortiert,
+bevor die relevantesten Chunks zusammen mit dem Nutzer-Prompt an
+\texttt{gpt-4o-mini} übergeben werden. Spezifische Prompt-Templates sorgen dabei
+für strukturierte und quellenbasierte Antworten.
 
 \begin{figure}[h!]
     \centering
