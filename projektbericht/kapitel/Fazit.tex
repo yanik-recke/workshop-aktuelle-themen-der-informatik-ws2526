@@ -25,9 +25,17 @@ in Qualität, aber es war beeindruckend wie schnell ein funktionierender Chatbot
 Mit den etlichen Tools (sowohl aus dem Python Ökosystem, als auch den Abhängigkeiten aus dem Spring Framework)
 konnte man schnell eine Anwendung entwickeln, die Informationen aus einem Vector Store abrufen konnte.
 
+Zu den wichtigsten Learnings zählten insbesondere die Umsetzung einer RAG-Applikation mittels
+Haystack, die Datenaufbereitung für LLMs, verschiedenste Strategien zur Embedding-Erstellung,
+das Hosten lokaler Modelle sowie die Anbindung von Cloud-Modellen. Ergänzend dazu wurden
+Evaluierungen mit DeepEval durchgeführt und MCP-Tools entwickelt und integriert, um die
+Funktionalität des Systems gezielt zu erweitern.
+
 Zusammenfassend kann man sagen, dass die Qualiät eines solchen Chatbots stark an der Qualität der diesem
 zur verfügenden Daten steht. Large Language Modelle sind mittlerweile (besonders seit Opus 4.5) 
 sehr gut im Verstehen von Benutzeranfragen zu bestimmten Domänen. Wir sind der Meinung, dass es nicht
 zwingend nötig ist ein eigenens Modell fine zu tunen oder speziell zu trainieren, sondern das die Anbindung 
 mittels einer API und einer Bereitstellung der Daten über die Studiengänge der FH Wedel absolut ausreichend ist und
-qualitativ akzeptable Ergebnisse erzeugen kann.
+qualitativ akzeptable Ergebnisse erzeugen kann. Die zentrale Herausforderung liegt dabei weniger in der
+reinen Softwareentwicklung, sondern in der Aufbereitung und Bereitstellung der Daten: Je besser die Daten,
+desto besser die Ergebnisse.

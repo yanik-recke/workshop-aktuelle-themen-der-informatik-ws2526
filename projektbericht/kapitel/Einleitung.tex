@@ -3,6 +3,8 @@
 
 Im Rahmen des Moduls \emph{Workshop: Aktuelle Entwicklungen der Informatik}
 sollte ein Chatbot für die FH Wedel entwickelt werden.
+Übergeordnetes Ziel war dabei ein schnellerer und einfacherer Zugriff auf
+relevante Informationen.
 
 Folgende Eigenschaften sollte der Chatbot erfüllen (entnommen aus \cite{aufgabenstellung}):
 
@@ -18,12 +20,14 @@ Folgende Eigenschaften sollte der Chatbot erfüllen (entnommen aus \cite{aufgabe
 
 Zunächst wurden im Rahmen der Vorlesungseinheiten die Grundlagen und Konzepte erlernt,
 um einen solchen Chatbot zu implementieren. Dazu gehörte unter anderem das Ansprechen
-von LLMs via \emph{OpenAI API} oder das Konzept von \emph{RAG} Anwendungen.
+von LLMs via \emph{OpenAI API} oder das Konzept von \emph{RAG} Anwendungen, auf dessen
+Basis die Lösung im weiteren Verlauf als \emph{RAG}-Anwendung umgesetzt wurde.
 
 In Eigenarbeit wurde weitere Recherche betrieben, z.B. zum Thema Prompt Engineering, aber auch 
 insbesondere zu Vektor Embeddings und semantischer Suche. Es wurde schnell klar, dass die Qualität
 eines solchen Chatbots stark von den Daten abhängt, die ihm bereitgestellt werden,
-weswegen hierrauf ein besonderer Fokus gelegt wurde.
+weswegen hierrauf ein besonderer Fokus gelegt wurde. Dafür wurden im Projektverlauf
+mehrere Ansätze untersucht und miteinander verglichen.
 
 Durch das Hosten von lokalen Modellen z.B. mit \emph{Ollama} oder \emph{llama.cpp}
 konnten schnell erste Versuche gestartet werden und auch direkt erste
