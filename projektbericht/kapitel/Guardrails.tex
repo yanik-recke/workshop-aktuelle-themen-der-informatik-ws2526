@@ -3,16 +3,16 @@
 
 \section{Motivation und Grundkonzept}
 
-Große Sprachmodelle (LLMs) sind äußerst leistungsfähig, bringen aber auch Risiken mit sich:
+Große Sprachmodelle (LLMs) bringen auch Risiken mit sich:
 Sie können sachlich falsche Informationen generieren, auf unangemessene Anfragen eingehen oder
 schlicht außerhalb ihres vorgesehenen Anwendungsbereichs verwendet werden. Gerade in produktiven
-Systemen, die in einem klar definierten Kontext eingesetzt werden -- wie dem hier entwickelten
-Chatbot für die FH Wedel -- ist es daher wünschenswert, das Verhalten des Modells
-kontrollierbar einzuschränken.
+Systemen, die in einem klar definierten Kontext eingesetzt werden ist es daher wünschenswert, 
+das Verhalten des Modells kontrollierbar einzuschränken. Prompt Engineering mit System Prompts
+ist zwar ein guter Ansatz, kommt aber schnell an seine Grenzen.
 
-Dieses Konzept wird unter dem Begriff \emph{Guardrails} zusammengefasst. Guardrails sind
+Ein anderes Konzept wird unter dem Begriff \emph{Guardrails} zusammengefasst. Guardrails sind
 Mechanismen, die das Ein- und Ausgabeverhalten eines LLM-Systems begrenzen und in definierten
-Bahnen halten. Sie können auf verschiedene Weisen realisiert werden: als einfache Schlüsselwortfilter,
+Domänen halten. Sie können auf verschiedene Weisen realisiert werden: als einfache Schlüsselwortfilter,
 als regelbasierte Systeme oder als vollständige Frameworks, die selbst wiederum LLMs zur Validierung
 einsetzen.
 
@@ -41,8 +41,7 @@ Die Architektur von NeMo Guardrails besteht im Wesentlichen aus drei Komponenten
 \emph{Colang} ist eine von NVIDIA entwickelte Skriptsprache, die ausdrücklich für die
 Beschreibung von Konversationslogik und Sicherheitsregeln in LLM-Anwendungen entworfen wurde.
 Sie ermöglicht es, abstrakt zu definieren, welche Absichten (\emph{intents}) ein Nutzer haben kann und
-welche Reaktionen (\emph{flows}) darauf erfolgen sollen -- ohne dabei auf klassische regelbasierte
-Systeme angewiesen zu sein.
+welche Reaktionen (\emph{flows}) darauf erfolgen sollen.
 
 Ein einfaches Beispiel aus dem Projekt zeigt die Grundstruktur:
 
@@ -102,8 +101,7 @@ if os.getenv("ENABLE_GUARDRAILS", "false").lower() == "true":
 \end{lstlisting}
 
 Ist das Feature aktiviert, wird beim Eingang einer Nutzeranfrage am \texttt{/chat}-Endpunkt zunächst
-eine Eingabeprüfung durchgeführt. Erkennt das Framework die Anfrage als thematisch unpassend -- etwa
-weil sie nichts mit dem Studium an der FH Wedel zu tun hat -- wird eine entsprechende Ablehnungsnachricht
+eine Eingabeprüfung durchgeführt. Erkennt das Framework die Anfrage als thematisch unpassend wird eine entsprechende Ablehnungsnachricht
 zurückgegeben und die RAG-Pipeline gar nicht erst aufgerufen:
 
 \begin{lstlisting}[language=Python, caption={Eingabeprüfung im Chat-Endpunkt}]
@@ -149,8 +147,7 @@ für den produktiven Betrieb eines solchen Chatbots erhebliche Vorteile:
     Neue Regeln oder Gesprächsflüsse können hinzugefügt werden, ohne die eigentliche
     Anwendungslogik zu berühren.
     \item \textbf{Auditierbarkeit}: Da das Regelwerk in separaten Dateien hinterlegt ist, lässt
-    sich nachvollziehen, welche Einschränkungen für das System gelten -- was für den Einsatz in
-    institutionellen Umgebungen von Vorteil ist.
+    sich nachvollziehen, welche Einschränkungen für das System gelten.
 \end{itemize}
 
 \section{Bewertung}
@@ -158,10 +155,10 @@ für den produktiven Betrieb eines solchen Chatbots erhebliche Vorteile:
 Die Integration von NeMo Guardrails fügt sich gut in die bestehende Architektur ein und
 verursacht im Grundbetrieb keinen nennenswerten Mehraufwand, solange das Feature deaktiviert bleibt.
 Der wesentliche Nachteil liegt darin, dass die Self-Check-Mechanismen selbst auf ein LLM zurückgreifen:
-Jede Eingabe- oder Ausgabeprüfung bedeutet einen zusätzlichen API-Aufruf, was Latenz und Kosten erhöht.
+Jede Eingabe- oder Ausgabeprüfung bedeutet einen zusätzlichen API-Aufruf, was Aufrufsdauer und Kosten erhöht.
 
 Für den produktiven Einsatz wäre eine sorgfältige Abwägung notwendig, welche Flows tatsächlich
 aktiviert werden sollten und ob die dadurch gewonnene Sicherheit den Mehraufwand rechtfertigt.
-Eine reine Eingabeprüfung -- wie im Projekt umgesetzt -- stellt dabei einen guten Kompromiss dar:
+Eine reine Eingabeprüfung stellt dabei einen guten Kompromiss dar:
 Sie schützt vor offensichtlichen Fehlverwendungen, ohne bei jeder Antwort zusätzliche Kosten
 zu verursachen.

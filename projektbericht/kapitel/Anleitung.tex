@@ -2,18 +2,18 @@
 \label{chap: anleitung}
 
 Der einfachste Weg, das Projekt vollständig zum Laufen zu bringen, führt über
-\emph{Docker} und \emph{Docker Compose}. Alle benötigten Dienste -- Frontend,
-RAG-API, Vektordatenbank und Chat-Persistenz -- sind in einer einzigen
-\texttt{docker-compose.yml} beschrieben und lassen sich mit wenigen Befehlen starten.
+\emph{Docker} und \emph{Docker Compose}. Alle benötigten Dienste: Frontend,
+RAG-API, Vektordatenbank und Chat-Persistenz, sind in einer einzigen
+\texttt{docker-compose.yml} beschrieben und lassen sich wie folgt starten.
 
 \section{Voraussetzungen}
 
-Folgende Software muss auf dem Zielsystem installiert sein:
+Folgende Software muss auf dem System installiert sein:
 
 \begin{itemize}
-    \item \textbf{Docker} (inkl. Docker Compose v2)
-    \item Ein \textbf{OpenAI-kompatibler API-Zugang} -- entweder ein echter OpenAI API Key
-    oder ein lokal laufendes Modell, das die OpenAI-API emuliert
+    \item \textbf{Docker} (inkl. Docker Compose)
+    \item Ein \textbf{OpenAI-kompatibler API-Zugang}: entweder ein echter OpenAI API Key
+    oder ein lokal laufendes Modell, das sich an die OpenAI-API hält
     (z.\,B. \emph{Ollama} oder \emph{LM Studio})
 \end{itemize}
 
@@ -42,7 +42,7 @@ Je nach Szenario sind unterschiedliche Einträge relevant:
 Beim allerersten Start müssen die Dokumente der FH Wedel heruntergeladen
 und in die Vektordatenbank eingespeist werden. Dazu stehen zwei auskommentierte
 Setup-Dienste in der \texttt{docker-compose.yml} bereit, die bei Bedarf aktiviert
-werden können. Alternativ lassen sich die Skripte auch direkt ausführen:
+werden können. Alternativ lassen sich die Skripte auch direkt ausführen (direkte Ausführung klappt meist besser):
 
 \begin{lstlisting}[language=bash, caption={Dokumente herunterladen und indizieren}]
 # PDFs von der FH-Wedel-Website herunterladen
@@ -55,13 +55,11 @@ python rag-code/indexing_pipeline.py
 Der Indizierungsschritt kann je nach Anzahl der Dokumente und verwendetem Modell
 einige Minuten bis zu einer halben Stunde in Anspruch nehmen, da für jedes
 Dokument Embeddings berechnet und in \emph{Qdrant} gespeichert werden.
-Dieser Schritt muss nur einmalig durchgeführt werden -- die Daten bleiben
-in einem Docker-Volume erhalten.
+Dieser Schritt muss nur einmalig durchgeführt werden.
 
 \section{Starten der Anwendung}
 
-Sind die Dokumente indiziert, genügt ein einzelner Befehl, um alle Dienste
-hochzufahren:
+Sind die Dokumente indiziert, muss folgender Befehl ausgeführt werden:
 
 \begin{lstlisting}[language=bash, caption={Alle Dienste starten}]
 docker compose up frontend -d
@@ -78,14 +76,13 @@ sind die Dienste über folgende Adressen erreichbar:
     \item \textbf{MongoDB}: \texttt{localhost:27017}
 \end{itemize}
 
-Die Weboberfläche unter Port 3000 ist der primäre Einstiegspunkt für den Endnutzer.
+Die Weboberfläche unter Port 3000 ist der Einstiegspunkt für den Benutzer.
 Dort kann nach der Auswahl eines Studiengangs direkt mit dem Chatbot interagiert werden.
 
 \section{Nutzung der CLI-Schnittstelle}
 
-Alternativ zur Weboberfläche steht eine interaktive Kommandozeilenschnittstelle
-zur Verfügung. Diese ist besonders während der Entwicklung oder für schnelle
-Tests praktisch:
+Alternativ zur Weboberfläche steht eine Kommandozeilenschnittstelle
+zur Verfügung. Diese half besonders während der Entwicklung und bei schnellen Tests:
 
 \begin{lstlisting}[language=bash, caption={CLI-Modus starten}]
 docker compose run --rm rag-cli

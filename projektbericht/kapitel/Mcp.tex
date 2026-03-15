@@ -6,7 +6,7 @@
 \emph{Model Context Protocol} (MCP) ist ein offener Standard, der im November 2024 von
 \emph{Anthropic} veröffentlicht wurde \cite{mcpspec}. Ziel ist es, eine universelle,
 herstellerunabhängige Schnittstelle zu schaffen, über die KI-Modelle mit externen
-Werkzeugen, Datenquellen und Diensten kommunizieren können -- vergleichbar mit dem
+Werkzeugen, Datenquellen und Diensten kommunizieren können. Das ist vergleichbar mit dem
 Stellenwert, den HTTP für den Datenaustausch im Web einnimmt.
 
 \subsection{Architektur}
@@ -19,7 +19,7 @@ MCP folgt einer klassischen Client-Server-Architektur:
     \item \textbf{MCP-Client}: Eine Komponente innerhalb des Hosts, die eine dedizierte
     Verbindung zu einem MCP-Server unterhält und Anfragen weiterleitet.
     \item \textbf{MCP-Server}: Ein eigenständiger Prozess oder Dienst, der konkrete
-    Fähigkeiten -- sogenannte \emph{Primitives} -- exponiert \cite{mcpspec}.
+    Fähigkeiten, sogenannte \emph{Primitives}, exponiert \cite{mcpspec}.
 \end{itemize}
 
 \subsection{Primitives}
@@ -51,7 +51,7 @@ MCP unterstützt primär zwei Varianten \cite{mcpspec}:
     Anfragen per HTTP-POST gesendet werden. Dieser Ansatz ist für verteilte Systeme geeignet.
 \end{itemize}
 
-Alle Nachrichten werden im Format \emph{JSON-RPC 2.0} ausgetauscht, was eine klare
+Alle Nachrichten werden im Format \emph{JSON-RPC} ausgetauscht, was eine klare
 Trennung von Anfragen, Antworten und Benachrichtigungen ermöglicht.
 
 \section{Implementierung: Calendar MCP Server}
@@ -68,8 +68,8 @@ Das Projekt gliedert sich in drei inhaltliche Schichten:
 
 \begin{itemize}
     \item \textbf{Model} (\texttt{CalendarEvent}): Ein Java-Record, der einen Kalender\-eintrag
-    repräsentiert und die relevanten Felder -- Titel, Beschreibung, Ort, Start- und Endzeitpunkt,
-    Organisator sowie einen Flag für ganztägige Ereignisse -- kapselt.
+    repräsentiert und die relevanten Felder: Titel, Beschreibung, Ort, Start- und Endzeitpunkt,
+    Organisator sowie einen Flag für ganztägige Ereignisse, kapselt.
     \item \textbf{Service} (\texttt{IcsParserService}): Liest eine ICS-Datei mithilfe der
     Bibliothek \emph{ical4j}, parst die enthaltenen VEVENT-Komponenten und hält die Ereignisse
     im Arbeitsspeicher vor. Der Pfad zur ICS-Datei ist über die Konfigurationseigenschaft
@@ -187,7 +187,7 @@ und -ausgabe. Der aufrufende Client muss lediglich den Startbefehl des Servers k
 }
 \end{lstlisting}
 
-Der Client -- im Kontext dieses Projekts das Python-Backend mit \emph{LangChain} --
+Der Client
 registriert die vom Server exponierten Tools und stellt sie dem Sprachmodell als
 aufrufbare Funktionen zur Verfügung. Das Modell entscheidet dann eigenständig, ob
 bei einer Nutzeranfrage ein Kalender-Tool aufgerufen werden soll, etwa wenn der Nutzer
@@ -211,10 +211,10 @@ Der vollständige Ablauf einer kalenderbezogenen Anfrage gliedert sich wie folgt
 
 \section{Bewertung}
 
-Die Verwendung von MCP bietet gegenüber einer direkten, proprietären Tool-Integration
+Die Verwendung von MCP bietet gegenüber einer direkten Tool-Integration
 mehrere Vorteile: Der Calendar MCP Server ist vollständig unabhängig vom restlichen
 System und kann separat gewartet, getestet und ausgetauscht werden. Durch die
-Standardisierung des Protokolls könnte derselbe Server -- ohne Anpassungen -- auch
+Standardisierung des Protokolls könnte derselbe Server auch
 von anderen MCP-kompatiblen Clients genutzt werden, etwa von \emph{Claude Desktop}
 oder anderen LLM-Anwendungen.
 
